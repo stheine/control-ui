@@ -1,24 +1,25 @@
-'use strict';
+import appConfig from './config.js';
+import common    from './webpack.common.js';
 
-const common = require('./webpack.common.js');
+const {serverPort} = appConfig;
 
-module.exports = {
+export default {
   ...common,
   mode: 'development',
 
 //  nodeModulesHmr: true,
-//  devServer: {
+  devServer: {
 //    disableHostCheck: true,
 //    host,
 //    https,
-//    port,
+    port: serverPort + 1,
 //    proxy: {
 //      '/api': {
 //        target: `https://${host}:${appConfig.serverPort}`,
 //        secure: false,
 //      },
 //    },
-//  },
+  },
 //  additionalJsxSources,
 //  resolve: {
 //    alias: {

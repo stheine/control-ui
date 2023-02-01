@@ -1,11 +1,9 @@
-'use strict';
-
 // const path = require('path');
 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 // const webpack = require('webpack'); //to access built-in plugins
 
-module.exports = {
+export default {
 //  entry:  './src/index.js',
   entry:  './src/index.jsx',
 //  output: {

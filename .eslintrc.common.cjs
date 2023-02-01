@@ -1,11 +1,13 @@
-'use strict';
-
 module.exports = {
   rules: {
     'array-bracket-spacing': [2, 'never'],
     'capitalized-comments': 0,
     'comma-dangle': [2, 'always-multiline'],
 //    'dot-location': [2, 'property'],
+    'eslint-comments/disable-enable-pair': 0,
+    'import/no-anonymous-default-export': 0,
+    'import/no-default-export': 0,
+    'import/unambiguous': 0,
     indent: [
       2,
       2,
@@ -36,12 +38,23 @@ module.exports = {
 //    'no-unused-vars': [2, {caughtErrors: 'none'}],
 //    'no-warning-comments': 0,
     'object-curly-spacing': [2, 'never'],
+    'prefer-named-capture-group': 0,
 //    'prefer-destructuring': 0,
     'require-unicode-regexp': 0,
+    'react/jsx-curly-spacing': 0,
+    'sort-imports': ['error', {
+      allowSeparatedGroups: true,
+      ignoreCase: true,
+      memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+    }],
     'space-before-function-paren': [2, 'never'],
 //    'unicorn/catch-error-name': 0,
-//    'unicorn/explicit-length-check': 0,
+    'unicorn/expiring-todo-comments': 0,
+    'unicorn/explicit-length-check': 0,
+    'import/extensions': ['error', 'always', {ignorePackages: true}],
+    'unicorn/import-style': 0,
     'unicorn/no-hex-escape': 0,
+    'unicorn/numeric-separators-style': 0,
 //    'unicorn/no-zero-fractions': 0,
   },
 };

@@ -1,7 +1,10 @@
-import React    from 'react';
-import {render} from 'react-dom';
+import {createRoot} from 'react-dom/client';
+import React        from 'react';
 
-import Root     from './components/Root';
-import               './index.scss';
+import                   './index.scss';
+import Root         from './components/Root.jsx';
 
-render(<Root />, document.getElementById('root'));
+const container = document.getElementById('root');
+const root      = createRoot(container);
+
+root.render(<Root />);
