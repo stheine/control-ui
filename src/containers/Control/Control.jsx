@@ -1,57 +1,21 @@
 import {connect}     from 'react-redux';
 import Favicon       from 'react-favicon';
 import React, {
-  useEffect,
-  useRef,
+//  useEffect,
+//  useRef,
 } from 'react';
 
 import {Back}        from '../../svg/Back.jsx';
 import faviconBase64 from '../../favicon.js';
+import FitBox        from '../../components/FitBox.jsx';
 import {Menu}        from '../../svg/Menu.jsx';
 import {Next}        from '../../svg/Next.jsx';
 import {Play}        from '../../svg/Play.jsx';
+import Solar         from '../Solar/Solar.jsx';
 import {Stop}        from '../../svg/Stop.jsx';
+import Temperature   from '../Temperature/Temperature.jsx';
 
-// https://dev.to/jankapunkt/make-text-fit-it-s-parent-size-using-javascript-m40
-const isOverflown = function({clientHeight, clientWidth, scrollHeight, scrollWidth}) {
-  return scrollHeight > clientHeight || scrollWidth > clientWidth;
-};
-const resizeText = function({element, elements, minSize = 10, maxSize = 512, step = 1}) {
-  for(const el of elements || [element]) {
-    let size     = minSize;
-    let overflow = false;
-
-    const parent = el.parentNode;
-
-    while (!overflow && size < maxSize) {
-      el.style.fontSize = `${size}px`;
-      overflow = isOverflown(parent);
-
-      if (!overflow) {
-        size += step;
-      }
-    }
-
-    // revert to last state where no overflow happened
-    el.style.fontSize = `${size - step}px`;
-  }
-};
-
-const FitBox = function(props) {
-  const {children} = props;
-
-  const ref = useRef();
-
-  useEffect(() => {
-    const element = ref.current;
-
-    resizeText({element});
-  });
-
-  return <div ref={ref} className='fit-box'>{children}</div>;
-};
-
-const Control = function(props) {
+const Control = function(/* props */) {
 //  console.log('Control', {props});
 
 //  console.log(document.querySelector('.fit-text'));
@@ -77,7 +41,7 @@ const Control = function(props) {
           </div>
           <div className='control__action'>
             <FitBox>
-              <img src='https://sochog.cl/wp-content/uploads/2018/06/objetivos-256x256.png' className='image' />
+              The quick brown fox jumps over the lazy dog
             </FitBox>
           </div>
           <div className='control__action'>
@@ -92,12 +56,12 @@ const Control = function(props) {
           </div>
           <div className='control__action'>
             <FitBox>
-              This Text is pretty long and should be wrapped correctly into multiple lines.
+              <Solar />
             </FitBox>
           </div>
           <div className='control__action'>
             <FitBox>
-              <Stop color='orange' />
+              <Temperature />
             </FitBox>
           </div>
         </div>

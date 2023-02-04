@@ -15,6 +15,8 @@
   "license": "",
   "dependencies": {
     "@reduxjs/toolkit": "1.9.2",
+    "async-mqtt": "2.6.3",
+    "buffer": "6.0.3",
     "dayjs": "1.11.7",
     "fqdn-multi": "0.1.2",
     "fs-extra": "11.1.0",
@@ -29,6 +31,7 @@
     "redux-first-history": "5.1.1",
     "redux-logger": "3.0.6",
     "redux-thunk": "2.4.2",
+    "url": "0.11.0",
     "window-size": "1.1.1"
   },
   "devDependencies": {

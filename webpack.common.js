@@ -1,7 +1,5 @@
-// const path = require('path');
-
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-// const webpack = require('webpack'); //to access built-in plugins
+import webpack           from 'webpack'; // to access built-in plugins
 
 export default {
 //  entry:  './src/index.js',
@@ -25,7 +23,18 @@ export default {
   },
   plugins: [
     new HtmlWebpackPlugin({template: './src/index.html'}),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+      process: ['process'],
+      url: ['url'],
+    }),
   ],
+
+//  resolve: {
+//    fallback: {
+//      url:    require.resolve('url'),
+//    },
+//  },
 
 //  additionalJsxSources: [
 //    path.join(process.cwd(), 'node_modules/.../'),
