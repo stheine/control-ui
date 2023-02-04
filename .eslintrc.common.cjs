@@ -42,6 +42,7 @@ module.exports = {
     'prefer-named-capture-group': 0,
 //    'prefer-destructuring': 0,
     'require-unicode-regexp': 0,
+    'react/destructuring-assignment': 0,
     'react/jsx-curly-spacing': 0,
     'sort-imports': ['error', {
       allowSeparatedGroups: true,

@@ -1,85 +1,44 @@
-import _         from 'lodash';
-import {connect} from 'react-redux';
-import mqtt      from 'async-mqtt';
+import _                 from 'lodash';
 import React, {
+  useContext,
   useEffect,
   useState,
 } from 'react';
 
-const Solar = function(props) {
-  // eslint-disable-next-line no-unused-vars
-  const {settings} = props; // TODO useContext settings/authentication/mqtt(?)
+import MqttClientContext from '../../contexts/MqttClient.js';
+import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
-  // console.log('Solar', {props, settings}); // TODO settings
+const topic = 'Fronius/solar/tele/SENSOR';
+
+export default function Solar() {
+  // console.log('Solar');
 
   const [_message, setMessage] = useState();
 
+  const mqttClient = useContext(MqttClientContext);
+
+  // eslint-disable-next-line arrow-body-style
   useEffect(() => {
-    let mqttClient;
+    // console.log('Solar:useEffect, mqttClient');
 
-    const initMqtt = async function() {
-      try {
-        mqttClient = await mqtt.connectAsync('tcp://192.168.6.7:9001'); // TODO from settings
+    return mqttSubscribe({mqttClient, topic, setMessage});
+  }, [mqttClient]);
 
-        mqttClient.on('message', async(topic, messageBuffer) => {
-          const messageRaw = messageBuffer.toString();
-          let   message;
-
-          try {
-            message = JSON.parse(messageRaw);
-          } catch {
-            // ignore
-            // logger.debug('JSON.parse', {messageRaw, errMessage: err.message});
-          }
-
-          switch(topic) {
-            case 'Fronius/solar/tele/SENSOR':
-              // / eslint-disable-next-line no-console
-              console.log({message});
-              setMessage(message);
-              break;
-
-            default:
-              // eslint-disable-next-line no-console
-              console.log(`Unhandled topic '${topic}'`, message);
-              break;
-          }
-        });
-
-        await mqttClient.subscribe('Fronius/solar/tele/SENSOR');
-      } catch(err) {
-        // eslint-disable-next-line no-console
-        console.log('Failed to init', err.message);
-      }
-    };
-
-    initMqtt();
-
-    return async() => {
-      await mqttClient.end();
-    };
-  }, []);
+  const stateOfCharge = _message?.battery.stateOfCharge || 0;
+  const powerOutgoing = _message?.inverter.powerOutgoing || 0;
 
   return (
     <table style={{padding: '0 30px 0 0'}}>
       <tbody>
         <tr>
           <td>Akku:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round((_message?.battery.stateOfCharge || 0) * 100, 2)}% `}</td>
+          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(stateOfCharge * 100, 2)}%`}</td>
         </tr>
         <tr>
           <td>Leistung:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round((_message?.inverter.powerOutgoing || 0) / 1000, 1)} kW`}</td>
+          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(powerOutgoing / 1000, 1)} kW`}</td>
         </tr>
       </tbody>
     </table>
   );
-};
-
-const mapStateToProps = state => {
-  const {settings} = state;
-
-  return {settings};
-};
-
-export default connect(mapStateToProps)(Solar);
+}
