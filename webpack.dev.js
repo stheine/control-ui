@@ -1,11 +1,17 @@
-import appConfig from './config.js';
-import common    from './webpack.common.js';
+import appConfig          from './config.js';
+import common             from './webpack.common.js';
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 const {serverPort} = appConfig;
 
 export default {
   ...common,
   mode: 'development',
+
+  plugins: [
+    ...common.plugins,
+    new ReactRefreshPlugin(),
+  ],
 
   devServer: {
     compress:   true,

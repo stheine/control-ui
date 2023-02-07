@@ -12,7 +12,19 @@ export default {
       {
         test:    /\.jsx$/,
         exclude: /node_modules/,
-        use:    'babel-loader',
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            plugins: ['react-refresh/babel'],
+
+            // This is a feature of `babel-loader` for webpack (not Babel itself).
+            // It enables caching results in ./node_modules/.cache/babel-loader/
+            // directory for faster rebuilds.
+            cacheDirectory:   true,
+            cacheCompression: false,
+            compact:          true,
+          },
+        }],
       },
       {
         test:    /\.scss$/,
