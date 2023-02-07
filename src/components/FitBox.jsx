@@ -42,7 +42,7 @@ const resizeText = function({debug, element, elements, minSize = 10, maxSize = 5
 };
 
 export default function FitBox(props) {
-  const {children, debug} = props;
+  const {border, children, debug} = props;
 
   const ref = useRef();
 
@@ -62,5 +62,11 @@ export default function FitBox(props) {
     console.log('FitBox:render', children);
   }
 
-  return <div ref={ref} className='fit-box'>{children}</div>;
+  const style = {};
+
+  if(border) {
+    style.border = '1px solid #000000';
+  }
+
+  return <div ref={ref} className='fit-box' style={style}>{children}</div>;
 }

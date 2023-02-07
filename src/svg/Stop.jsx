@@ -41,7 +41,7 @@ const StopRed = function() {
   );
 };
 
-export const Stop = function(props) {
+export default function Stop(props) {
   const {color} = props;
 
   switch(color) {
@@ -50,4 +50,4 @@ export const Stop = function(props) {
     case 'red':    return <StopRed />;
     default:       return <StopBlue />;
   }
-};
+}

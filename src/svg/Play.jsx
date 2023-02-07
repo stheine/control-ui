@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export const Play = function() {
+export default function Play() {
   return (
     <svg x='0px' y='0px' viewBox='0 0 512 512'>
       <circle style={{fill: '#366796'}} cx='256' cy='256' r='256' />
@@ -11,4 +11,4 @@ export const Play = function() {
       <path style={{fill: '#FFC91B'}} d='M160.516,256.862V361.67c0,15.001,16.239,24.376,29.229,16.875l183.025-105.67 c6.211-3.586,9.418-9.743,9.69-16.013H160.516z' />
     </svg>
   );
-};
+}

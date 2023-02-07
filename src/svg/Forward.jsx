@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export const Next = function() {
+export default function Next() {
   return (
     <svg x='0px' y='0px' viewBox='0 0 512 512'>
       <circle fill='#273B7A' cx='256' cy='256' r='256' />
@@ -13,4 +13,4 @@ export const Next = function() {
       <path fill='#FDE085' d='M271.574,256.574c-0.131,1.693-0.812,3.353-2.108,4.648l-53.743,53.741 c-6.513,6.513-6.513,17.074,0,23.586l0,0c6.513,6.513,17.074,6.513,23.586,0l70.758-70.758c3.11-3.11,4.718-7.144,4.858-11.219 h-43.351V256.574z' />
     </svg>
   );
-};
+}

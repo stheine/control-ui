@@ -1,21 +1,24 @@
-import {connect}     from 'react-redux';
-import Favicon       from 'react-favicon';
-import mqtt          from 'async-mqtt';
+import {connect}         from 'react-redux';
+import Favicon           from 'react-favicon';
+import mqtt              from 'async-mqtt';
 import React, {
   useEffect,
   useState,
 } from 'react';
 
-import {Back}            from '../../svg/Back.jsx';
+import Left                 from '../../svg/sargam/Left.jsx';
+import Play                 from '../../svg/sargam/Play.jsx';
+import Right                from '../../svg/sargam/Right.jsx';
+import SettingsVerticalDots from '../../svg/sargam/SettingsVerticalDots.jsx';
+
 import faviconBase64     from '../../favicon.js';
 import FitBox            from '../../components/FitBox.jsx';
-import {Menu}            from '../../svg/Menu.jsx';
 import MqttClientContext from '../../contexts/MqttClient.js';
-import {Next}            from '../../svg/Next.jsx';
-import {Play}            from '../../svg/Play.jsx';
-import Solar             from '../Solar/Solar.jsx';
-import {Stop}            from '../../svg/Stop.jsx';
-import Temperature       from '../Temperature/Temperature.jsx';
+
+import Fenster           from '../../components/Fenster/Fenster.jsx';
+import Solar             from '../../components/Solar/Solar.jsx';
+import Temperaturen      from '../../components/Temperaturen/Temperaturen.jsx';
+import Volumio           from '../../components/Volumio/Volumio.jsx';
 
 const Control = function(/* props */) {
 //  console.log('Control', {props});
@@ -61,7 +64,7 @@ const Control = function(/* props */) {
           <div className='control__left'>
             <div className='control__action'>
               <FitBox>
-                <Play />
+                tadadada
               </FitBox>
             </div>
             <div className='control__action'>
@@ -71,12 +74,12 @@ const Control = function(/* props */) {
             </div>
             <div className='control__action'>
               <FitBox>
-                Fit Me in here
+                <Volumio />
               </FitBox>
             </div>
             <div className='control__action'>
               <FitBox>
-                <Stop color='red' />
+                <Fenster />
               </FitBox>
             </div>
             <div className='control__action'>
@@ -86,24 +89,24 @@ const Control = function(/* props */) {
             </div>
             <div className='control__action'>
               <FitBox>
-                <Temperature />
+                <Temperaturen />
               </FitBox>
             </div>
           </div>
           <div className='control__right'>
             <div className='control__navigation'>
               <FitBox>
-                <Back />
+                <Left dark={true} />
               </FitBox>
             </div>
             <div className='control__navigation'>
               <FitBox>
-                <Menu />
+                <SettingsVerticalDots dark={true} />
               </FitBox>
             </div>
             <div className='control__navigation'>
               <FitBox>
-                <Next />
+                <Right dark={true} />
               </FitBox>
             </div>
           </div>

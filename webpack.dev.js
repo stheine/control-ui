@@ -7,12 +7,11 @@ export default {
   ...common,
   mode: 'development',
 
-//  nodeModulesHmr: true,
   devServer: {
-//    disableHostCheck: true,
-//    host,
-//    https,
-    port: serverPort + 1,
+    compress:   true,
+    hot:        true,
+    liveReload: false,
+    port:       serverPort + 1,
 //    proxy: {
 //      '/api': {
 //        target: `https://${host}:${appConfig.serverPort}`,

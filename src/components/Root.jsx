@@ -5,6 +5,7 @@ import React                     from 'react';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
 import {Route, Routes}           from 'react-router';
 
+import Icons                     from './Icons/Icons.jsx';
 import Quixy                     from '../containers/Control/Control.jsx';
 import {history, store}          from '../store/index.js';
 
@@ -15,6 +16,7 @@ class Root extends React.Component {
         <Router history={history}>
           <Routes>
             <Route exact={true} path='/noauth' element={<div>No Auth</div>} />
+            <Route exact={true} path='/icons' element={<Icons />} />
             <Route path='*' element={<Quixy />} />
           </Routes>
         </Router>

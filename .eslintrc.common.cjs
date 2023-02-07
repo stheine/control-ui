@@ -54,6 +54,7 @@ module.exports = {
     'unicorn/expiring-todo-comments': 0,
     'unicorn/explicit-length-check': 0,
     'import/extensions': ['error', 'always', {ignorePackages: true}],
+    'unicorn/import-index': 0,
     'unicorn/import-style': 0,
     'unicorn/no-hex-escape': 0,
     'unicorn/numeric-separators-style': 0,
