@@ -1,2 +1,23 @@
-@import './components/Root.scss';
+@import './components/index.scss';
 @import './containers/index.scss';
+
+body {
+  margin:      0px;
+  padding:     0px;
+  font-family: sans-serif;
+}
+
+@font-face {
+  font-family: "LCD";
+  src:         url("fonts/LCD.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Out AEG LCD";
+  src:         url("fonts/Out AEG LCD.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Dash Dot LCD-7";
+  src:         url("fonts/Dash Dot LCD-7.woff2") format("woff2");
+}

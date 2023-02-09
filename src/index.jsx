@@ -4,7 +4,7 @@ import                   './index.scss';
 import {createRoot} from 'react-dom/client';
 import React        from 'react';
 
-import Root         from './components/Root.jsx';
+import Root         from './components/Root/Root.jsx';
 
 // eslint-disable-next-line no-undef
 const container = document.getElementById('root');

@@ -12,7 +12,7 @@ import Right                from '../../svg/sargam/Right.jsx';
 import SettingsVerticalDots from '../../svg/sargam/SettingsVerticalDots.jsx';
 
 import faviconBase64        from '../../favicon.js';
-import FitBox               from '../../components/FitBox.jsx';
+import FitBox               from '../../components/FitBox/FitBox.jsx';
 import MqttClientContext    from '../../contexts/MqttClient.js';
 
 import Button               from '../../components/Button/Button.jsx';

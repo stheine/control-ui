@@ -1,6 +1,6 @@
 import React                  from 'react';
 
-import FitBox                 from '../FitBox.jsx';
+import FitBox                 from '../FitBox/FitBox.jsx';
 
 import Back                   from '../../svg/Back.jsx';
 import Forward                from '../../svg/Forward.jsx';

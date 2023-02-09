@@ -7,9 +7,9 @@ import React                     from 'react';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
 import {Route, Routes}           from 'react-router';
 
-import Control                   from '../containers/Control/Control.jsx';
-import Icons                     from './Icons/Icons.jsx';
-import {history, store}          from '../store/index.js';
+import Control                   from '../../containers/Control/Control.jsx';
+import Icons                     from '../Icons/Icons.jsx';
+import {history, store}          from '../../store/index.js';
 
 class Root extends React.Component {
   render() {

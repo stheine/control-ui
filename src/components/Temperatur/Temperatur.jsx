@@ -8,6 +8,33 @@ import React, {
 import MqttClientContext from '../../contexts/MqttClient.js';
 import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
+const degreeRenderer = function(num, config) {
+  const rounded = _.round(num, config.precision);
+  const numString = rounded.toString();
+  const [number, decimals] = numString.split('.');
+
+  return (
+    <div className='temperatur__value'>
+      <div className='temperatur__value__number'>
+        {number}
+      </div>
+      {decimals ?
+        <div className='temperatur__value__dot'>
+          .
+        </div> :
+        null}
+      <div className='temperatur__value__right'>
+        <div className='temperatur__value__unit'>
+          {config.unit}
+        </div>
+        <div className='temperatur__value__decimals'>
+          {decimals || <span>&nbsp;</span>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const sites = {
   aussen: {
     label: 'Aussen',
@@ -46,7 +73,7 @@ const sites = {
   },
 };
 
-export default function Temperaturen(props) {
+export default function Temperatur(props) {
   const {site} = props;
   // console.log('Temperaturen');
 
@@ -62,14 +89,14 @@ export default function Temperaturen(props) {
   }
 
   return (
-    <table>
+    <table className='temperatur'>
       <tbody>
         <tr>
-          <td>{sites[site].label}</td>
+          <td className='temperatur__label'>{sites[site].label}</td>
         </tr>
         {_.map(sites[site].values, value => (
           <tr key={value.key}>
-            <td>{_.round(_message?.[value.key], value.precision)}&nbsp;{value.unit}</td>
+            <td>{degreeRenderer(_message?.[value.key], value)}</td>
           </tr>
         ))}
       </tbody>

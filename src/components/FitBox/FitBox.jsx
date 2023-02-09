@@ -15,7 +15,7 @@ const isOverflown = function({clientHeight, clientWidth, scrollHeight, scrollWid
 
   return overflown;
 };
-const resizeText = function({debug, element, elements, minSize = 10, maxSize = 100, step = 10}) {
+const resizeText = function({debug, element, elements, minSize = 10, maxSize = 150, step = 10}) {
   for(const el of elements || [element]) {
     let size     = minSize;
     let overflow = false;
