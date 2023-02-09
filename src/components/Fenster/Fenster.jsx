@@ -34,29 +34,8 @@ export default function Fenster() {
 
   const mqttClient = useContext(MqttClientContext);
 
-  useEffect(() => {
-    // console.log('Fenster:useEffect, mqttClient');
-
-    const cleanups = {};
-
-    for(const topic of topics) {
-      // eslint-disable-next-line object-property-newline
-      const cleanup = mqttSubscribe({mqttClient, topic, setMessage: message =>
-        setMessages[topic](message)});
-
-      if(cleanup) {
-        cleanups[topic] = cleanup;
-      }
-    }
-
-    return () => {
-      for(const topic of topics) {
-        if(cleanups[topic]) {
-          cleanups[topic]();
-        }
-      }
-    };
-  }, [mqttClient]);
+  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) => setMessages[topic](message)}),
+    [mqttClient]);
 
   // console.log({_messages});
 
@@ -72,7 +51,7 @@ export default function Fenster() {
               <td>
                 <span
                   style={{
-                    margin: '1px',
+                    margin: '2px',
                     padding: '1px 5px 1px 5px',
                     ...contact ? {color: '#33ff33'} : {backgroundColor: '#ff0000'},
                   }}

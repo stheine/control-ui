@@ -1,10 +1,12 @@
+import _                  from 'lodash';
+import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+
 import appConfig          from './config.js';
 import common             from './webpack.common.js';
-import ReactRefreshPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 const {serverPort} = appConfig;
 
-export default {
+const config = {
   ...common,
   mode: 'development',
 
@@ -25,6 +27,9 @@ export default {
 //      },
 //    },
   },
+
+  devtool:    'source-map',
+
 //  additionalJsxSources,
 //  resolve: {
 //    alias: {
@@ -62,3 +67,8 @@ export default {
 //    },
 //  },
 };
+
+_.find(_.find(config.module.rules, {test: /\.jsx$/}).use, {loader: 'babel-loader'}).options.plugins =
+  ['react-refresh/babel'];
+
+export default config;

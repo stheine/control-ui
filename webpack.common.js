@@ -15,7 +15,7 @@ export default {
         use: [{
           loader: 'babel-loader',
           options: {
-            plugins: ['react-refresh/babel'],
+// dev-only:  plugins: ['react-refresh/babel'],
 
             // This is a feature of `babel-loader` for webpack (not Babel itself).
             // It enables caching results in ./node_modules/.cache/babel-loader/

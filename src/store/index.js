@@ -1,10 +1,11 @@
-/* eslint-disable no-constant-condition */
+/* eslint-disable import/group-exports */
+/* / eslint-disable no-constant-condition */
 
 import {combineReducers}           from 'redux';
 import {configureStore}            from '@reduxjs/toolkit';
 import {createHashHistory}         from 'history';
 import {createReduxHistoryContext} from 'redux-first-history';
-import {logger}                    from 'redux-logger';
+// import {logger}                    from 'redux-logger';
 import thunk                       from 'redux-thunk';
 
 import * as reducers               from '../reducers/index.js';
@@ -23,9 +24,9 @@ const middleware = [
   thunk,
 ];
 
-if(false && process.env.NODE_ENV !== 'production') {
-  middleware.push(logger);
-}
+// if(false && process.env.NODE_ENV !== 'production') {
+//   middleware.push(logger);
+// }
 
 export const store = configureStore({
   reducer: combineReducers({

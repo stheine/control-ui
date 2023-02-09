@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* / eslint-disable max-len */
 
 import React from 'react';
 
@@ -11,6 +11,7 @@ export default function Icon(props) {
     <svg viewBox='0 0 512 512'>
       <g onClick={onClick}>
         <g transform='scale(21.33)'>
+          <path d='m3 5 10 7-10 7V5Z' fill={color} fillOpacity={opacity} stroke={color} strokeWidth='1.5' />
         </g>
       </g>
     </svg>

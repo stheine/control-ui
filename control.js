@@ -41,7 +41,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
   app.use(compression());
 
   // Register routes for static files. No authentication.
-  app.use('/', express.static(path.join(__dirname, 'build')));
+  app.use('/', express.static(path.join(__dirname, 'dist')));
 
   // Register route for favicon. No authentication.
   app.use('/favicon.ico', async(req, res) =>

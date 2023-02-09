@@ -17,28 +17,46 @@ export default function Solar() {
 
   const mqttClient = useContext(MqttClientContext);
 
-  // eslint-disable-next-line arrow-body-style
-  useEffect(() => {
-    // console.log('Solar:useEffect, mqttClient');
+  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
+    [mqttClient]);
 
-    return mqttSubscribe({mqttClient, topic, setMessage});
-  }, [mqttClient]);
+  // console.log('Solar', {_message});
 
-  const stateOfCharge = _message?.battery.stateOfCharge || 0;
-  const powerOutgoing = _message?.inverter.powerOutgoing || 0;
+  const akkuLadelevel           = _message?.battery.stateOfCharge || 0;
+  const akkuLadung              = _message?.battery.powerIncoming || 0;
+  const solarErzeugung          = _message?.solar.powerOutgoing || 0;
+  const wechselrichterErzeugung = _message?.inverter.powerOutgoing || 0;
+  const einspeisung             = _message?.meter.powerOutgoing || 0;
+  const einkauf                 = _message?.meter.powerIncoming || 0;
 
   return (
     <table style={{padding: '0 30px 0 0'}}>
       <tbody>
         <tr>
-          <td>Akku:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(stateOfCharge * 100, 2)}%`}</td>
+          <td>Solar:</td>
+          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(solarErzeugung / 1000, 1)} kW`}</td>
         </tr>
         <tr>
-          <td>Leistung:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(powerOutgoing / 1000, 1)} kW`}</td>
+          <td>Verbrauch:</td>
+          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(wechselrichterErzeugung - einspeisung + einkauf)} W`}</td>
+        </tr>
+        <tr>
+          <td>Akkuladung:</td>
+          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(akkuLadung / 1000, 1)} kW`}</td>
+        </tr>
+        <tr>
+          <td>Einspeisung:</td>
+          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(einspeisung / 1000, 1)} kW`}</td>
+        </tr>
+        <tr>
+          <td>Akku:</td>
+          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(akkuLadelevel * 100, 2)}%`}</td>
         </tr>
       </tbody>
     </table>
   );
 }
+//        <tr>
+//          <td>Wechselrichter:</td>
+//          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(wechselrichterErzeugung / 1000, 1)} kW`}</td>
+//        </tr>

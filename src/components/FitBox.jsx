@@ -15,7 +15,7 @@ const isOverflown = function({clientHeight, clientWidth, scrollHeight, scrollWid
 
   return overflown;
 };
-const resizeText = function({debug, element, elements, minSize = 10, maxSize = 512, step = 1}) {
+const resizeText = function({debug, element, elements, minSize = 10, maxSize = 100, step = 10}) {
   for(const el of elements || [element]) {
     let size     = minSize;
     let overflow = false;
@@ -37,12 +37,16 @@ const resizeText = function({debug, element, elements, minSize = 10, maxSize = 5
     }
 
     // revert to last state where no overflow happened
-    el.style.fontSize = `${size - step}px`;
+    const fontSize = size - step;
+
+    el.style.fontSize = `${fontSize}px`;
   }
 };
 
 export default function FitBox(props) {
   const {border, children, debug} = props;
+
+  // console.log('FitBox', {props});
 
   const ref = useRef();
 
@@ -54,7 +58,7 @@ export default function FitBox(props) {
       console.log('FitBox:useEffect', {element, children});
     }
 
-    resizeText({debug, element});
+    resizeText({children, debug, element});
   });
 
   if(debug) {
