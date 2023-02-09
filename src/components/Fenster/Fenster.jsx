@@ -1,3 +1,5 @@
+/* eslint-disable object-property-newline */
+
 import _                 from 'lodash';
 import React, {
   useContext,
@@ -17,27 +19,15 @@ const topics = [
   'Zigbee/FensterSensor Sonoff 1',
 ];
 
-// eslint-disable-next-line no-underscore-dangle
-const _messages   = {};
-const setMessages = {};
-
 export default function Fenster() {
-  // console.log('Fenster');
-
-  for(const topic of topics) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [_message, setMessage] = useState();
-
-    _messages[topic]   = _message;
-    setMessages[topic] = setMessage;
-  }
+  const [_messages, setMessages] = useState({});
 
   const mqttClient = useContext(MqttClientContext);
 
-  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) => setMessages[topic](message)}),
-    [mqttClient]);
+  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
+    setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
 
-  // console.log({_messages});
+  // console.log('Fenster', {_messages});
 
   return (
     <table>
