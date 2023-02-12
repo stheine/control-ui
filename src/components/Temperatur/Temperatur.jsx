@@ -37,7 +37,7 @@ const degreeRenderer = function(num, config) {
 
 const sites = {
   aussen: {
-    label: 'Aussen',
+    label: 'Außen',
     topic: 'vito/tele/SENSOR',
     values: [{
       key:       'tempAussen',
@@ -96,7 +96,11 @@ export default function Temperatur(props) {
         </tr>
         {_.map(sites[site].values, value => (
           <tr key={value.key}>
-            <td>{degreeRenderer(_message?.[value.key], value)}</td>
+            <td>
+              {value.key === 'dummy' ?
+                <span style={{fontSize: '10%'}}>&nbsp;</span> :
+                degreeRenderer(_message?.[value.key], value)}
+            </td>
           </tr>
         ))}
       </tbody>

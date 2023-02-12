@@ -22,35 +22,42 @@ export default function Solar() {
 
   // console.log('Solar', {_message});
 
-  const akkuLadelevel           = _message?.battery.stateOfCharge || 0;
-  const akkuLadung              = _message?.battery.powerIncoming || 0;
-  const solarErzeugung          = _message?.solar.powerOutgoing || 0;
+  const akkuLadelevel           = _message?.battery.stateOfCharge  || 0;
+  const akkuLadung              = _message?.battery.powerIncoming  || 0;
+  const solarErzeugung          = _message?.solar.powerOutgoing    || 99999;
   const wechselrichterErzeugung = _message?.inverter.powerOutgoing || 0;
-  const einspeisung             = _message?.meter.powerOutgoing || 0;
-  const einkauf                 = _message?.meter.powerIncoming || 0;
+  const einspeisung             = _message?.meter.powerOutgoing    || 0;
+  const einkauf                 = _message?.meter.powerIncoming    || 0;
 
   return (
-    <table style={{padding: '0 30px 0 0'}}>
+    <table className='solar'>
       <tbody>
         <tr>
-          <td>Solar:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(solarErzeugung / 1000, 1)} kW`}</td>
+          <td className='solar__label'>Solar:</td>
+          <td className='solar__value'>
+            {solarErzeugung < 1000 ? _.round(solarErzeugung) : _.round(solarErzeugung / 1000, 1)}
+          </td>
+          <td className='solar__unit'>{solarErzeugung < 1000 ? 'W' : 'kW'}</td>
         </tr>
         <tr>
-          <td>Verbrauch:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(wechselrichterErzeugung - einspeisung + einkauf)} W`}</td>
+          <td className='solar__label'>Verbrauch:</td>
+          <td className='solar__value'>{_.round(wechselrichterErzeugung - einspeisung + einkauf)}</td>
+          <td className='solar__unit'>W</td>
         </tr>
         <tr>
-          <td>Akkuladung:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(akkuLadung / 1000, 1)} kW`}</td>
+          <td className='solar__label'>Akkuladung:</td>
+          <td className='solar__value'>{_.round(akkuLadung / 1000, 1)}</td>
+          <td className='solar__unit'>kW</td>
         </tr>
         <tr>
-          <td>Einspeisung:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(einspeisung / 1000, 1)} kW`}</td>
+          <td className='solar__label'>Einspeisung:</td>
+          <td className='solar__value'>{_.round(einspeisung / 1000, 1)}</td>
+          <td className='solar__unit'>kW</td>
         </tr>
         <tr>
-          <td>Akku:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(akkuLadelevel * 100, 2)}%`}</td>
+          <td className='solar__label'>Akku:</td>
+          <td className='solar__value'>{_.round(akkuLadelevel * 100, 2)}</td>
+          <td className='solar__unit'>%</td>
         </tr>
       </tbody>
     </table>

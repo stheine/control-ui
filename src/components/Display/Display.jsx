@@ -1,4 +1,5 @@
-import _                 from 'lodash';
+/* eslint-disable object-property-newline */
+
 import React, {
   useContext,
   useEffect,
@@ -8,30 +9,39 @@ import React, {
 import MqttClientContext from '../../contexts/MqttClient.js';
 import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
+import Moon              from '../../svg/sargam/Moon.jsx';
+import OnOff             from '../../svg/sargam/OnOff.jsx';
+import Sun               from '../../svg/sargam/Sun.jsx';
+
+const topics = [
+  `control-io/brightness/STATE`,
+  `control-io/display/STATE`,
+];
+
 export default function Display() {
-  const topic = `control-io/display/STATE`;
-
-  // console.log('Display');
-
-  const [_message, setMessage] = useState();
-
   const mqttClient = useContext(MqttClientContext);
 
-  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-    [mqttClient, topic]);
+  const [_messages, setMessages] = useState({});
 
-  if(!_.isNil(_message)) {
-    // console.log('Display', {topic, _message});
-  }
+  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
+    setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
 
-  const state = _message;
+  // console.log('Display', _messages);
+
+  const state = _messages['control-io/display/STATE'];
 
   return (
     <table style={{padding: '0 30px 0 0'}}>
       <tbody>
-        <tr onClick={() => mqttClient.publish(`control-io/cmnd/display`, state ? '0' : '1')}>
-          <td style={{whiteSpace: 'nowrap'}}>Display:</td>
-          <td>{state}</td>
+        <tr>
+          <td style={{fontSize: 50}}>{_messages['control-io/brightness/STATE'] || 999}</td>
+          <td><Sun dark={true} onClick={() => mqttClient.publish(`control-io/cmnd/brightness`, '"-"')} /></td>
+        </tr>
+        <tr>
+          <td style={{width: '50%'}}>
+            <OnOff dark={true} onClick={() => mqttClient.publish(`control-io/cmnd/display`, state ? '0' : '1')} />
+          </td>
+          <td><Moon dark={true} onClick={() => mqttClient.publish(`control-io/cmnd/brightness`, '"+"')} /></td>
         </tr>
       </tbody>
     </table>

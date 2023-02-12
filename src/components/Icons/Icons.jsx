@@ -1,3 +1,4 @@
+import _                      from 'lodash';
 import React                  from 'react';
 
 import FitBox                 from '../FitBox/FitBox.jsx';
@@ -11,83 +12,96 @@ import StopColored            from '../../svg/Stop.jsx';
 import Close                  from '../../svg/sargam/Close.jsx';
 import Decrease               from '../../svg/sargam/Decrease.jsx';
 import Down                   from '../../svg/sargam/Down.jsx';
+import Icon                   from '../../svg/sargam/Icon.jsx';
 import Increase               from '../../svg/sargam/Increase.jsx';
 import Left                   from '../../svg/sargam/Left.jsx';
 import Minus                  from '../../svg/sargam/Minus.jsx';
+import Moon                   from '../../svg/sargam/Moon.jsx';
 import Next                   from '../../svg/sargam/Next.jsx';
+import Notification           from '../../svg/sargam/Notification.jsx';
 import Off                    from '../../svg/sargam/Off.jsx';
 import On                     from '../../svg/sargam/On.jsx';
+import OnOff                  from '../../svg/sargam/OnOff.jsx';
 import Pause                  from '../../svg/sargam/Pause.jsx';
 import Play                   from '../../svg/sargam/Play.jsx';
 import PlayPause              from '../../svg/sargam/PlayPause.jsx';
 import Plus                   from '../../svg/sargam/Plus.jsx';
 import Previous               from '../../svg/sargam/Previous.jsx';
+import Refresh                from '../../svg/sargam/Refresh.jsx';
 import Right                  from '../../svg/sargam/Right.jsx';
 import SettingsApplications   from '../../svg/sargam/SettingsApplications.jsx';
 import SettingsHorizontalDots from '../../svg/sargam/SettingsHorizontalDots.jsx';
 import SettingsVerticalDots   from '../../svg/sargam/SettingsVerticalDots.jsx';
 import Stop                   from '../../svg/sargam/Stop.jsx';
+import Sun                    from '../../svg/sargam/Sun.jsx';
 import Up                     from '../../svg/sargam/Up.jsx';
+
+const row1 = [
+  <Back key='back' />,
+  <Menu key='menu' />,
+  <PlayColored key='playColored' />,
+  <StopColored key='stopColored' />,
+  <StopColored key='stopColoredRed' color='red' />,
+  <StopColored key='stopColoredOrange' color='orange' />,
+  <Forward key='forward' />,
+];
+const row2 = [
+  <Previous key='previous' dark={true} />,
+  <Stop key='stop' dark={true} />,
+  <Play key='play' dark={true} />,
+  <Pause key='pause' dark={true} />,
+  <PlayPause key='playPause' dark={true} />,
+  <Next key='next' dark={true} />,
+  <SettingsHorizontalDots key='settingsHorizontalDots' dark={true} />,
+  <SettingsVerticalDots key='settingsVerticalDots' dark={true} />,
+  <Off key='off' dark={true} />,
+  <On key='on' dark={true} />,
+];
+const row3 = [
+  <Down key='down' dark={true} />,
+  <Up key='up' dark={true} />,
+  <Left key='left' dark={true} />,
+  <Right key='right' dark={true} />,
+  <SettingsApplications key='settingsApplications' dark={true} />,
+  <Minus key='minus' dark={true} />,
+  <Plus key='plus' dark={true} />,
+  <Increase key='Increase' dark={true} />,
+  <Decrease key='decrease' dark={true} />,
+  <Close key='close' dark={true} />,
+];
+const row4 = [
+  <Icon key='icon' dark={true} />,
+  <OnOff key='onOff' dark={true} />,
+  <Sun key='sun' dark={true} />,
+  <Moon key='moon' dark={true} />,
+  <Notification key='notification' dark={true} />,
+  <Refresh key='refresh' dark={true} />,
+  <Plus key='plus' dark={true} />,
+  <Increase key='Increase' dark={true} />,
+  <Decrease key='decrease' dark={true} />,
+  <Close key='close' dark={true} />,
+];
 
 export default function Icons() {
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
       <div style={{display: 'flex', flexDirection: 'row', height: '100px'}}>
-        <FitBox><Back /></FitBox>
-        <FitBox><Menu /></FitBox>
-        <FitBox><PlayColored /></FitBox>
-        <FitBox><StopColored /></FitBox>
-        <FitBox><StopColored color='red' /></FitBox>
-        <FitBox><StopColored color='orange' /></FitBox>
-        <FitBox><Forward /></FitBox>
+        {_.map(row1, icon => <FitBox>{icon}</FitBox>)}
       </div>
       <div style={{display: 'flex', flexDirection: 'row', height: '100px'}}>
-        <FitBox><Down /></FitBox>
-        <FitBox><Up /></FitBox>
-        <FitBox><Left /></FitBox>
-        <FitBox><Right /></FitBox>
-        <FitBox><SettingsApplications /></FitBox>
-        <FitBox><Minus /></FitBox>
-        <FitBox><Plus /></FitBox>
-        <FitBox><Increase /></FitBox>
-        <FitBox><Decrease /></FitBox>
-        <FitBox><Close /></FitBox>
+        {_.map(row2, icon => <FitBox>{icon}</FitBox>)}
       </div>
       <div style={{display: 'flex', flexDirection: 'row', height: '100px'}}>
-        <FitBox><Previous /></FitBox>
-        <FitBox><Stop /></FitBox>
-        <FitBox><Play /></FitBox>
-        <FitBox><Pause /></FitBox>
-        <FitBox><PlayPause /></FitBox>
-        <FitBox><Next /></FitBox>
-        <FitBox><SettingsHorizontalDots /></FitBox>
-        <FitBox><SettingsVerticalDots /></FitBox>
-        <FitBox><Off /></FitBox>
-        <FitBox><On /></FitBox>
+        {_.map(row3, icon => <FitBox>{icon}</FitBox>)}
       </div>
       <div style={{display: 'flex', flexDirection: 'row', height: '100px', backgroundColor: '#000000'}}>
-        <FitBox><Down dark={true} /></FitBox>
-        <FitBox><Up dark={true} /></FitBox>
-        <FitBox><Left dark={true} /></FitBox>
-        <FitBox><Right dark={true} /></FitBox>
-        <FitBox><SettingsApplications dark={true} /></FitBox>
-        <FitBox><Minus dark={true} /></FitBox>
-        <FitBox><Plus dark={true} /></FitBox>
-        <FitBox><Increase dark={true} /></FitBox>
-        <FitBox><Decrease dark={true} /></FitBox>
-        <FitBox><Close dark={true} /></FitBox>
+        {_.map(row2, icon => <FitBox>{icon}</FitBox>)}
       </div>
       <div style={{display: 'flex', flexDirection: 'row', height: '100px', backgroundColor: '#000000'}}>
-        <FitBox><Previous dark={true} /></FitBox>
-        <FitBox><Stop dark={true} /></FitBox>
-        <FitBox><Play dark={true} /></FitBox>
-        <FitBox><Pause dark={true} /></FitBox>
-        <FitBox><PlayPause dark={true} /></FitBox>
-        <FitBox><Next dark={true} /></FitBox>
-        <FitBox><SettingsHorizontalDots dark={true} /></FitBox>
-        <FitBox><SettingsVerticalDots dark={true} /></FitBox>
-        <FitBox><Off dark={true} /></FitBox>
-        <FitBox><On dark={true} /></FitBox>
+        {_.map(row3, icon => <FitBox>{icon}</FitBox>)}
+      </div>
+      <div style={{display: 'flex', flexDirection: 'row', height: '100px', backgroundColor: '#000000'}}>
+        {_.map(row4, icon => <FitBox>{icon}</FitBox>)}
       </div>
     </div>
   );

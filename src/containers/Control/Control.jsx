@@ -7,14 +7,16 @@ import React, {
   useState,
 } from 'react';
 
-import Left                 from '../../svg/sargam/Left.jsx';
-import Right                from '../../svg/sargam/Right.jsx';
+import Down                 from '../../svg/sargam/Down.jsx';
 import SettingsVerticalDots from '../../svg/sargam/SettingsVerticalDots.jsx';
+import Up                   from '../../svg/sargam/Up.jsx';
 
 import faviconBase64        from '../../favicon.js';
 import FitBox               from '../../components/FitBox/FitBox.jsx';
 import MqttClientContext    from '../../contexts/MqttClient.js';
+import Refresh              from '../../svg/sargam/Refresh.jsx';
 
+import Beep                 from '../../components/Beep/Beep.jsx';
 import Button               from '../../components/Button/Button.jsx';
 import Display              from '../../components/Display/Display.jsx';
 import Fenster              from '../../components/Fenster/Fenster.jsx';
@@ -46,7 +48,7 @@ const Page1 = function() {
     </div>,
     <div key='lu' className='control__action'>
       <FitBox>
-        <Fenster />
+        <Wetter />
       </FitBox>
     </div>,
     <div key='mu' className='control__action'>
@@ -56,7 +58,7 @@ const Page1 = function() {
     </div>,
     <div key='mr' className='control__action'>
       <FitBox>
-        <Vito />
+        <Fenster />
       </FitBox>
     </div>,
   ];
@@ -66,7 +68,7 @@ const Page2 = function() {
   return [
     <div key='lo' className='control__action'>
       <FitBox>
-        Page2
+        &nbsp;
       </FitBox>
     </div>,
     <div key='mo' className='control__action'>
@@ -76,12 +78,12 @@ const Page2 = function() {
     </div>,
     <div key='ro' className='control__action'>
       <FitBox>
-        <Wetter />
+        &nbsp;
       </FitBox>
     </div>,
     <div key='lu' className='control__action'>
       <FitBox>
-        &nbsp;
+        <Vito />
       </FitBox>
     </div>,
     <div key='mu' className='control__action'>
@@ -106,7 +108,7 @@ const Page3 = function() {
   return [
     <div key='lo' className='control__action'>
       <FitBox>
-        Page3
+        &nbsp;
       </FitBox>
     </div>,
     <div key='mo' className='control__action'>
@@ -115,9 +117,7 @@ const Page3 = function() {
       </FitBox>
     </div>,
     <div key='ro' className='control__action'>
-      <FitBox>
-        <div onClick={() => reloadPage()}>Reload</div>
-      </FitBox>
+      <Refresh dark={true} onClick={() => reloadPage()} />
     </div>,
     <div key='lu' className='control__action'>
       <FitBox>
@@ -140,9 +140,7 @@ const Page3 = function() {
 const Page4 = function() {
   return [
     <div key='lo' className='control__action'>
-      <FitBox>
-        Page4
-      </FitBox>
+      <Display />
     </div>,
     <div key='mo' className='control__action'>
       <FitBox>
@@ -155,9 +153,7 @@ const Page4 = function() {
       </FitBox>
     </div>,
     <div key='lu' className='control__action'>
-      <FitBox>
-        <Display />
-      </FitBox>
+      <Beep />
     </div>,
     <div key='mu' className='control__action'>
       <FitBox>
@@ -222,13 +218,13 @@ const Control = function(props) {
       <div>
         <Favicon url={`data:image/png;base64,${faviconBase64}`} />
         <div className='control' id='control'>
-          <div className='control__left'>
+          <div className='control__down'>
             <Page page={page} />
           </div>
-          <div className='control__right'>
+          <div className='control__up'>
             <div className='control__navigation'>
               <FitBox>
-                <Right dark={true} onClick={() => dispatch(replace(`/${(page + 1) % maxPages || maxPages}`))} />
+                <Up dark={true} onClick={() => dispatch(replace(`/${(page - 1) % maxPages || maxPages}`))} />
               </FitBox>
             </div>
             <div className='control__navigation'>
@@ -238,7 +234,7 @@ const Control = function(props) {
             </div>
             <div className='control__navigation'>
               <FitBox>
-                <Left dark={true} onClick={() => dispatch(replace(`/${page - 1 || maxPages}`))} />
+                <Down dark={true} onClick={() => dispatch(replace(`/${page + 1 || maxPages}`))} />
               </FitBox>
             </div>
           </div>

@@ -20,9 +20,9 @@ const topics = [
 ];
 
 export default function Fenster() {
-  const [_messages, setMessages] = useState({});
-
   const mqttClient = useContext(MqttClientContext);
+
+  const [_messages, setMessages] = useState({});
 
   useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
     setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
