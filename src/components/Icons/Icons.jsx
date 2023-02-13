@@ -12,6 +12,7 @@ import StopColored            from '../../svg/Stop.jsx';
 import Close                  from '../../svg/sargam/Close.jsx';
 import Decrease               from '../../svg/sargam/Decrease.jsx';
 import Down                   from '../../svg/sargam/Down.jsx';
+import Home                   from '../../svg/sargam/Home.jsx';
 import Icon                   from '../../svg/sargam/Icon.jsx';
 import Increase               from '../../svg/sargam/Increase.jsx';
 import Left                   from '../../svg/sargam/Left.jsx';
@@ -76,7 +77,7 @@ const row4 = [
   <Moon key='moon' dark={true} />,
   <Notification key='notification' dark={true} />,
   <Refresh key='refresh' dark={true} />,
-  <Plus key='plus' dark={true} />,
+  <Home key='home' dark={true} />,
   <Increase key='Increase' dark={true} />,
   <Decrease key='decrease' dark={true} />,
   <Close key='close' dark={true} />,

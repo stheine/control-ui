@@ -1,34 +1,66 @@
-/* eslint-disable class-methods-use-this */
 /* eslint-disable react/jsx-props-no-multi-spaces */
-/* eslint-disable react/prefer-stateless-function */
 
+import Favicon                   from 'react-favicon';
+import mqtt                      from 'async-mqtt';
 import {Provider}                from 'react-redux';
-import React                     from 'react';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
+import React, {
+  useEffect,
+  useState,
+} from 'react';
 import {Route, Routes}           from 'react-router';
 
-import Control                   from '../../containers/Control/Control.jsx';
+import Control                   from '../Control/Control.jsx';
+import faviconBase64             from '../../favicon.js';
 import Icons                     from '../Icons/Icons.jsx';
+import MqttClientContext         from '../../contexts/MqttClient.js';
+import Settings                  from '../Settings/Settings.jsx';
 import {history, store}          from '../../store/index.js';
 
-class Root extends React.Component {
-  render() {
-    return (
+const Root = function() {
+  const [_mqttClient, setMqttClient] = useState();
+
+  useEffect(() => {
+    // / eslint-disable-next-line no-console
+    // console.log('Control:useEffect, initial');
+
+    let mqttClient;
+
+    const initMqtt = async function() {
+      try {
+        mqttClient = await mqtt.connectAsync('tcp://192.168.6.7:9001'); // TODO from settings
+
+        setMqttClient(mqttClient);
+      } catch(err) {
+        // eslint-disable-next-line no-console
+        console.log('Failed to init', err.message);
+      }
+    };
+
+    initMqtt();
+
+    return async() => {
+      await mqttClient.end();
+
+      setMqttClient();
+    };
+  }, []);
+
+  return (
+    <MqttClientContext.Provider value={_mqttClient}>
+      <Favicon url={`data:image/png;base64,${faviconBase64}`} />
       <Provider store={store}>
         <Router history={history}>
           <Routes>
-            <Route path='/noauth' element={<div>No Auth</div>} />
-            <Route path='/icons'  element={<Icons />} />
-            <Route path='/1'      element={<Control page={1} />} />
-            <Route path='/2'      element={<Control page={2} />} />
-            <Route path='/3'      element={<Control page={3} />} />
-            <Route path='/4'      element={<Control page={4} />} />
-            <Route path='*'       element={<Control page={1} />} />
+            <Route path='/:page'          element={<Control />} />
+            <Route path='/icons'          element={<Icons />} />
+            <Route path='/settings/:page' element={<Settings />} />
+            <Route path='*'               element={<Control page={1} />} />
           </Routes>
         </Router>
       </Provider>
-    );
-  }
-}
+    </MqttClientContext.Provider>
+  );
+};
 
 export default Root;
