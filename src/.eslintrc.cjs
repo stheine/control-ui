@@ -19,6 +19,10 @@ module.exports = {
 //    'plugin:react/recommended',
 //  ],
 
+  env: {
+    browser: true,
+  },
+
   globals: {
     React:   true,
 //    document: true,

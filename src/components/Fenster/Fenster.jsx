@@ -16,13 +16,18 @@ const topics = [
   'Zigbee/FensterSensor Badezimmer',
   'Zigbee/FensterSensor Büro',
   'Zigbee/FensterSensor Garage',
-  'Zigbee/FensterSensor Sonoff 1',
 ];
 
 export default function Fenster() {
   const mqttClient = useContext(MqttClientContext);
 
   const [_messages, setMessages] = useState({});
+
+  useEffect(() => {
+    if(window.screen.height !== 600 && !topics.includes('Zigbee/FensterSensor Sonoff 1')) {
+      topics.push('Zigbee/FensterSensor Sonoff 1');
+    }
+  }, []);
 
   useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
     setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
