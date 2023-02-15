@@ -18,18 +18,16 @@ const degreeRenderer = function(num, config) {
       <div className='temperatur__value__number'>
         {number}
       </div>
-      {decimals ?
-        <div className='temperatur__value__dot'>
-          .
-        </div> :
-        null}
       <div className='temperatur__value__right'>
         <div className='temperatur__value__unit'>
           {config.unit}
         </div>
-        <div className='temperatur__value__decimals'>
-          {decimals || <span>&nbsp;</span>}
-        </div>
+        {decimals ?
+          <div className='temperatur__value__right__bottom'>
+            <div className='temperatur__value__dot'>.</div>
+            <div className='temperatur__value__decimals'>{decimals}</div>
+          </div> :
+          null}
       </div>
     </div>
   );

@@ -8,18 +8,11 @@
   .temperatur__value {
     display:        flex;
     flex-direction: row;
+    padding:        0 0 5% 0;
 
     .temperatur__value__number {
-      font-family: "Out AEG LCD", sans-serif;
-      line-height:      80%;
-      // background-color: #a0a0a0;
-    }
-
-    .temperatur__value__dot {
-      font-family: "Out AEG LCD", sans-serif;
-      line-height:      80%;
-      margin:           0 -7% 0 -3%;
-      // background-color: #a0a0a0;
+      font-family: "AC Display", sans-serif;
+      line-height: 80%;
     }
 
     .temperatur__value__right {
@@ -27,21 +20,27 @@
       display:        flex;
       flex-direction: column;
       flex:           0 1 auto;
-      // background-color: #b0b000;
 
       .temperatur__value__unit {
         line-height: 80%;
         font-size:   20%;
-        padding:     3px 0 0 0;
-        // background-color: #505050;
+        padding:     15% 0 0 0;
       }
 
-      .temperatur__value__decimals {
-        font-family: "Out AEG LCD", sans-serif;
-        line-height: 80%;
-        font-size:   60%;
-        padding:     28% 0 0 0;
-        // background-color: #707070;
+      .temperatur__value__right__bottom {
+        display:        flex;
+        flex-direction: row;
+        font-family:    "AC Display", sans-serif;
+        line-height:    80%;
+        font-size:      60%;
+
+        .temperatur__value__dot {
+          margin:      10% 0 0 -0%;
+        }
+
+        .temperatur__value__decimals {
+          margin:      10% 0 0 -0%;
+        }
       }
     }
   }
