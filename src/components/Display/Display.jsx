@@ -1,5 +1,7 @@
 /* eslint-disable object-property-newline */
 
+import {connect}         from 'react-redux';
+import {replace}         from 'redux-first-history';
 import React, {
   useContext,
   useEffect,
@@ -18,7 +20,9 @@ const topics = [
   `control-io/display/STATE`,
 ];
 
-export default function Display() {
+const Display = function(props) {
+  const {dispatch} = props;
+
   const mqttClient = useContext(MqttClientContext);
 
   const [_messages, setMessages] = useState({});
@@ -39,11 +43,21 @@ export default function Display() {
         </tr>
         <tr>
           <td style={{width: '50%'}}>
-            <OnOff dark={true} onClick={() => mqttClient.publish(`control-io/cmnd/display`, state ? '0' : '1')} />
+            <OnOff
+              dark={true}
+              onClick={() => {
+                mqttClient.publish(`control-io/cmnd/display`, state ? '0' : '1');
+                dispatch(replace('/1'));
+              }}
+            />
           </td>
           <td><Moon dark={true} onClick={() => mqttClient.publish(`control-io/cmnd/brightness`, '"+"')} /></td>
         </tr>
       </tbody>
     </table>
   );
-}
+};
+
+const mapStateToProps = () => ({});
+
+export default connect(mapStateToProps)(Display);
