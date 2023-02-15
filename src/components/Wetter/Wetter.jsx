@@ -46,7 +46,7 @@ export default function Wetter() {
       </tr>,
       <tr key='nightWind'>
         <td>Max Wind:</td>
-        <td>{_.round(_message?.nextNightMaxWind)}&nbsp;<font style={{fontSize: '50%'}}>m/s</font></td>
+        <td>{_.round(_message?.nextNightMaxWind || 0 * 3.6)}&nbsp;<font style={{fontSize: '50%'}}>km/h</font></td>
       </tr>,
     ];
   };
@@ -64,7 +64,7 @@ export default function Wetter() {
       </tr>,
       <tr key='dayWind'>
         <td>Max Wind:</td>
-        <td>{_.round(_message?.nextDayMaxWind)}&nbsp;<font style={{fontSize: '50%'}}>m/s</font></td>
+        <td>{_.round(_message?.nextDayMaxWind || 0 * 3.6)}&nbsp;<font style={{fontSize: '50%'}}>km/h</font></td>
       </tr>,
     ];
   };
