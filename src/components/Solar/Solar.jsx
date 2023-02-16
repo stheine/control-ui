@@ -24,7 +24,7 @@ export default function Solar() {
 
   const akkuLadelevel           = _message?.battery.stateOfCharge  || 0;
   const akkuLadung              = _message?.battery.powerIncoming  || 0;
-  const solarErzeugung          = _message?.solar.powerOutgoing    || 99999;
+  const solarErzeugung          = _.isNumber(_message?.solar.powerOutgoing) ? _message.solar.powerOutgoing : 99999;
   const wechselrichterErzeugung = _message?.inverter.powerOutgoing || 0;
   const einspeisung             = _message?.meter.powerOutgoing    || 0;
   const einkauf                 = _message?.meter.powerIncoming    || 0;
