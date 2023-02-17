@@ -10,6 +10,17 @@ import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
 const topic = 'Fronius/solar/tele/SENSOR';
 
+const displayWattage = function(value) {
+  return [
+    <td key='value' className='solar__value'>
+      {value < 1000 ? _.round(value) : _.round(value / 1000, 1)}
+    </td>,
+    <td key='unit' className='solar__unit'>
+      {value < 1000 ? 'W' : 'kW'}
+    </td>,
+  ];
+};
+
 export default function Solar() {
   // console.log('Solar');
 
@@ -29,30 +40,26 @@ export default function Solar() {
   const einspeisung             = _message?.meter.powerOutgoing    || 0;
   const einkauf                 = _message?.meter.powerIncoming    || 0;
 
+  const verbrauch               = wechselrichterErzeugung - einspeisung + einkauf;
+
   return (
     <table className='solar'>
       <tbody>
         <tr>
           <td className='solar__label'>Solar:</td>
-          <td className='solar__value'>
-            {solarErzeugung < 1000 ? _.round(solarErzeugung) : _.round(solarErzeugung / 1000, 1)}
-          </td>
-          <td className='solar__unit'>{solarErzeugung < 1000 ? 'W' : 'kW'}</td>
+          {displayWattage(solarErzeugung)}
         </tr>
         <tr>
           <td className='solar__label'>Verbrauch:</td>
-          <td className='solar__value'>{_.round(wechselrichterErzeugung - einspeisung + einkauf)}</td>
-          <td className='solar__unit'>W</td>
+          {displayWattage(verbrauch)}
         </tr>
         <tr>
           <td className='solar__label'>Akkuladung:</td>
-          <td className='solar__value'>{_.round(akkuLadung / 1000, 1)}</td>
-          <td className='solar__unit'>kW</td>
+          {displayWattage(akkuLadung)}
         </tr>
         <tr>
           <td className='solar__label'>Einspeisung:</td>
-          <td className='solar__value'>{_.round(einspeisung / 1000, 1)}</td>
-          <td className='solar__unit'>kW</td>
+          {displayWattage(einspeisung)}
         </tr>
         <tr>
           <td className='solar__label'>Akku:</td>
@@ -63,7 +70,3 @@ export default function Solar() {
     </table>
   );
 }
-//        <tr>
-//          <td>Wechselrichter:</td>
-//          <td style={{whiteSpace: 'nowrap'}}>{`${_.round(wechselrichterErzeugung / 1000, 1)} kW`}</td>
-//        </tr>
