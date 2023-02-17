@@ -41,12 +41,12 @@ export default function Wetter() {
       <tr key='nightTemp'>
         <td>Temperatur:</td>
         <td style={{whiteSpace: 'nowrap'}}>
-          {_.round(_message?.nextNightMinTemp)}&deg; - {_.round(_message?.nextNightMaxTemp)}&deg;
+          {_.round(_message?.nightMinTemp)}&deg; - {_.round(_message?.nightMaxTemp)}&deg;
         </td>
       </tr>,
       <tr key='nightWind'>
         <td>Max Wind:</td>
-        <td>{_.round(_message?.nextNightMaxWind || 0 * 3.6)}&nbsp;<font style={{fontSize: '50%'}}>km/h</font></td>
+        <td>{_.round(_message?.nightMaxWind || 0 * 3.6)}&nbsp;<font style={{fontSize: '50%'}}>km/h</font></td>
       </tr>,
     ];
   };
@@ -59,12 +59,12 @@ export default function Wetter() {
       <tr key='dayTemp'>
         <td>Temperatur:</td>
         <td style={{whiteSpace: 'nowrap'}}>
-          {_.round(_message?.nextDayMinTemp)}&deg; - {_.round(_message?.nextDayMaxTemp)}&deg;
+          {_.round(_message?.dayMinTemp)}&deg; - {_.round(_message?.dayMaxTemp)}&deg;
         </td>
       </tr>,
       <tr key='dayWind'>
         <td>Max Wind:</td>
-        <td>{_.round(_message?.nextDayMaxWind || 0 * 3.6)}&nbsp;<font style={{fontSize: '50%'}}>km/h</font></td>
+        <td>{_.round(_message?.dayMaxWind || 0 * 3.6)}&nbsp;<font style={{fontSize: '50%'}}>km/h</font></td>
       </tr>,
     ];
   };
