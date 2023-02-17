@@ -12,7 +12,7 @@ import MqttClientContext from '../../contexts/MqttClient.js';
 import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
 import Moon              from '../../svg/sargam/Moon.jsx';
-import OnOff             from '../../svg/sargam/OnOff.jsx';
+import ScreenOff         from '../../svg/sargam/ScreenOff.jsx';
 import Sun               from '../../svg/sargam/Sun.jsx';
 
 const topics = [
@@ -43,7 +43,7 @@ const Display = function(props) {
         </tr>
         <tr>
           <td style={{width: '50%'}}>
-            <OnOff
+            <ScreenOff
               dark={true}
               onClick={() => {
                 mqttClient.publish(`control-io/cmnd/display`, state ? '0' : '1');

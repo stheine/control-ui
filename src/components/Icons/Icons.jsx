@@ -30,6 +30,7 @@ import Plus                   from '../../svg/sargam/Plus.jsx';
 import Previous               from '../../svg/sargam/Previous.jsx';
 import Refresh                from '../../svg/sargam/Refresh.jsx';
 import Right                  from '../../svg/sargam/Right.jsx';
+import ScreenOff              from '../../svg/sargam/ScreenOff.jsx';
 import SettingsApplications   from '../../svg/sargam/SettingsApplications.jsx';
 import SettingsHorizontalDots from '../../svg/sargam/SettingsHorizontalDots.jsx';
 import SettingsVerticalDots   from '../../svg/sargam/SettingsVerticalDots.jsx';
@@ -71,16 +72,16 @@ const row3 = [
   <Close key='close' dark={true} />,
 ];
 const row4 = [
-  <Icon key='icon' dark={true} />,
   <OnOff key='onOff' dark={true} />,
   <Sun key='sun' dark={true} />,
   <Moon key='moon' dark={true} />,
   <Notification key='notification' dark={true} />,
   <Refresh key='refresh' dark={true} />,
   <Home key='home' dark={true} />,
-  <Increase key='Increase' dark={true} />,
-  <Decrease key='decrease' dark={true} />,
-  <Close key='close' dark={true} />,
+  <ScreenOff key='screenOff' dark={true} />,
+  <Icon key='icon1' dark={true} />,
+  <Icon key='icon2' dark={true} />,
+  <Icon key='icon3' dark={true} />,
 ];
 
 export default function Icons() {
