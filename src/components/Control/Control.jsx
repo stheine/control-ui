@@ -32,9 +32,5 @@ export default function Control() {
   const params = useParams();
   const page = Number(params.page);
 
-  // console.log('Control', {props, page});
-
-  return (
-    <Grid page={page} {...pages[page]} maxPages={Number(_.last(_.keys(pages)))} />
-  );
+  return <Grid page={page} {...pages[page]} maxPages={Number(_.last(_.keys(pages)))} />;
 }

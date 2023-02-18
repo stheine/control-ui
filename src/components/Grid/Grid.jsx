@@ -11,32 +11,32 @@ import Up                   from '../../svg/sargam/Up.jsx';
 
 const Page = function(props) {
   return [
-    <div key='lo' className='control__action'>
+    <div key='lo' className='grid__action'>
       <FitBox>
         {props.lo}
       </FitBox>
     </div>,
-    <div key='mo' className='control__action'>
+    <div key='mo' className='grid__action'>
       <FitBox>
         {props.mo}
       </FitBox>
     </div>,
-    <div key='ro' className='control__action'>
+    <div key='ro' className='grid__action'>
       <FitBox>
         {props.ro}
       </FitBox>
     </div>,
-    <div key='lu' className='control__action'>
+    <div key='lu' className='grid__action'>
       <FitBox>
         {props.lu}
       </FitBox>
     </div>,
-    <div key='mu' className='control__action'>
+    <div key='mu' className='grid__action'>
       <FitBox>
         {props.mu}
       </FitBox>
     </div>,
-    <div key='ru' className='control__action'>
+    <div key='ru' className='grid__action'>
       <FitBox>
         {props.ru}
       </FitBox>
@@ -49,40 +49,36 @@ const Grid = function(props) {
 
   // console.log('Grid', {maxPages, page, props});
 
-  return (
-    <div>
-      <div className='control' id='control'>
-        <div className='control__down'>
-          <Page {...props} />
-        </div>
-        <div className='control__up'>
-          <div className='control__navigation'>
-            <FitBox>
-              <Up
-                dark={true}
-                onClick={() => dispatch(replace(`${settings ? '/settings' : ''}/${page - 1 || maxPages}`))}
-              />
-            </FitBox>
-          </div>
-          <div className='control__navigation'>
-            <FitBox>
-              {settings ?
-                <Home dark={true} onClick={() => dispatch(replace('/1'))} /> :
-                <SettingsVerticalDots dark={true} onClick={() => dispatch(replace('/settings/1'))} />}
-            </FitBox>
-          </div>
-          <div className='control__navigation'>
-            <FitBox>
-              <Down
-                dark={true}
-                onClick={() => dispatch(replace(`${settings ? '/settings' : ''}/${(page + 1) % maxPages || maxPages}`))}
-              />
-            </FitBox>
-          </div>
-        </div>
+  return [
+    <div key='grid' className='grid'>
+      <Page {...props} />
+    </div>,
+    <div key='navigation' className='navigation'>
+      <div className='navigation__button'>
+        <FitBox>
+          <Up
+            dark={true}
+            onClick={() => dispatch(replace(`${settings ? '/settings' : ''}/${page - 1 || maxPages}`))}
+          />
+        </FitBox>
       </div>
-    </div>
-  );
+      <div className='navigation__button'>
+        <FitBox>
+          {settings ?
+            <Home dark={true} onClick={() => dispatch(replace('/1'))} /> :
+            <SettingsVerticalDots dark={true} onClick={() => dispatch(replace('/settings/1'))} />}
+        </FitBox>
+      </div>
+      <div className='navigation__button'>
+        <FitBox>
+          <Down
+            dark={true}
+            onClick={() => dispatch(replace(`${settings ? '/settings' : ''}/${(page + 1) % maxPages || maxPages}`))}
+          />
+        </FitBox>
+      </div>
+    </div>,
+  ];
 };
 
 const mapStateToProps = () => ({});

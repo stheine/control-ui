@@ -1,0 +1,17 @@
+.icons {
+  background-color: #ffffff;
+  display:          flex;
+  flex-direction:   column;
+  flex:             1 1 auto;
+
+  .icons__row {
+    display:        flex;
+    flex-direction: row;
+    flex:           1 1 auto;
+    height:         100px;
+  }
+
+  .dark {
+    background-color: #000000;
+  }
+};

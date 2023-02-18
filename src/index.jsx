@@ -4,10 +4,10 @@ import                   './index.scss';
 import {createRoot} from 'react-dom/client';
 import React        from 'react';
 
-import Root         from './components/Root/Root.jsx';
+import App          from './components/App/App.jsx';
 
 // eslint-disable-next-line no-undef
-const container = document.getElementById('root');
-const root      = createRoot(container);
+const container = document.getElementById('app');
+const app       = createRoot(container);
 
-root.render(<Root />);
+app.render(<App />);

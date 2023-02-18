@@ -86,23 +86,23 @@ const row4 = [
 
 export default function Icons() {
   return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
-      <div style={{display: 'flex', flexDirection: 'row', height: '100px'}}>
+    <div className='icons'>
+      <div className='icons__row'>
         {_.map(row1, icon => <FitBox>{icon}</FitBox>)}
       </div>
-      <div style={{display: 'flex', flexDirection: 'row', height: '100px'}}>
+      <div className='icons__row'>
         {_.map(row2, icon => <FitBox>{icon}</FitBox>)}
       </div>
-      <div style={{display: 'flex', flexDirection: 'row', height: '100px'}}>
+      <div className='icons__row'>
         {_.map(row3, icon => <FitBox>{icon}</FitBox>)}
       </div>
-      <div style={{display: 'flex', flexDirection: 'row', height: '100px', backgroundColor: '#000000'}}>
+      <div className='icons__row dark'>
         {_.map(row2, icon => <FitBox>{icon}</FitBox>)}
       </div>
-      <div style={{display: 'flex', flexDirection: 'row', height: '100px', backgroundColor: '#000000'}}>
+      <div className='icons__row dark'>
         {_.map(row3, icon => <FitBox>{icon}</FitBox>)}
       </div>
-      <div style={{display: 'flex', flexDirection: 'row', height: '100px', backgroundColor: '#000000'}}>
+      <div className='icons__row dark'>
         {_.map(row4, icon => <FitBox>{icon}</FitBox>)}
       </div>
     </div>

@@ -13,7 +13,6 @@ import Display     from '../Display/Display.jsx';
 import LedToggle   from '../LedToggle/LedToggle.jsx';
 
 const reloadPage = function() {
-  // eslint-disable-next-line no-undef
   window.location.replace(window.location.pathname);
 };
 
@@ -37,7 +36,5 @@ export default function Settings() {
 
   // console.log('Settings', {params, page, pages});
 
-  return (
-    <Grid page={page} settings={true} {...pages[page]} maxPages={Number(_.last(_.keys(pages)))} />
-  );
+  return <Grid page={page} settings={true} {...pages[page]} maxPages={Number(_.last(_.keys(pages)))} />;
 }

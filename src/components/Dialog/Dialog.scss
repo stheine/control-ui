@@ -1,0 +1,58 @@
+.dialog-layer {
+  display:  flex;
+  position: fixed;
+  top:      0px;
+  left:     0px;
+  width:    915px;
+  height:   600px;
+  z-index:  20;
+
+  .dialog-layer__center {
+    display:         flex;
+    flex:            1 1 auto;
+    align-items:     center;
+    justify-content: center;
+
+    .dialog-layer__center__border {
+      background-color: #fffaaf;
+      padding:          5px;
+
+      .dialog-layer__center__border__header {
+        background-color: #fffaaf;
+        color:            #000000;
+        border-color:     #000000;
+        border-style:     solid;
+        border-width:     2px 2px 0 2px;
+        display:          flex;
+
+        .dialog-layer__center__border__header__text {
+          // background-color: #3fa3af;
+          padding:     10px;
+          font-weight: bold;
+        }
+
+        .dialog-layer__center__border__header__blank {
+          flex: 1;
+        }
+
+        .dialog-layer__center__border__header__closer {
+          // background-color: #f33aaf;
+          border-color:     #000000;
+          border-style:     solid;
+          border-width:     0;
+          height: 43px;
+          width:  43px;
+        }
+      }
+
+      .dialog-layer__center__border__content {
+        background-color: #ffffff;
+        color:            #000000;
+        padding:          10px;
+        border-color:     #000000;
+        border-style:     solid;
+        border-width:     2px;
+      }
+    }
+  }
+}
