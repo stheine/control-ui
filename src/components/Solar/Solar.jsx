@@ -13,7 +13,7 @@ const topic = 'Fronius/solar/tele/SENSOR';
 const displayWattage = function(value) {
   return [
     <td key='value' className='solar__value'>
-      {value < 1000 ? _.round(value) : _.round(value / 1000, 1)}
+      {value < 1000 ? _.round(value) : _.round(value / 1000, 1).toFixed(1)}
     </td>,
     <td key='unit' className='solar__unit'>
       {value < 1000 ? 'W' : 'kW'}
@@ -63,7 +63,7 @@ export default function Solar() {
         </tr>
         <tr>
           <td className='solar__label'>Akku:</td>
-          <td className='solar__value'>{_.round(akkuLadelevel * 100, 2)}</td>
+          <td className='solar__value'>{_.round(akkuLadelevel * 100, 1)}</td>
           <td className='solar__unit'>%</td>
         </tr>
       </tbody>
