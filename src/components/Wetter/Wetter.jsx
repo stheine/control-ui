@@ -29,7 +29,7 @@ export default function Wetter() {
   const gefuehlt         = _message?.current.feels_like === undefined ? 99 : _message.current.feels_like;
   const bewoelkung       = _message?.current.clouds     === undefined ? 99 : _message.current.clouds;
   const luftfeuchtigkeit = _message?.current.humidity   === undefined ? 99 : _message.current.humidity;
-  const warnungEvent     = _message?.alerts?.[0].event || '';
+  const warnungEvent     = _message?.alerts?.[0].event || 'none';
   // const warnungDesc      = _message?.alerts?.[0].description || '';
   // TODO Vorhersage
 
@@ -70,7 +70,7 @@ export default function Wetter() {
   };
 
   return (
-    <table style={{fontSize: '150%', padding: '0 0 0 0'}}>
+    <table style={{fontSize: '140%', padding: '0 0 0 0'}}>
       <tbody>
         <tr>
           <td colSpan={2} style={{whiteSpace: 'nowrap'}}>{wetter}</td>
