@@ -1,3 +1,5 @@
+/* eslint-disable object-property-newline */
+
 import _                 from 'lodash';
 import React, {
   useContext,
@@ -8,33 +10,35 @@ import React, {
 import MqttClientContext from '../../contexts/MqttClient.js';
 import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
-export default function LedToggle(props) {
-  const {color} = props;
+const topics = [
+  'control-io/ledRed/STATE',
+  'control-io/ledWhite/STATE',
+];
 
-  const topic = `control-io/led${color}/STATE`;
-
-  // console.log('LedToggle');
-
-  const [_message, setMessage] = useState();
-
+export default function LedToggle() {
   const mqttClient = useContext(MqttClientContext);
 
-  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-    [mqttClient, topic]);
+  const [_messages, setMessages] = useState({'control-io/ledRed/STATE': 0, 'control-io/ledWhite/STATE': 0});
 
-  if(!_.isNil(_message)) {
-    // console.log('LedToggle', {topic, _message});
-  }
+  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
+    setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
 
-  const state = _message;
+  console.log('LedToggle', {_messages});
 
   return (
     <table style={{padding: '0 30px 0 0'}}>
       <tbody>
-        <tr onClick={() => mqttClient.publish(`control-io/cmnd/led${color}`, state ? '0' : '1')}>
-          <td style={{whiteSpace: 'nowrap'}}>LED {color}:</td>
-          <td>{state}</td>
-        </tr>
+        {_.map(_messages, (state, topic) => {
+          console.log({topic});
+          const led = topic.split('/')[1];
+
+          return (
+            <tr key={led} onClick={() => mqttClient.publish(`control-io/cmnd/${led}`, state ? '0' : '1')}>
+              <td style={{whiteSpace: 'nowrap'}}>{led}:</td>
+              <td>{state}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

@@ -20,10 +20,10 @@ const pages = {
   1: {
     lo: <Display />,
     mo: <Button type='Upper' />,
-    ro: <LedToggle color='Red' />,
+    ro: <LedToggle />,
     lu: <Beep />,
     mu: <Button type='Lower' />,
-    ru: <LedToggle color='White' />,
+    // ru:
   },
   2: {
     ro: <Refresh dark={true} onClick={() => reloadPage()} />,
