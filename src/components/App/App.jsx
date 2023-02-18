@@ -65,10 +65,10 @@ const App = function() {
         <Provider store={store}>
           <Router history={history}>
             <Routes>
-              <Route path='/:page'          element={<Control />} />
+              <Route path='/'               element={<Control />} />
               <Route path='/icons'          element={<Icons />} />
               <Route path='/settings/:page' element={<Settings />} />
-              <Route path='*'               element={<Control page={1} />} />
+              <Route path='*'               element={<Control />} />
             </Routes>
           </Router>
         </Provider>
