@@ -5,7 +5,7 @@ import React from 'react';
 export default function Icon(props) {
   const {dark, onClick} = props;
   const color      = dark ? '#e0e0e0' : '#000000';
-  const innerColor = dark ? '#a0a0a0' : '#ffffff';
+  const innerColor = dark ? '#a0a0a0' : '#f0f0f0';
   const opacity    = dark ? '0.4'     : '0.16';
 
   return (

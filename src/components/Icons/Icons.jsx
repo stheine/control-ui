@@ -9,19 +9,24 @@ import Menu                   from '../../svg/Menu.jsx';
 import PlayColored            from '../../svg/Play.jsx';
 import StopColored            from '../../svg/Stop.jsx';
 
+import Button                 from '../../svg/Button.jsx';
+import Checked                from '../../svg/sargam/Checked.jsx';
 import Close                  from '../../svg/sargam/Close.jsx';
 import Decrease               from '../../svg/sargam/Decrease.jsx';
 import Down                   from '../../svg/sargam/Down.jsx';
 import Home                   from '../../svg/sargam/Home.jsx';
 import Icon                   from '../../svg/sargam/Icon.jsx';
 import Increase               from '../../svg/sargam/Increase.jsx';
+import Led                    from '../../svg/Led.jsx';
 import Left                   from '../../svg/sargam/Left.jsx';
 import Minus                  from '../../svg/sargam/Minus.jsx';
 import Moon                   from '../../svg/sargam/Moon.jsx';
 import Next                   from '../../svg/sargam/Next.jsx';
 import Notification           from '../../svg/sargam/Notification.jsx';
-import Off                    from '../../svg/sargam/Off.jsx';
-import On                     from '../../svg/sargam/On.jsx';
+import OffChecked             from '../../svg/sargam/OffChecked.jsx';
+import OffColored             from '../../svg/sargam/OffColored.jsx';
+import OnChecked              from '../../svg/sargam/OnChecked.jsx';
+import OnColored              from '../../svg/sargam/OnColored.jsx';
 import OnOff                  from '../../svg/sargam/OnOff.jsx';
 import Pause                  from '../../svg/sargam/Pause.jsx';
 import Play                   from '../../svg/sargam/Play.jsx';
@@ -48,40 +53,53 @@ const row1 = [
   <Forward key='forward' />,
 ];
 const row2 = [
-  <Previous key='previous' dark={true} />,
-  <Stop key='stop' dark={true} />,
-  <Play key='play' dark={true} />,
-  <Pause key='pause' dark={true} />,
-  <PlayPause key='playPause' dark={true} />,
-  <Next key='next' dark={true} />,
-  <SettingsHorizontalDots key='settingsHorizontalDots' dark={true} />,
-  <SettingsVerticalDots key='settingsVerticalDots' dark={true} />,
-  <Off key='off' dark={true} />,
-  <On key='on' dark={true} />,
+  <Previous key='previous' />,
+  <Stop key='stop' />,
+  <Play key='play' />,
+  <Pause key='pause' />,
+  <PlayPause key='playPause' />,
+  <Next key='next' />,
+  <SettingsApplications key='settingsApplications' />,
+  <SettingsHorizontalDots key='settingsHorizontalDots' />,
+  <SettingsVerticalDots key='settingsVerticalDots' />,
+  <Led key='ledRed' color='red' />,
+  <Led key='ledRedLit' color='red' lit={true} />,
+  <Led key='ledGreen' color='green' />,
+  <Led key='ledGreen' color='green' lit={true} />,
+  <Led key='ledBlue' color='blue' />,
+  <Led key='ledBlue' color='blue' lit={true} />,
+  <Led key='ledYello' color='yellow' />,
+  <Led key='ledYello' color='yellow' lit={true} />,
+  <Led key='ledWhite' color='white' />,
+  <Led key='ledWhite' color='white' lit={true} />,
 ];
 const row3 = [
-  <Down key='down' dark={true} />,
-  <Up key='up' dark={true} />,
-  <Left key='left' dark={true} />,
-  <Right key='right' dark={true} />,
-  <SettingsApplications key='settingsApplications' dark={true} />,
-  <Minus key='minus' dark={true} />,
-  <Plus key='plus' dark={true} />,
-  <Increase key='Increase' dark={true} />,
-  <Decrease key='decrease' dark={true} />,
-  <Close key='close' dark={true} />,
+  <Down key='down' />,
+  <Up key='up' />,
+  <Left key='left' />,
+  <Right key='right' />,
+  <Minus key='minus' />,
+  <Plus key='plus' />,
+  <Increase key='Increase' />,
+  <Decrease key='decrease' />,
+  <Icon key='icon1' />,
+  <Close key='close' />,
+  <Checked key='checked' />,
 ];
 const row4 = [
-  <OnOff key='onOff' dark={true} />,
-  <Sun key='sun' dark={true} />,
-  <Moon key='moon' dark={true} />,
-  <Notification key='notification' dark={true} />,
-  <Refresh key='refresh' dark={true} />,
-  <Home key='home' dark={true} />,
-  <ScreenOff key='screenOff' dark={true} />,
-  <Icon key='icon1' dark={true} />,
-  <Icon key='icon2' dark={true} />,
-  <Icon key='icon3' dark={true} />,
+  <OnOff key='onOff' />,
+  <Sun key='sun' />,
+  <Moon key='moon' />,
+  <Notification key='notification' />,
+  <Refresh key='refresh' />,
+  <Home key='home' />,
+  <ScreenOff key='screenOff' />,
+  <OffChecked key='off' />,
+  <OnChecked key='on' />,
+  <OffColored key='off' />,
+  <OnColored key='on' />,
+  <Button key='button' />,
+  <Button key='buttonPushed' pushed={true} />,
 ];
 
 export default function Icons() {
@@ -96,14 +114,17 @@ export default function Icons() {
       <div className='icons__row'>
         {_.map(row3, icon => <FitBox>{icon}</FitBox>)}
       </div>
-      <div className='icons__row dark'>
-        {_.map(row2, icon => <FitBox>{icon}</FitBox>)}
-      </div>
-      <div className='icons__row dark'>
-        {_.map(row3, icon => <FitBox>{icon}</FitBox>)}
-      </div>
-      <div className='icons__row dark'>
+      <div className='icons__row'>
         {_.map(row4, icon => <FitBox>{icon}</FitBox>)}
+      </div>
+      <div className='icons__row dark'>
+        {_.map(row2, icon => <FitBox>{React.cloneElement(icon, {dark: true})}</FitBox>)}
+      </div>
+      <div className='icons__row dark'>
+        {_.map(row3, icon => <FitBox>{React.cloneElement(icon, {dark: true})}</FitBox>)}
+      </div>
+      <div className='icons__row dark'>
+        {_.map(row4, icon => <FitBox>{React.cloneElement(icon, {dark: true})}</FitBox>)}
       </div>
     </div>
   );

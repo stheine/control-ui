@@ -8,9 +8,9 @@ import Grid        from '../Grid/Grid.jsx';
 import Refresh     from '../../svg/sargam/Refresh.jsx';
 
 import Beep        from '../Beep/Beep.jsx';
-import Button      from '../Button/Button.jsx';
+import Buttons     from '../Buttons/Buttons.jsx';
 import Display     from '../Display/Display.jsx';
-import LedToggle   from '../LedToggle/LedToggle.jsx';
+import Leds        from '../Leds/Leds.jsx';
 
 const reloadPage = function() {
   window.location.replace(window.location.pathname);
@@ -19,10 +19,10 @@ const reloadPage = function() {
 const pages = {
   1: {
     lo: <Display />,
-    mo: <Button type='Upper' />,
-    ro: <LedToggle />,
+    mo: <Buttons />,
+    ro: <Leds />,
     lu: <Beep />,
-    mu: <Button type='Lower' />,
+    // mu:
     // ru:
   },
   2: {
