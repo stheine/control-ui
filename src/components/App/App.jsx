@@ -1,8 +1,11 @@
+/* eslint-disable object-property-newline */
 /* eslint-disable react/jsx-props-no-multi-spaces */
 
+import _                         from 'lodash';
+import {connect}                 from 'react-redux';
 import Favicon                   from 'react-favicon';
 import mqtt                      from 'async-mqtt';
-import {Provider}                from 'react-redux';
+import {replace}                 from 'redux-first-history';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
 import React, {
   useEffect,
@@ -13,16 +16,21 @@ import {Route, Routes}           from 'react-router';
 import Control                   from '../Control/Control.jsx';
 import Dialog                    from '../Dialog/Dialog.jsx';
 import faviconBase64             from '../../favicon.js';
+import {history}                 from '../../store/index.js';
 import Icons                     from '../Icons/Icons.jsx';
 import MqttClientContext         from '../../contexts/MqttClient.js';
 import mqttSubscribe             from '../../lib/mqttSubscribe.js';
 import Settings                  from '../Settings/Settings.jsx';
-import {history, store}          from '../../store/index.js';
 
-const topic = 'control-ui/cmnd/control';
+const topics = [
+  'control-ui/cmnd/dialog',
+  'control-ui/cmnd/route',
+];
 
-const App = function() {
-  const [_message, setMessage] = useState();
+const App = function(props) {
+  const {dispatch} = props;
+
+  const [_messages, setMessages] = useState({});
   const [_mqttClient, setMqttClient] = useState();
 
   useEffect(() => {
@@ -51,33 +59,41 @@ const App = function() {
     };
   }, []);
 
-  useEffect(() => mqttSubscribe({mqttClient: _mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-    [_mqttClient]);
+  useEffect(() => mqttSubscribe({mqttClient: _mqttClient, topics, onMessage({topic, message}) {
+    switch(topic) {
+      case 'control-ui/cmnd/route':
+        dispatch(replace(message));
+        break;
 
-  if(_message) {
-    // console.log('App', {_message});
+      default:
+        setMessages(prevMessages => ({...prevMessages, [topic]: message}));
+        break;
+    }
+  }}), [_mqttClient, dispatch]);
+
+  if(!_.isEmpty(_messages)) {
+    // console.log('App', {_messages});
   }
 
   return (
     <div className='control'>
       <MqttClientContext.Provider value={_mqttClient}>
         <Favicon url={`data:image/png;base64,${faviconBase64}`} />
-        <Provider store={store}>
-          <Router history={history}>
-            <Routes>
-              <Route path='/'               element={<Control />} />
-              <Route path='/icons'          element={<Icons />} />
-              <Route path='/settings/:page' element={<Settings />} />
-              <Route path='*'               element={<Control />} />
-            </Routes>
-          </Router>
-        </Provider>
-        {_message?.dialog ?
+        <Router history={history}>
+          <Routes>
+            <Route path='/'               element={<Control />} />
+            <Route path='/:page'          element={<Control />} />
+            <Route path='/icons'          element={<Icons />} />
+            <Route path='/settings/:page' element={<Settings />} />
+            <Route path='*'               element={<Control />} />
+          </Routes>
+        </Router>
+        {_messages?.['control-ui/cmnd/dialog'] ?
           <Dialog
             key='dialog'
-            onClose={() => setMessage()}
+            onClose={() => setMessages(prevMessages => _.omit(prevMessages, ['control-ui/cmnd/dialog']))}
           >
-            {_message.dialog.map(line => <div key={line}>{line}</div>)}
+            {_messages['control-ui/cmnd/dialog'].map(line => <div key={line}>{line}</div>)}
           </Dialog> :
           null}
       </MqttClientContext.Provider>
@@ -85,4 +101,6 @@ const App = function() {
   );
 };
 
-export default App;
+const mapStateToProps = () => ({});
+
+export default connect(mapStateToProps)(App);

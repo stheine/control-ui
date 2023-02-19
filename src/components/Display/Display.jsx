@@ -1,7 +1,5 @@
 /* eslint-disable object-property-newline */
 
-import {connect}         from 'react-redux';
-import {replace}         from 'redux-first-history';
 import React, {
   useContext,
   useEffect,
@@ -20,9 +18,7 @@ const topics = [
   `control-io/display/STATE`,
 ];
 
-const Display = function(props) {
-  const {dispatch} = props;
-
+const Display = function() {
   const mqttClient = useContext(MqttClientContext);
 
   const [_messages, setMessages] = useState({});
@@ -47,7 +43,7 @@ const Display = function(props) {
               dark={true}
               onClick={() => {
                 mqttClient.publish(`control-io/cmnd/display`, state ? '0' : '1');
-                dispatch(replace('/1'));
+                mqttClient.publish(`control-ui/cmnd/route`, '"/1"');
               }}
             />
           </td>
@@ -58,6 +54,4 @@ const Display = function(props) {
   );
 };
 
-const mapStateToProps = () => ({});
-
-export default connect(mapStateToProps)(Display);
+export default Display;
