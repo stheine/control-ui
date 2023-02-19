@@ -29,7 +29,7 @@ export default function Wetter() {
   const gefuehlt         = _message?.current.feels_like === undefined ? 99 : _message.current.feels_like;
   const bewoelkung       = _message?.current.clouds     === undefined ? 99 : _message.current.clouds;
   const luftfeuchtigkeit = _message?.current.humidity   === undefined ? 99 : _message.current.humidity;
-  const warnungEvent     = _message?.alerts?.[0].event || 'none';
+  const warnungEvent     = _message ? _message?.alerts?.[0].event : 'none';
   // const warnungDesc      = _message?.alerts?.[0].description || '';
   // TODO Vorhersage
 
