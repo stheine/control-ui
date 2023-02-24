@@ -1,0 +1,18 @@
+.wetter {
+  font-size: 140%;
+
+  .wetter__label {
+    font-weight: bold;
+  }
+
+  .wetter__value {
+    .wetter__value__unit {
+      font-size:      60%;
+      vertical-align: super;
+    }
+  }
+
+  .wetter__warning {
+    background-color: #ff0000;
+  }
+}
