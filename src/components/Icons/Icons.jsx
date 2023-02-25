@@ -27,11 +27,12 @@ import OffChecked             from '../../svg/sargam/OffChecked.jsx';
 import OffColored             from '../../svg/sargam/OffColored.jsx';
 import OnChecked              from '../../svg/sargam/OnChecked.jsx';
 import OnColored              from '../../svg/sargam/OnColored.jsx';
-import OnOff                  from '../../svg/sargam/OnOff.jsx';
+import OnOffUnknown           from '../../svg/sargam/OnOffUnknown.jsx';
 import Pause                  from '../../svg/sargam/Pause.jsx';
 import Play                   from '../../svg/sargam/Play.jsx';
 import PlayPause              from '../../svg/sargam/PlayPause.jsx';
 import Plus                   from '../../svg/sargam/Plus.jsx';
+import Power                  from '../../svg/sargam/Power.jsx';
 import Previous               from '../../svg/sargam/Previous.jsx';
 import Refresh                from '../../svg/sargam/Refresh.jsx';
 import Right                  from '../../svg/sargam/Right.jsx';
@@ -87,7 +88,6 @@ const row3 = [
   <Checked key='checked' />,
 ];
 const row4 = [
-  <OnOff key='onOff' />,
   <Sun key='sun' />,
   <Moon key='moon' />,
   <Notification key='notification' />,
@@ -98,8 +98,10 @@ const row4 = [
   <OnChecked key='on' />,
   <OffColored key='off' />,
   <OnColored key='on' />,
+  <OnOffUnknown key='on' />,
   <Button key='button' />,
   <Button key='buttonPushed' pushed={true} />,
+  <Power key='power' />,
 ];
 
 export default function Icons() {
