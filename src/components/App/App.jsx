@@ -71,6 +71,10 @@ const App = function(props) {
     }
   }}), [_mqttClient, dispatch]);
 
+  if(!_mqttClient) {
+    return;
+  }
+
   if(!_.isEmpty(_messages)) {
     // console.log('App', {_messages});
   }
