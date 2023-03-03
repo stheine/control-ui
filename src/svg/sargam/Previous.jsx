@@ -11,6 +11,7 @@ export default function Icon(props) {
   return (
     <svg viewBox='0 0 512 512'>
       <g onClick={onClick}>
+        <rect id='handleOnClickOnUnfilledArea' pointerEvents='all' x='0' y='0' width='100%' height='100%' fill='none' />
         <g transform='scale(21.33)'>
           <path d='m21 5-10 7 10 7V5Z' fill={color} fillOpacity={opacity} stroke={color} strokeWidth='1.5' strokeLinejoin='round' />
           <path d='M4.8 5h2.4a.8.8 0 0 1 .8.8v12.4a.8.8 0 0 1-.8.8H3.8a.8.8 0 0 1-.8-.8V5.8a.8.8 0 0 1 .8-.8Z' fill={innerColor} stroke={color} strokeWidth='1.5' strokeMiterlimit='10' />

@@ -8,6 +8,7 @@ export default function Icon(props) {
   return (
     <svg viewBox='0 -40 440 480'>
       <g onClick={onClick}>
+        <rect id='handleOnClickOnUnfilledArea' pointerEvents='all' x='0' y='0' width='100%' height='100%' fill='none' />
         <g stroke={color} strokeWidth='14' strokeLinejoin='round' fill={fillColor}>
           <rect x='38' y='23' width='362' height='20' fill={color} />
           <rect x='69' y='120' width='300' height='280' fill='none' strokeWidth='10' />
