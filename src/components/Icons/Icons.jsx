@@ -12,6 +12,9 @@ import StopColored            from '../../svg/Stop.jsx';
 import Button                 from '../../svg/Button.jsx';
 import Checked                from '../../svg/sargam/Checked.jsx';
 import Close                  from '../../svg/sargam/Close.jsx';
+import BlindDown              from '../../svg/sargam/BlindDown.jsx';
+import BlindShade             from '../../svg/sargam/BlindShade.jsx';
+import BlindUp                from '../../svg/sargam/BlindUp.jsx';
 import Decrease               from '../../svg/sargam/Decrease.jsx';
 import Down                   from '../../svg/sargam/Down.jsx';
 import Home                   from '../../svg/sargam/Home.jsx';
@@ -41,6 +44,7 @@ import SettingsApplications   from '../../svg/sargam/SettingsApplications.jsx';
 import SettingsHorizontalDots from '../../svg/sargam/SettingsHorizontalDots.jsx';
 import SettingsVerticalDots   from '../../svg/sargam/SettingsVerticalDots.jsx';
 import Stop                   from '../../svg/sargam/Stop.jsx';
+import StopCircle             from '../../svg/sargam/StopCircle.jsx';
 import Sun                    from '../../svg/sargam/Sun.jsx';
 import Up                     from '../../svg/sargam/Up.jsx';
 
@@ -81,11 +85,15 @@ const row3 = [
   <Right key='right' />,
   <Minus key='minus' />,
   <Plus key='plus' />,
-  <Increase key='Increase' />,
+  <Increase key='increase' />,
   <Decrease key='decrease' />,
-  <Icon key='icon1' />,
+  <Icon key='icon' />,
   <Close key='close' />,
   <Checked key='checked' />,
+  <BlindDown key='blindDown' />,
+  <BlindShade key='blindShade' />,
+  <BlindUp key='blindUp' />,
+  <StopCircle key='stopCircle' />,
 ];
 const row4 = [
   <Sun key='sun' />,
