@@ -1,0 +1,13 @@
+.clock {
+  color:       #ccff00;
+  font-family: LCDSH;
+  text-align: center;
+
+  .clock__time {
+    padding-bottom: 40px;
+  }
+
+  .clock__date {
+    font-size: 50%;
+  }
+}

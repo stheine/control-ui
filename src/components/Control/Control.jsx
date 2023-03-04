@@ -6,6 +6,7 @@ import {useParams} from 'react-router-dom';
 
 import Grid        from '../Grid/Grid.jsx';
 
+import Clock       from '../Clock/Clock.jsx';
 import Fenster     from '../Fenster/Fenster.jsx';
 import Jalousie    from '../Jalousie/Jalousie.jsx';
 import Solar       from '../Solar/Solar.jsx';
@@ -21,9 +22,10 @@ const pages = {
     {width: 1, fit: true, content: <Temperatur site='buero' />},
     {width: 1, fit: true, content: <Wetter />},
     {width: 1, fit: true, content: <Solar />},
-    {width: 1, fit: true, content: <Fenster />},
+    {width: 1, fit: true, content: <Clock />},
   ],
   2: [
+    {width: 1, fit: true, content: <Fenster />},
     {width: 1, fit: true, content: <Vito />},
     {width: 1, fit: true, content: <Jalousie />},
     {width: 2,            content: <Volumio />},
