@@ -32,18 +32,30 @@ export default function Volumio() {
   }
 
   return (
-    <table>
+    <table className='volumio'>
       <tbody>
         <tr>
-          <td colSpan={3}>{_message?.status} {_message?.title}</td>
+          <td className='volumio__control'>
+            <Dlf dark={true} onClick={() => mqttClient.publish('volumio/cmnd/DLF', '')} />
+          </td>
+          <td rowSpan={3} className='volumio__title'>
+            <div><span>{_message?.artist ? `${_message.artist} - ` : null}{_message?.title}</span></div>
+          </td>
+          <td rowSpan={3} className='volumio__volume'>
+            <div>
+              <Increase dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"+"')} />
+              <span>{_message?.volume}</span>
+              <Decrease dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"-"')} />
+            </div>
+          </td>
         </tr>
         <tr>
-          <td><Dlf dark={true} onClick={() => mqttClient.publish('volumio/cmnd/browseLibrary', '')} /></td>
-          <td><Increase dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"+"')} /></td>
+          <td>
+            <PlayPause dark={true} onClick={() => mqttClient.publish('volumio/cmnd/playPause', '')} />
+          </td>
         </tr>
         <tr>
-          <td><PlayPause dark={true} onClick={() => mqttClient.publish('volumio/cmnd/playPause', '')} /></td>
-          <td><Decrease dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"-"')} /></td>
+          <td className='volumio__status'>{_message?.status}</td>
         </tr>
       </tbody>
     </table>

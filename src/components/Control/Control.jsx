@@ -25,10 +25,8 @@ const pages = {
   ],
   2: [
     {width: 1, fit: true, content: <Vito />},
-    {width: 2,            content: <Volumio />},
-    {width: 1, fit: true, content: <Solar />},
-    {width: 1, fit: true, content: <Wetter />},
     {width: 1, fit: true, content: <Jalousie />},
+    {width: 2,            content: <Volumio />},
   ],
 };
 
