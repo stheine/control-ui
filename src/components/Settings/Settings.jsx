@@ -17,17 +17,13 @@ const reloadPage = function() {
 };
 
 const pages = {
-  1: {
-    lo: <Display />,
-    mo: <Buttons />,
-    ro: <Leds />,
-    lu: <Beep />,
-    // mu:
-    // ru:
-  },
-  2: {
-    ro: <Refresh dark={true} onClick={() => reloadPage()} />,
-  },
+  1: [
+    {width: 1, fit: true, content: <Display />},
+    {width: 1, fit: true, content: <Beep />},
+    {width: 1, fit: true, content: <Leds />},
+    {width: 1, fit: true, content: <Buttons />},
+    {width: 1, fit: true, content: <Refresh dark={true} onClick={() => reloadPage()} />},
+  ],
 };
 
 export default function Settings() {
@@ -36,5 +32,5 @@ export default function Settings() {
 
   // console.log('Settings', {params, page, pages});
 
-  return <Grid page={page} settings={true} {...pages[page]} maxPages={Number(_.last(_.keys(pages)))} />;
+  return <Grid page={page} settings={true} items={pages[page]} maxPages={Number(_.last(_.keys(pages)))} />;
 }

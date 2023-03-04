@@ -1,51 +1,75 @@
 .grid {
-  width:            915px;
-  height:           600px;
-  background-color: #000000;
-  display:          flex;
-  flex-wrap:        wrap;
+  width:                 915px;
+  height:                600px;
+  background-color:      #000000;
+  display:               grid;
+  grid-template-columns: repeat(3, 295px);
+  grid-template-rows:    repeat(2, 295px);
+  grid-auto-flow:        row dense;
+  column-gap:            10px;
+  row-gap:               10px;
 
   .grid__action {
-    // background-color: #00ff00;
-    color:            #e0e0e0;
-    width:            293px;
-    height:           293px;
-    border-color:     #303030;
-    border-style:     solid;
-    border-width:     1px;
-    margin-right:     10px;
-    margin-bottom:    10px;
+    color:             #e0e0e0;
+    border-color:      #303030;
+    border-style:      solid;
+    border-width:      1px;
+    grid-column-start: auto;
+    grid-column-end:   span 1;
+    grid-row-start:    auto;
+    grid-row-end:      span 1;
 
-    display:          flex;
-    flex-direction:   column;
-  }
-  .grid__action:nth-child(4), .grid__action:nth-child(5), .grid__action:nth-child(6) {
-    margin-bottom:    0;
-  }
+    display:        flex;
+    flex-direction: column;
 
-  .grid__action img {
-    padding: 10px;
+    &.double {
+      grid-column-end: span 2;
+    }
+    &.triple {
+      grid-column-end: span 3;
+    }
   }
 }
 
 .navigation {
-  width:            109px;
-  height:           600px;
-  background-color: #000000;
-  display:          flex;
-  flex-wrap:        wrap;
+  width:                 109px;
+  height:                600px;
+  background-color:      #000000;
+  display:               grid;
+  grid-template-columns: 109px;
+  grid-template-rows:    repeat(4, 142.5px);
+  grid-auto-flow:        column;
+  row-gap:               10px;
+
+  // background-color: #00ff00;
 
   .navigation__button {
-    // background-color: #00ff00;
-    width:            109px;
-    height:           191.33px;
     border-color:     #303030;
     border-style:     solid;
     border-width:     1px;
-    margin-bottom:    10px;
-    color:            #ffff00;
+    grid-column-start: auto;
+    grid-column-end:   span 1;
+    grid-row-start:    auto;
+    grid-row-end:      span 1;
 
-    display:          flex;
-    flex-direction:   column;
+    display:        flex;
+    flex-direction: row;
+
+    &.double {
+      grid-row-end: span 2;
+    }
+
+    &.one {
+      grid-row-start: 1;
+    }
+    &.two {
+      grid-row-start: 2;
+    }
+    &.three {
+      grid-row-start: 3;
+    }
+    &.four {
+      grid-row-start: 4;
+    }
   }
 }
