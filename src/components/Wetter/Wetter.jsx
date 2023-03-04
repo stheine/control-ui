@@ -24,6 +24,7 @@ export default function Wetter() {
     // console.log('Wetter', {_message});
   }
 
+  const {eveningStartsHour} = _message || {};
   const wetter           = _message?.current.weather[0].description || '';
   const temperatur       = _message?.current.temp       === undefined ? 99 : _message.current.temp;
   const gefuehlt         = _message?.current.feels_like === undefined ? 99 : _message.current.feels_like;
@@ -100,7 +101,7 @@ export default function Wetter() {
             <td colSpan={2} className='wetter__warning'>{warnungEvent}</td>
           </tr> :
           null}
-        {new Date().getHours() < 20 ?
+        {new Date().getHours() < eveningStartsHour ?
           [...tag(), ...nacht()] :
           [...nacht(), ...tag()]}
       </tbody>
