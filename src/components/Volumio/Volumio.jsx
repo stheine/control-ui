@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {
   useContext,
   useEffect,
@@ -55,7 +56,7 @@ export default function Volumio() {
           </td>
         </tr>
         <tr>
-          <td className='volumio__status'>{_message?.status}</td>
+          <td className='volumio__status'>{_.upperFirst(_message?.status)}</td>
         </tr>
       </tbody>
     </table>
