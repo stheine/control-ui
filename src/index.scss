@@ -7,21 +7,37 @@ body {
 }
 
 @font-face {
+  // LCD / + Regular / + proportional / + mit Kleinbuchstaben
+  font-family: "Digitalism";
+  src:         url("fonts/Digitalism.ttf") format("truetype");
+}
+
+@font-face {
+  // LCD / + Regular / - nicht-proportional
+  font-family: "G7 Cube 5";
+  src:         url("fonts/G7_Cube_5.ttf") format("truetype");
+}
+
+@font-face {
+  // LCD / - Italic / - 1 looks a little like 7
   font-family: "LCD";
   src:         url("fonts/LCD.woff") format("woff");
 }
 
 @font-face {
+  // LCD / + Regular / - 1 looks a little like 7
   font-family: "LCDSH";
   src:         url("fonts/LCDSH-Regular.woff2") format("woff2");
 }
 
 @font-face {
+  // LCD / + Regular / + Many small segments / - 2 looks like Z
   font-family: "Out AEG LCD";
   src:         url("fonts/Out AEG LCD.woff2") format("woff2");
 }
 
 @font-face {
+  // LCD / + Regular / + Dots and lines / - zu pixelig
   font-family: "Dash Dot LCD-7";
   src:         url("fonts/Dash Dot LCD-7.woff2") format("woff2");
 }
