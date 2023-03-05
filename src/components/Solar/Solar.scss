@@ -4,9 +4,14 @@
   }
 
   .solar__value {
+    color:          $value-color;
     font-family:    Digitalism;
     letter-spacing: 0.03em;
     text-align:     right;
+
+    &.negative {
+      color:        #ff8080;
+    }
   }
 
   .solar__unit {

@@ -12,7 +12,7 @@ const topic = 'Fronius/solar/tele/SENSOR';
 
 const displayWattage = function(value) {
   return [
-    <td key='value' className='solar__value'>
+    <td key='value' className={`solar__value${value < 0 ? ' negative' : ''}`}>
       {value < 1000 ? _.round(value) : _.round(value / 1000, 1).toFixed(1)}
     </td>,
     <td key='unit' className='solar__unit'>
@@ -58,8 +58,8 @@ export default function Solar() {
           {displayWattage(akkuLadung)}
         </tr>
         <tr>
-          <td className='solar__label'>Einspeisung:</td>
-          {displayWattage(einspeisung)}
+          <td className='solar__label'>{einspeisung ? 'Einspeisung' : 'Einkauf'}:</td>
+          {displayWattage(einspeisung || -einkauf)}
         </tr>
         <tr>
           <td className='solar__label'>Akku:</td>
