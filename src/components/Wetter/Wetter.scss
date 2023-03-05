@@ -1,18 +1,47 @@
 .wetter {
-  font-size: 140%;
+  font-size: 190%;
 
-  .wetter__label {
-    font-weight: bold;
-  }
-
-  .wetter__value {
-    .wetter__value__unit {
-      font-size:      60%;
-      vertical-align: super;
+  > tbody > tr {
+    > td {
+      vertical-align: top;
     }
-  }
 
-  .wetter__warning {
-    background-color: #ff0000;
+    > td:nth-child(2) {
+    }
+
+    > td {
+      > table {
+        > tbody {
+          > tr > td:first-child {
+            // background-color: #666666;
+            padding-right:  10px;
+            font-size:      80%;
+            vertical-align: middle;
+          }
+
+          > tr + tr > td.wetter__label {
+            border-top: 1px dotted $font-color;
+          }
+
+          .wetter__label {
+            font-weight: bold;
+          }
+
+          .wetter__value {
+            color: $value-color;
+
+            .wetter__value__unit {
+              color:          $font-color;
+              font-size:      50%;
+              vertical-align: super;
+            }
+          }
+
+          .wetter__warning {
+            background-color: #ff0000;
+          }
+        }
+      }
+    }
   }
 }

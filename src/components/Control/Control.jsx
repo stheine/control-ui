@@ -19,8 +19,8 @@ const pages = {
   1: [
     {width: 1, fit: true, content: <Temperatur site='aussen' />},
     {width: 1, fit: true, content: <Temperatur site='wohnen' />},
+    {width: 2,            content: <Wetter />},
     {width: 1, fit: true, content: <Temperatur site='buero' />},
-    {width: 1, fit: true, content: <Wetter />},
     {width: 1, fit: true, content: <Solar />},
     {width: 1, fit: true, content: <Clock />},
   ],

@@ -34,43 +34,95 @@ export default function Wetter() {
   // const warnungDesc      = _message?.alerts?.[0].description || '';
   // TODO Vorhersage
 
-  const nacht = function() {
+  const renderNight = function() {
     return [
       <tr key='nightLabel'>
         <td colSpan={2} className='wetter__label'>Nacht</td>
       </tr>,
       <tr key='nightTemp'>
         <td>Temperatur:</td>
-        <td className='wetter__value'>
-          {_.round(_message?.nightMinTemp)}&deg; - {_.round(_message?.nightMaxTemp)}&deg;
+        <td>
+          <font className='wetter__value'>
+            {_.round(_message?.nightMinTemp)}
+            <font className='wetter__value__unit'>&deg;C</font>
+          </font>
+          &nbsp;-&nbsp;
+          <font className='wetter__value'>
+            {_.round(_message?.nightMaxTemp)}
+            <font className='wetter__value__unit'>&deg;C</font>
+          </font>
         </td>
       </tr>,
       <tr key='nightWind'>
         <td>Max Wind:</td>
         <td className='wetter__value'>
-          {_.round(_message?.nightMaxWind || 0 * 3.6)}&nbsp;<font className='wetter__value__unit'>km/h</font>
+          {_.round(_message?.nightMaxWind || 0 * 3.6)}
+          <font className='wetter__value__unit'>km/h</font>
         </td>
       </tr>,
     ];
   };
 
-  const tag = function() {
+  const renderDay = function() {
     return [
       <tr key='dayLabel'>
         <td colSpan={2} className='wetter__label'>Tag</td>
       </tr>,
       <tr key='dayTemp'>
         <td>Temperatur:</td>
-        <td className='wetter__value'>
-          {_.round(_message?.dayMinTemp)}&deg; - {_.round(_message?.dayMaxTemp)}&deg;
+        <td>
+          <font className='wetter__value'>
+            {_.round(_message?.dayMinTemp)}
+            <font className='wetter__value__unit'>&deg;C</font>
+          </font>
+          &nbsp;-&nbsp;
+          <font className='wetter__value'>
+            {_.round(_message?.dayMaxTemp)}
+            <font className='wetter__value__unit'>&deg;C</font>
+          </font>
         </td>
       </tr>,
       <tr key='dayWind'>
         <td>Max Wind:</td>
         <td className='wetter__value'>
-          {_.round(_message?.dayMaxWind || 0 * 3.6)}&nbsp;<font className='wetter__value__unit'>km/h</font>
+          {_.round(_message?.dayMaxWind || 0 * 3.6)}<font className='wetter__value__unit'>km/h</font>
         </td>
       </tr>,
+    ];
+  };
+
+  const renderCurrent = function() {
+    return [
+      <tr key='wetter'>
+        <td colSpan={2}>{wetter}</td>
+      </tr>,
+      <tr key='bewoelkung'>
+        <td>Bewölkung:</td>
+        <td className='wetter__value'>{bewoelkung}<font className='wetter__value__unit'>%</font></td>
+      </tr>,
+      <tr key='temperatur'>
+        <td>Temperatur:</td>
+        <td className='wetter__value'>
+          {_.round(temperatur, 1)}
+          <font className='wetter__value__unit'>&deg;C</font>
+        </td>
+      </tr>,
+      <tr key='gefuehlt'>
+        <td>Gefühlt:</td>
+        <td className='wetter__value'>
+          {_.round(gefuehlt, 1)}
+          <font className='wetter__value__unit'>&deg;C</font>
+        </td>
+      </tr>,
+      <tr key='luftfeuchtigkeit'>
+        <td>Luftfeuchtigkeit:</td>
+        <td className='wetter__value'>{luftfeuchtigkeit}<font className='wetter__value__unit'>%</font></td>
+      </tr>,
+      warnungEvent ?
+        <tr key='warnung'>
+          <td colSpan={2} className='wetter__warning'>{warnungEvent}</td>
+        </tr> :
+        null,
     ];
   };
 
@@ -78,32 +130,26 @@ export default function Wetter() {
     <table className='wetter'>
       <tbody>
         <tr>
-          <td colSpan={2}>{wetter}</td>
+          <td>
+            <table>
+              <tbody>
+                <tr>
+                  <td className='wetter__label'>Aktuell</td>
+                </tr>
+                {renderCurrent()}
+              </tbody>
+            </table>
+          </td>
+          <td>
+            <table>
+              <tbody>
+                {new Date().getHours() < eveningStartsHour ?
+                  [...renderDay(), ...renderNight()] :
+                  [...renderNight(), ...renderDay()]}
+              </tbody>
+            </table>
+          </td>
         </tr>
-        <tr>
-          <td>Bewölkung:</td>
-          <td className='wetter__value'>{bewoelkung}&nbsp;<font className='wetter__value__unit'>%</font></td>
-        </tr>
-        <tr>
-          <td>Temperatur:</td>
-          <td className='wetter__value'>{temperatur}&deg;</td>
-        </tr>
-        <tr>
-          <td>Gefühlt:</td>
-          <td className='wetter__value'>{gefuehlt}&deg;</td>
-        </tr>
-        <tr>
-          <td>Luftfeuchtigkeit:</td>
-          <td className='wetter__value'>{luftfeuchtigkeit}&nbsp;<font className='wetter__value__unit'>%</font></td>
-        </tr>
-        {warnungEvent ?
-          <tr>
-            <td colSpan={2} className='wetter__warning'>{warnungEvent}</td>
-          </tr> :
-          null}
-        {new Date().getHours() < eveningStartsHour ?
-          [...tag(), ...nacht()] :
-          [...nacht(), ...tag()]}
       </tbody>
     </table>
   );
