@@ -95,9 +95,11 @@ export default function Temperatur(props) {
         {_.map(sites[site].values, value => (
           <tr key={value.key}>
             <td>
-              {value.key === 'dummy' ?
-                <span style={{fontSize: '10%'}}>&nbsp;</span> :
-                degreeRenderer(_message?.[value.key], value)}
+              <div className='temperatur__content'>
+                {value.key === 'dummy' ?
+                  <span style={{fontSize: '10%'}}>&nbsp;</span> :
+                  degreeRenderer(_message?.[value.key], value)}
+              </div>
             </td>
           </tr>
         ))}

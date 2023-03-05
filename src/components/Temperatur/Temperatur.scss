@@ -1,45 +1,55 @@
 .temperatur {
-  // background-color: #ffffff;
+  // background-color: #3b3c5e;
 
   .temperatur__label {
-    font-size:   60%;
+    font-size:  60%;
+    text-align: center;
   }
 
-  .temperatur__value {
-    display:        flex;
-    flex-direction: row;
-    padding:        0 0 5% 0;
+  .temperatur__content {
+    display:         flex;
+    flex-direction:  row;
+    justify-content: center;
 
-    .temperatur__value__number {
-      font-family: "AC Display", sans-serif;
-      line-height: 80%;
-    }
-
-    .temperatur__value__right {
-      line-height:    80%;
+    .temperatur__value {
       display:        flex;
-      flex-direction: column;
-      flex:           0 1 auto;
+      flex-direction: row;
+      padding:        0 0 5% 0;
 
-      .temperatur__value__unit {
+      .temperatur__value__number {
+        color:       $value-color;
+        font-family: "AC Display";
         line-height: 80%;
-        font-size:   20%;
-        padding:     15% 0 0 0;
       }
 
-      .temperatur__value__right__bottom {
-        display:        flex;
-        flex-direction: row;
-        font-family:    "AC Display", sans-serif;
+      .temperatur__value__right {
+        color:          $value-color;
         line-height:    80%;
-        font-size:      60%;
+        display:        flex;
+        flex-direction: column;
+        flex:           0 1 auto;
 
-        .temperatur__value__dot {
-          margin:      10% 0 0 -0%;
+        .temperatur__value__unit {
+          color:       $font-color;
+          line-height: 80%;
+          font-size:   20%;
+          padding:     10% 0 0 0;
         }
 
-        .temperatur__value__decimals {
-          margin:      10% 0 0 -0%;
+        .temperatur__value__right__bottom {
+          display:        flex;
+          flex-direction: row;
+          font-family:    "AC Display";
+          line-height:    80%;
+          font-size:      60%;
+
+          .temperatur__value__dot {
+            margin:      20% 0 0 -0%;
+          }
+
+          .temperatur__value__decimals {
+            margin:      20% 0 0 -0%;
+          }
         }
       }
     }
