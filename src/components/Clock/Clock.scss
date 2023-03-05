@@ -1,13 +1,22 @@
 .clock {
-  color:       #ccff00;
-  font-family: LCDSH;
-  text-align: center;
+  color:          #ccff00;
+  font-family:    Digitalism;
+  letter-spacing: 0.02em;
+  text-align:     center;
 
   .clock__time {
-    padding-bottom: 40px;
   }
 
   .clock__date {
-    font-size: 50%;
+    font-size:       40%;
+    display:         flex;
+    justify-content: center;
+
+    .clock__date__day {
+    }
+
+    .clock__date__date {
+      margin: 0 0 0 20px;
+    }
   }
 }
