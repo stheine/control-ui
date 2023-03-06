@@ -19,16 +19,16 @@ const pages = {
   1: [
     {width: 1, fit: true, content: <Temperatur site='aussen' />},
     {width: 1, fit: true, content: <Temperatur site='wohnen' />},
-    {width: 2,            content: <Wetter />},
-    {width: 1, fit: true, content: <Temperatur site='buero' />},
-    {width: 1, fit: true, content: <Solar />},
     {width: 1, fit: true, content: <Clock />},
+    {width: 2,            content: <Wetter />},
+    {width: 1, fit: true, content: <Solar />},
   ],
   2: [
     {width: 1, fit: true, content: <Fenster />},
+    {width: 1, fit: true, content: <Temperatur site='buero' />},
     {width: 1, fit: true, content: <Vito />},
-    {width: 1, fit: true, content: <Jalousie />},
     {width: 2,            content: <Volumio />},
+    {width: 1, fit: true, content: <Jalousie />},
   ],
 };
 
