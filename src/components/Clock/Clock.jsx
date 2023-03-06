@@ -60,7 +60,7 @@ export default function Clock() {
   return (
     <div className='clock'>
       <div className='clock__time'>
-        {_now.toLocaleTimeString('de-DE', {timeStyle: 'short'})}
+        {_now.toLocaleTimeString('de-DE', {timeStyle: 'short'}).replace(/^0/, '')}
       </div>
       <div className='clock__date'>
         <div className='clock__date__day'>
