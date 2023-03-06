@@ -79,7 +79,14 @@ const App = function(props) {
     // console.log('App', {_messages});
   }
 
-  const dialog = _messages?.['control-ui/cmnd/dialog'] ? [_messages?.['control-ui/cmnd/dialog']].flat() : null;
+  let dialogData;
+  let dialogHeader;
+
+  if(_messages?.['control-ui/cmnd/dialog']) {
+    dialogHeader = _messages?.['control-ui/cmnd/dialog']?.header;
+    dialogData   = _messages?.['control-ui/cmnd/dialog']?.data?.map(line =>
+      <div key={line}>{_.isObject(line) ? JSON.stringify(line) : line}</div>);
+  }
 
   return (
     <div className='control'>
@@ -94,13 +101,13 @@ const App = function(props) {
             <Route path='*'               element={<Control />} />
           </Routes>
         </Router>
-        {dialog ?
+        {dialogData ?
           <Dialog
             key='dialog'
             onClose={() => setMessages(prevMessages => _.omit(prevMessages, ['control-ui/cmnd/dialog']))}
-          >
-            {dialog.map(line => <div key={line}>{_.isObject(line) ? JSON.stringify(line) : line}</div>)}
-          </Dialog> :
+            header={dialogHeader}
+            data={dialogData}
+          /> :
           null}
       </MqttClientContext.Provider>
     </div>

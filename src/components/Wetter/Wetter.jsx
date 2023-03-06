@@ -161,8 +161,10 @@ export default function Wetter() {
                 <div className='wetter__warning__icon'>
                   <Alert
                     dark={true}
-                    onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`,
-                      JSON.stringify(alerts.flatMap(alert => [alert.event, alert.description])))}
+                    onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
+                      header: 'Wetter Warnung',
+                      data:   alerts.flatMap(alert => [alert.event, alert.description]),
+                    }))}
                   />
                 </div>
               </td>
