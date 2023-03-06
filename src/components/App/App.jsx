@@ -79,6 +79,8 @@ const App = function(props) {
     // console.log('App', {_messages});
   }
 
+  const dialog = _messages?.['control-ui/cmnd/dialog'] ? [_messages?.['control-ui/cmnd/dialog']].flat() : null;
+
   return (
     <div className='control'>
       <MqttClientContext.Provider value={_mqttClient}>
@@ -92,12 +94,12 @@ const App = function(props) {
             <Route path='*'               element={<Control />} />
           </Routes>
         </Router>
-        {_messages?.['control-ui/cmnd/dialog'] ?
+        {dialog ?
           <Dialog
             key='dialog'
             onClose={() => setMessages(prevMessages => _.omit(prevMessages, ['control-ui/cmnd/dialog']))}
           >
-            {_messages['control-ui/cmnd/dialog'].map(line => <div key={line}>{line}</div>)}
+            {dialog.map(line => <div key={line}>{_.isObject(line) ? JSON.stringify(line) : line}</div>)}
           </Dialog> :
           null}
       </MqttClientContext.Provider>

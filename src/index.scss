@@ -1,6 +1,12 @@
 $font-color:  #e0e0e0;
 $value-color: #ffff99;
 
+$dialog-frame-color:      #1aa3ff;
+$dialog-border-color:     #303030;
+$dialog-background-color: #ccebff;
+$dialog-header-color:     #000000;
+$dialog-text-color:       #000000;
+
 @import './components/index.scss';
 
 body {

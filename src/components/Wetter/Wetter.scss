@@ -1,45 +1,71 @@
 .wetter {
-  font-size: 190%;
+  // background-color: #666666;
+  display:        flex;
+  flex-direction: column;
+  flex:           1 1 auto;
+  padding-left:   7px;
 
-  > tbody > tr {
-    > td {
-      vertical-align: top;
-    }
+  > table {
+    // border: 1px solid yellow;
+    font-size:      190%;
+    border-spacing: 0;
 
-    > td:nth-child(2) {
-    }
+    > tbody > tr {
+      > td {
+        vertical-align: top;
+      }
 
-    > td {
-      > table {
-        > tbody {
-          > tr > td:first-child {
-            // background-color: #666666;
-            padding-right:  10px;
-            font-size:      80%;
-            vertical-align: middle;
-          }
+      > td:nth-child(2) {
+      }
 
-          > tr + tr > td.wetter__label {
-            border-top: 1px dotted $font-color;
-          }
+      > td {
+        > table {
+          border-spacing: 0;
 
-          .wetter__label {
-            font-weight: bold;
-          }
+          > tbody {
+            > tr:first-child {
+            }
 
-          .wetter__value {
-            color: $value-color;
+            > tr > td:first-child {
+              // background-color: #666666;
+              padding-right:  10px;
+              font-size:      80%;
+              vertical-align: middle;
+            }
 
-            .wetter__value__unit {
-              color:          $font-color;
-              font-size:      50%;
-              vertical-align: super;
+            > tr + tr > td.wetter__label {
+              border-top: 1px dotted $font-color;
+            }
+
+            .wetter__label {
+              font-weight: bold;
+            }
+
+            .wetter__value {
+              color: $value-color;
+
+              .wetter__value__unit {
+                color:          $font-color;
+                font-size:      50%;
+                vertical-align: super;
+              }
             }
           }
+        }
+      }
 
-          .wetter__warning {
-            background-color: #ff0000;
-          }
+      .wetter__warning {
+         padding-right: 7px;
+
+        .wetter__warning__text {
+          background-color: #ff6600;
+          float:            left;
+          padding-left:     7px;
+          width:            calc(100% - 45px - 10px);
+        }
+        .wetter__warning__icon {
+          width: 45px;
+          float: right;
         }
       }
     }

@@ -9,12 +9,13 @@ import Menu                   from '../../svg/Menu.jsx';
 import PlayColored            from '../../svg/Play.jsx';
 import StopColored            from '../../svg/Stop.jsx';
 
-import Button                 from '../../svg/Button.jsx';
-import Checked                from '../../svg/sargam/Checked.jsx';
-import Close                  from '../../svg/sargam/Close.jsx';
+import Alert                  from '../../svg/sargam/Alert.jsx';
 import BlindDown              from '../../svg/sargam/BlindDown.jsx';
 import BlindShade             from '../../svg/sargam/BlindShade.jsx';
 import BlindUp                from '../../svg/sargam/BlindUp.jsx';
+import Button                 from '../../svg/Button.jsx';
+import Checked                from '../../svg/sargam/Checked.jsx';
+import Close                  from '../../svg/sargam/Close.jsx';
 import Decrease               from '../../svg/sargam/Decrease.jsx';
 import Down                   from '../../svg/sargam/Down.jsx';
 import Home                   from '../../svg/sargam/Home.jsx';
@@ -110,6 +111,7 @@ const row4 = [
   <Button key='button' />,
   <Button key='buttonPushed' pushed={true} />,
   <Power key='power' />,
+  <Alert key='alert' />,
 ];
 
 export default function Icons() {

@@ -8,6 +8,8 @@ import React, {
 import MqttClientContext from '../../contexts/MqttClient.js';
 import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
+import Alert             from '../../svg/sargam/Alert.jsx';
+
 const topic = 'wetter/INFO';
 
 export default function Wetter() {
@@ -25,14 +27,17 @@ export default function Wetter() {
   }
 
   const {eveningStartsHour} = _message || {};
-  const wetter           = _message?.current.weather[0].description || '';
-  const temperatur       = _message?.current.temp       === undefined ? 99 : _message.current.temp;
-  const gefuehlt         = _message?.current.feels_like === undefined ? 99 : _message.current.feels_like;
-  const bewoelkung       = _message?.current.clouds     === undefined ? 99 : _message.current.clouds;
-  const luftfeuchtigkeit = _message?.current.humidity   === undefined ? 99 : _message.current.humidity;
-  const warnungEvent     = _message ? _message?.alerts?.[0].event : 'none';
-  // const warnungDesc      = _message?.alerts?.[0].description || '';
+  const wetter              = _message?.current.weather[0].description || '';
+  const temperatur          = _message?.current.temp       === undefined ? 99 : _message.current.temp;
+  const gefuehlt            = _message?.current.feels_like === undefined ? 99 : _message.current.feels_like;
+  const bewoelkung          = _message?.current.clouds     === undefined ? 99 : _message.current.clouds;
+  const luftfeuchtigkeit    = _message?.current.humidity   === undefined ? 99 : _message.current.humidity;
+  const alerts              = _message ? _message?.alerts || [] : [{event: 'none'}];
   // TODO Vorhersage
+
+  if(alerts.length > 1) {
+    // console.log({alerts});
+  }
 
   const renderNight = function() {
     return [
@@ -118,39 +123,53 @@ export default function Wetter() {
         <td>Luftfeuchtigkeit:</td>
         <td className='wetter__value'>{luftfeuchtigkeit}<font className='wetter__value__unit'>%</font></td>
       </tr>,
-      warnungEvent ?
-        <tr key='warnung'>
-          <td colSpan={2} className='wetter__warning'>{warnungEvent}</td>
-        </tr> :
-        null,
     ];
   };
 
   return (
-    <table className='wetter'>
-      <tbody>
-        <tr>
-          <td>
-            <table>
-              <tbody>
-                <tr>
-                  <td className='wetter__label'>Aktuell</td>
-                </tr>
-                {renderCurrent()}
-              </tbody>
-            </table>
-          </td>
-          <td>
-            <table>
-              <tbody>
-                {new Date().getHours() < eveningStartsHour ?
-                  [...renderDay(), ...renderNight()] :
-                  [...renderNight(), ...renderDay()]}
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div className='wetter'>
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <table>
+                <tbody>
+                  <tr>
+                    <td className='wetter__label'>Aktuell</td>
+                  </tr>
+                  {renderCurrent()}
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table>
+                <tbody>
+                  {new Date().getHours() < eveningStartsHour ?
+                    [...renderDay(), ...renderNight()] :
+                    [...renderNight(), ...renderDay()]}
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          {alerts.length ?
+            <tr key='warnung'>
+              <td colSpan={2} className='wetter__warning'>
+                <div className='wetter__warning__text'>
+                  {alerts[0].event}
+                  {alerts.length > 1 ? ` (${alerts.length})` : null}
+                </div>
+                <div className='wetter__warning__icon'>
+                  <Alert
+                    dark={true}
+                    onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`,
+                      JSON.stringify(alerts.flatMap(alert => [alert.event, alert.description])))}
+                  />
+                </div>
+              </td>
+            </tr> :
+            null}
+        </tbody>
+      </table>
+    </div>
   );
 }

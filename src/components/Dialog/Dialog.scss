@@ -14,13 +14,13 @@
     justify-content: center;
 
     .dialog-layer__center__border {
-      background-color: #fffaaf;
+      background-color: $dialog-frame-color;
       padding:          5px;
 
       .dialog-layer__center__border__header {
-        background-color: #fffaaf;
-        color:            #000000;
-        border-color:     #000000;
+        background-color: $dialog-frame-color;
+        color:            $dialog-header-color;
+        border-color:     $dialog-border-color;
         border-style:     solid;
         border-width:     2px 2px 0 2px;
         display:          flex;
@@ -37,7 +37,7 @@
 
         .dialog-layer__center__border__header__closer {
           // background-color: #f33aaf;
-          border-color:     #000000;
+          border-color:     $dialog-border-color;
           border-style:     solid;
           border-width:     0;
           height: 43px;
@@ -46,10 +46,10 @@
       }
 
       .dialog-layer__center__border__content {
-        background-color: #ffffff;
-        color:            #000000;
+        background-color: $dialog-background-color;
+        color:            $dialog-text-color;
         padding:          10px;
-        border-color:     #000000;
+        border-color:     $dialog-border-color;
         border-style:     solid;
         border-width:     2px;
       }

@@ -15,9 +15,14 @@ export default function mqttSubscribe({mqttClient, topic, topics, onMessage}) {
       }
 
       const messageRaw = messageBuffer.toString();
-      const message = JSON.parse(messageRaw);
 
-      onMessage({topic: messageTopic, message});
+      try {
+        const message = JSON.parse(messageRaw);
+
+        onMessage({topic: messageTopic, message});
+      } catch{
+        onMessage({topic: messageTopic, message: messageRaw});
+      }
     });
 
     (async() => {
