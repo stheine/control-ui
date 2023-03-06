@@ -8,6 +8,7 @@
   > table {
     // border: 1px solid yellow;
     font-size:      190%;
+    line-height:    120%;
     border-spacing: 0;
 
     > tbody > tr {
@@ -60,11 +61,11 @@
         .wetter__warning__text {
           background-color: #ff6600;
           float:            left;
-          padding-left:     7px;
+          padding:          2px 0 0 7px;
           width:            calc(100% - 45px - 10px);
         }
         .wetter__warning__icon {
-          width: 45px;
+          width: 40px;
           float: right;
         }
       }
