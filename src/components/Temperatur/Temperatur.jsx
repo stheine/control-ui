@@ -36,6 +36,19 @@ const degreeRenderer = function(num, config) {
 const sites = {
   aussen: {
     label: 'Außen',
+    topic: 'tasmota/thermometer/tele/SENSOR',
+    values: [{
+      key:       'AM2301.Temperature',
+      precision: 1,
+      unit:      '°C',
+    }, {
+      key:       'AM2301.Humidity',
+      precision: 0,
+      unit:      '%rH',
+    }],
+  },
+  aussenVito: {
+    label: 'Außen',
     topic: 'vito/tele/SENSOR',
     values: [{
       key:       'tempAussen',
@@ -98,7 +111,7 @@ export default function Temperatur(props) {
               <div className='temperatur__content'>
                 {value.key === 'dummy' ?
                   <span style={{fontSize: '10%'}}>&nbsp;</span> :
-                  degreeRenderer(_message?.[value.key], value)}
+                  degreeRenderer(_.get(_message, value.key), value)}
               </div>
             </td>
           </tr>
