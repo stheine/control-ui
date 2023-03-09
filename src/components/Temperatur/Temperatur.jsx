@@ -1,4 +1,5 @@
 import _                 from 'lodash';
+import ms                from 'ms';
 import React, {
   useContext,
   useEffect,
@@ -8,10 +9,10 @@ import React, {
 import MqttClientContext from '../../contexts/MqttClient.js';
 import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
-const degreeRenderer = function(num, config) {
-  const rounded = _.round(num, config.precision);
-  const numString = rounded.toString();
-  const [number, decimals] = numString.split('.');
+const renderValue = function(value, config) {
+  const rounded = _.round(value, config.precision);
+  const valueString = rounded.toString();
+  const [number, decimals] = valueString.split('.');
 
   return (
     <div className='temperatur__value'>
@@ -99,19 +100,26 @@ export default function Temperatur(props) {
     // console.log({site, _message});
   }
 
+  if(_message?.Time && Date.now() - Date.parse(_message.Time) > ms('60m')) {
+    // eslint-disable-next-line no-console
+    console.log('Temperatur:outdated', {now: Date.now(), sent: Date.parse(_message.Time), string: _message.Time});
+
+    return `Outdated`;
+  }
+
   return (
     <table className='temperatur'>
       <tbody>
         <tr>
           <td className='temperatur__label'>{sites[site].label}</td>
         </tr>
-        {_.map(sites[site].values, value => (
-          <tr key={value.key}>
+        {_.map(sites[site].values, config => (
+          <tr key={config.key}>
             <td>
               <div className='temperatur__content'>
-                {value.key === 'dummy' ?
+                {config.key === 'dummy' ?
                   <span style={{fontSize: '10%'}}>&nbsp;</span> :
-                  degreeRenderer(_.get(_message, value.key), value)}
+                  renderValue(_.get(_message, config.key), config)}
               </div>
             </td>
           </tr>
