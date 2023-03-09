@@ -31,7 +31,9 @@ export default function Solar() {
   useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
     [mqttClient]);
 
-  // console.log('Solar', {_message});
+  if(_message) {
+    // console.log('Solar', {_message});
+  }
 
   const akkuLadelevel           = _message?.battery.stateOfCharge  || 0;
   const akkuLadung              = _message?.battery.powerIncoming  || 0;
