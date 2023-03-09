@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 
+import AppContext        from '../../contexts/AppContext.js';
 import MqttClientContext from '../../contexts/MqttClient.js';
 import mqttSubscribe     from '../../lib/mqttSubscribe.js';
 
@@ -17,6 +18,7 @@ export default function Wetter() {
 
   const [_message, setMessage] = useState();
 
+  const {clientId} = useContext(AppContext);
   const mqttClient = useContext(MqttClientContext);
 
   useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
@@ -162,8 +164,9 @@ export default function Wetter() {
                   <Alert
                     dark={true}
                     onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
-                      header: 'Wetter Warnung',
-                      data:   alerts.flatMap(alert => [alert.event, alert.description]),
+                      clientId,
+                      header:   'Wetter Warnung',
+                      data:     alerts.flatMap(alert => [alert.event, alert.description]),
                     }))}
                   />
                 </div>

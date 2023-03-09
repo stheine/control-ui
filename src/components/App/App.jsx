@@ -7,12 +7,15 @@ import Favicon                   from 'react-favicon';
 import mqtt                      from 'async-mqtt';
 import {replace}                 from 'redux-first-history';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
+import {v4 as uuidv4}            from 'uuid';
 import React, {
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import {Route, Routes}           from 'react-router';
 
+import AppContext                from '../../contexts/AppContext.js';
 import Control                   from '../Control/Control.jsx';
 import Dialog                    from '../Dialog/Dialog.jsx';
 import faviconBase64             from '../../favicon.js';
@@ -32,6 +35,8 @@ const App = function(props) {
 
   const [_messages, setMessages] = useState({});
   const [_mqttClient, setMqttClient] = useState();
+
+  const appContextValue = useMemo(() => ({clientId: uuidv4()}), []);
 
   useEffect(() => {
     // / eslint-disable-next-line no-console
@@ -66,10 +71,12 @@ const App = function(props) {
         break;
 
       default:
-        setMessages(prevMessages => ({...prevMessages, [topic]: message}));
+        if(message?.clientId === appContextValue.clientId) {
+          setMessages(prevMessages => ({...prevMessages, [topic]: message}));
+        }
         break;
     }
-  }}), [_mqttClient, dispatch]);
+  }}), [appContextValue, _mqttClient, dispatch]);
 
   if(!_mqttClient) {
     return;
@@ -90,26 +97,28 @@ const App = function(props) {
 
   return (
     <div className='control'>
-      <MqttClientContext.Provider value={_mqttClient}>
-        <Favicon url={`data:image/png;base64,${faviconBase64}`} />
-        <Router history={history}>
-          <Routes>
-            <Route path='/'               element={<Control />} />
-            <Route path='/:page'          element={<Control />} />
-            <Route path='/icons'          element={<Icons />} />
-            <Route path='/settings/:page' element={<Settings />} />
-            <Route path='*'               element={<Control />} />
-          </Routes>
-        </Router>
-        {dialogData ?
-          <Dialog
-            key='dialog'
-            onClose={() => setMessages(prevMessages => _.omit(prevMessages, ['control-ui/cmnd/dialog']))}
-            header={dialogHeader}
-            data={dialogData}
-          /> :
-          null}
-      </MqttClientContext.Provider>
+      <AppContext.Provider value={appContextValue}>
+        <MqttClientContext.Provider value={_mqttClient}>
+          <Favicon url={`data:image/png;base64,${faviconBase64}`} />
+          <Router history={history}>
+            <Routes>
+              <Route path='/'               element={<Control />} />
+              <Route path='/:page'          element={<Control />} />
+              <Route path='/icons'          element={<Icons />} />
+              <Route path='/settings/:page' element={<Settings />} />
+              <Route path='*'               element={<Control />} />
+            </Routes>
+          </Router>
+          {dialogData ?
+            <Dialog
+              key='dialog'
+              onClose={() => setMessages(prevMessages => _.omit(prevMessages, ['control-ui/cmnd/dialog']))}
+              header={dialogHeader}
+              data={dialogData}
+            /> :
+            null}
+        </MqttClientContext.Provider>
+      </AppContext.Provider>
     </div>
   );
 };
