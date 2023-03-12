@@ -1,32 +1,18 @@
 import React, {
   useContext,
-//   useEffect,
-//   useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-// import mqttSubscribe     from '../../lib/mqttSubscribe.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
-import BlindDown         from '../../svg/sargam/BlindDown.jsx';
-import BlindShade        from '../../svg/sargam/BlindShade.jsx';
-import BlindUp           from '../../svg/sargam/BlindUp.jsx';
-import StopCircle        from '../../svg/sargam/StopCircle.jsx';
-
-// const topic = 'volumio/stat/pushState';
+import BlindDown   from '../../svg/sargam/BlindDown.jsx';
+import BlindShade  from '../../svg/sargam/BlindShade.jsx';
+import BlindUp     from '../../svg/sargam/BlindUp.jsx';
+import StopCircle  from '../../svg/sargam/StopCircle.jsx';
 
 export default function Jalousie() {
   // console.log('Jalousie');
 
-//  const [_message, setMessage] = useState();
-
-  const mqttClient = useContext(MqttClientContext);
-
-//  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-//    [mqttClient]);
-
-//  if(_message) {
-    // console.log('Jalousie', {_message});
-//  }
+  const {mqttClient} = useContext(MqttContext);
 
   // Power2 - Hoch
   // Power1 - Runter

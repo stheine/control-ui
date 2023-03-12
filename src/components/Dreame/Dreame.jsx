@@ -1,39 +1,21 @@
-/* eslint-disable object-property-newline */
-
-import _                 from 'lodash';
+import _           from 'lodash';
 import React, {
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
-
-const topics = [
-  'valetudo/dreame-d9/BatteryStateAttribute/level',
-  'valetudo/dreame-d9/StatusStateAttribute/status',
-//  'valetudo/dreame-d9/StatusStateAttribute/detail',
-  'valetudo/dreame-d9/StatusStateAttribute/error',
-];
+// import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
 export default function Dreame() {
-  const mqttClient = useContext(MqttClientContext);
+  const {messages} = useContext(MqttContext);
 
-  // console.log('Dreame');
-
-  const [_messages, setMessages] = useState({});
-
-  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
-    setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
-
-  if(!_.isEmpty(_messages)) {
-    // console.log('Dreame', {_messages});
+  if(!_.isEmpty(messages)) {
+    // console.log('Dreame', {messages});
   }
 
-  const level         = _messages['valetudo/dreame-d9/BatteryStateAttribute/level'] || 999;
-  const status        = _messages['valetudo/dreame-d9/StatusStateAttribute/status'] || 'Unknown';
-  const error         = _messages['valetudo/dreame-d9/StatusStateAttribute/error'];
+  const level         = messages['valetudo/dreame-d9/BatteryStateAttribute/level'] || 999;
+  const status        = messages['valetudo/dreame-d9/StatusStateAttribute/status'] || 'Unknown';
+  const error         = messages['valetudo/dreame-d9/StatusStateAttribute/error'];
   const errorSeverity = error?.severity.kind || 'none';
 
   return (

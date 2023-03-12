@@ -1,14 +1,10 @@
-import _                 from 'lodash';
+import _           from 'lodash';
 import React, {
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
-
-const topic = 'Fronius/solar/tele/SENSOR';
+import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
 const displayWattage = function(value) {
   return [
@@ -24,23 +20,22 @@ const displayWattage = function(value) {
 export default function Solar() {
   // console.log('Solar');
 
-  const [_message, setMessage] = useState();
+  const {messages} = useContext(MqttContext);
 
-  const mqttClient = useContext(MqttClientContext);
+  const siteConfig = _.first(mqttConfig);
 
-  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-    [mqttClient]);
+  const message = messages[siteConfig.topic];
 
-  if(_message) {
-    // console.log('Solar', {_message});
+  if(message) {
+    // console.log('Solar', {message});
   }
 
-  const akkuLadelevel           = _message?.battery.stateOfCharge  || 0;
-  const akkuLadung              = _message?.battery.powerIncoming  || 0;
-  const solarErzeugung          = _.isNumber(_message?.solar.powerOutgoing) ? _message.solar.powerOutgoing : 99999;
-  const wechselrichterErzeugung = _message?.inverter.powerOutgoing || 0;
-  const einspeisung             = _message?.meter.powerOutgoing    || 0;
-  const einkauf                 = _message?.meter.powerIncoming    || 0;
+  const akkuLadelevel           = message?.battery.stateOfCharge  || 0;
+  const akkuLadung              = message?.battery.powerIncoming  || 0;
+  const solarErzeugung          = _.isNumber(message?.solar.powerOutgoing) ? message.solar.powerOutgoing : 99999;
+  const wechselrichterErzeugung = message?.inverter.powerOutgoing || 0;
+  const einspeisung             = message?.meter.powerOutgoing    || 0;
+  const einkauf                 = message?.meter.powerIncoming    || 0;
 
   const verbrauch               = wechselrichterErzeugung - einspeisung + einkauf;
 

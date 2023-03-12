@@ -19,21 +19,22 @@ import WetterDwd   from '../WetterDwd/WetterDwd.jsx';
 
 const pages = {
   1: [
-    {width: 1, fit: true, content: <Temperatur site='aussen' />},
-    {width: 1, fit: true, content: <Temperatur site='wohnen' />},
+    {width: 1, fit: true, content: <Temperatur site='Außen' />},
+    {width: 1, fit: true, content: <Temperatur site='Wohnen' />},
     {width: 1, fit: true, content: <Clock />},
     {width: 2,            content: <Wetter />},
     {width: 1, fit: true, content: <Solar />},
   ],
   2: [
     {width: 1, fit: true, content: <Fenster />},
-    {width: 1, fit: true, content: <Temperatur site='buero' />},
-    {width: 1, fit: true, content: <Temperatur site='aussenVito' />},
+    {width: 1, fit: true, content: <Temperatur site='Büro' />},
+    {width: 1, fit: true, content: <Temperatur site='AußenVito' />},
     {width: 1, fit: true, content: <Vito />},
     {width: 2,            content: <Volumio />},
-    {width: 1, fit: true, content: <Jalousie />},
   ],
   3: [
+// TODO    {width: 1, fit: true, content: <Jalousie />},
+    {width: 2,            content: <Wetter />},
     {width: 1, fit: true, content: <Dreame />},
     {width: 2,            content: <WetterDwd />},
   ],

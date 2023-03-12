@@ -1,40 +1,26 @@
-/* eslint-disable object-property-newline */
-
-import _                 from 'lodash';
+import _           from 'lodash';
 import React, {
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
+import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
-import Led               from '../../svg/Led.jsx';
-
-const topics = [
-  'control-io/ledRed/STATE',
-  'control-io/ledWhite/STATE',
-];
+import Led         from '../../svg/Led.jsx';
 
 export default function Leds() {
-  const mqttClient = useContext(MqttClientContext);
+  const {messages, mqttClient} = useContext(MqttContext);
 
-  const [_messages, setMessages] = useState({'control-io/ledRed/STATE': 0, 'control-io/ledWhite/STATE': 0});
-
-  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
-    setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
-
-  if(!_.isEmpty(_messages)) {
-    // console.log('Leds', {_messages});
+  if(!_.isEmpty(messages)) {
+    // console.log('Leds', {messages});
   }
 
   return (
     <table>
       <tbody>
         <tr>
-          {_.map(_messages, (state, topic) => {
-            const led   = topic.split('/')[1];
+          {_.map(mqttConfig, config => {
+            const led   = config.topic.split('/')[1];
             const color = led.replace(/^led/, '').toLowerCase();
 
             return (
@@ -42,8 +28,8 @@ export default function Leds() {
                 <Led
                   color={color}
                   dark={true}
-                  lit={Boolean(state)}
-                  onClick={() => mqttClient.publish(`control-io/cmnd/${led}`, state ? '0' : '1')}
+                  lit={Boolean(messages[config.topic])}
+                  onClick={() => mqttClient.publish(`control-io/cmnd/${led}`, messages[config.topic] ? '0' : '1')}
                 />
               </td>
             );

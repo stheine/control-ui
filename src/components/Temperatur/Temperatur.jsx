@@ -1,13 +1,11 @@
-import _                 from 'lodash';
-import ms                from 'ms';
+import _           from 'lodash';
+import ms          from 'ms';
 import React, {
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
+import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
 const renderValue = function(value, config) {
   const rounded = _.round(value, config.precision);
@@ -34,75 +32,27 @@ const renderValue = function(value, config) {
   );
 };
 
-const sites = {
-  aussen: {
-    label: 'Außen',
-    topic: 'tasmota/thermometer/tele/SENSOR',
-    values: [{
-      key:       'AM2301.Temperature',
-      precision: 1,
-      unit:      '°C',
-    }, {
-      key:       'AM2301.Humidity',
-      precision: 0,
-      unit:      '%rH',
-    }],
-  },
-  aussenVito: {
-    label: 'Außen',
-    topic: 'vito/tele/SENSOR',
-    values: [{
-      key:       'tempAussen',
-      precision: 1,
-      unit:      '°C',
-    }],
-  },
-  buero: {
-    label: 'Büro',
-    topic: 'Zigbee/LuftSensor Büro',
-    values: [{
-      key:       'temperature',
-      precision: 1,
-      unit:      '°C',
-    }, {
-      key:       'humidity',
-      precision: 0,
-      unit:      '%rH',
-    }],
-  },
-  wohnen: {
-    label: 'Wohnen',
-    topic: 'Wohnzimmer/tele/SENSOR',
-    values: [{
-      key:       'temperature',
-      precision: 1,
-      unit:      '°C',
-    }, {
-      key:       'humidity',
-      precision: 0,
-      unit:      '%rH',
-    }],
-  },
-};
-
 export default function Temperatur(props) {
   const {site} = props;
   // console.log('Temperaturen');
 
-  const mqttClient = useContext(MqttClientContext);
+  const {messages} = useContext(MqttContext);
 
-  const [_message, setMessage] = useState();
+  const siteConfig = _.find(mqttConfig, {label: site});
 
-  useEffect(() => mqttSubscribe({mqttClient, topic: sites[site].topic, onMessage: ({message}) => setMessage(message)}),
-    [mqttClient, site]);
-
-  if(_message) {
-    // console.log({site, _message});
+  if(!siteConfig) {
+    return <div>Missing: {site}</div>;
   }
 
-  if(_message?.Time && Date.now() - Date.parse(_message.Time) > ms('60m')) {
+  const message = messages[siteConfig.topic];
+
+  if(message) {
+    // console.log({site, message});
+  }
+
+  if(message?.Time && Date.now() - Date.parse(message.Time) > ms('60m')) {
     // eslint-disable-next-line no-console
-    console.log('Temperatur:outdated', {now: Date.now(), sent: Date.parse(_message.Time), string: _message.Time});
+    console.log('Temperatur:outdated', {now: Date.now(), sent: Date.parse(message.Time), string: message.Time});
 
     return `Outdated`;
   }
@@ -111,15 +61,15 @@ export default function Temperatur(props) {
     <table className='temperatur'>
       <tbody>
         <tr>
-          <td className='temperatur__label'>{sites[site].label}</td>
+          <td className='temperatur__label'>{siteConfig.label}</td>
         </tr>
-        {_.map(sites[site].values, config => (
+        {_.map(siteConfig.values, config => (
           <tr key={config.key}>
             <td>
               <div className='temperatur__content'>
                 {config.key === 'dummy' ?
                   <span style={{fontSize: '10%'}}>&nbsp;</span> :
-                  renderValue(_.get(_message, config.key), config)}
+                  renderValue(_.get(message, config.key), config)}
               </div>
             </td>
           </tr>

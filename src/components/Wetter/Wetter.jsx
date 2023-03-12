@@ -1,40 +1,33 @@
 import _ from 'lodash';
 import React, {
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 
-import AppContext        from '../../contexts/AppContext.js';
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
+import AppContext  from '../../contexts/AppContext.js';
+import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
-import Alert             from '../../svg/sargam/Alert.jsx';
-
-const topic = 'wetter/INFO';
+import Alert       from '../../svg/sargam/Alert.jsx';
 
 export default function Wetter() {
-  // console.log('Wetter');
-
-  const [_message, setMessage] = useState();
-
   const {clientId} = useContext(AppContext);
-  const mqttClient = useContext(MqttClientContext);
+  const {messages, mqttClient} = useContext(MqttContext);
 
-  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-    [mqttClient]);
+  const siteConfig = _.first(mqttConfig);
 
-  if(_message) {
-    // console.log('Wetter', {_message});
+  const message = messages[siteConfig.topic];
+
+  if(message) {
+    // console.log('Wetter', {message});
   }
 
-  const {eveningStartsHour} = _message || {};
-  const wetter              = _message?.current.weather[0].description || '';
-  const temperatur          = _message?.current.temp       === undefined ? 99 : _message.current.temp;
-  const gefuehlt            = _message?.current.feels_like === undefined ? 99 : _message.current.feels_like;
-  const bewoelkung          = _message?.current.clouds     === undefined ? 99 : _message.current.clouds;
-  const luftfeuchtigkeit    = _message?.current.humidity   === undefined ? 99 : _message.current.humidity;
-  const alerts              = _message ? _message?.alerts || [] : [{event: 'none'}];
+  const {eveningStartsHour} = message || {};
+  const wetter              = message?.current.weather[0].description || '';
+  const temperatur          = message?.current.temp       === undefined ? 99 : message.current.temp;
+  const gefuehlt            = message?.current.feels_like === undefined ? 99 : message.current.feels_like;
+  const bewoelkung          = message?.current.clouds     === undefined ? 99 : message.current.clouds;
+  const luftfeuchtigkeit    = message?.current.humidity   === undefined ? 99 : message.current.humidity;
+  const alerts              = message ? message?.alerts || [] : [{event: 'none'}];
   // TODO Vorhersage
 
   if(alerts.length > 1) {
@@ -50,12 +43,12 @@ export default function Wetter() {
         <td>Temperatur:</td>
         <td>
           <font className='wetter__value'>
-            {_.round(_message?.nightMinTemp)}
+            {_.round(message?.nightMinTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
           &nbsp;-&nbsp;
           <font className='wetter__value'>
-            {_.round(_message?.nightMaxTemp)}
+            {_.round(message?.nightMaxTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
         </td>
@@ -63,7 +56,7 @@ export default function Wetter() {
       <tr key='nightWind'>
         <td>Max Wind:</td>
         <td className='wetter__value'>
-          {_.round(_message?.nightMaxWind || 0 * 3.6)}
+          {_.round(message?.nightMaxWind || 0 * 3.6)}
           <font className='wetter__value__unit'>km/h</font>
         </td>
       </tr>,
@@ -79,12 +72,12 @@ export default function Wetter() {
         <td>Temperatur:</td>
         <td>
           <font className='wetter__value'>
-            {_.round(_message?.dayMinTemp)}
+            {_.round(message?.dayMinTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
           &nbsp;-&nbsp;
           <font className='wetter__value'>
-            {_.round(_message?.dayMaxTemp)}
+            {_.round(message?.dayMaxTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
         </td>
@@ -92,7 +85,7 @@ export default function Wetter() {
       <tr key='dayWind'>
         <td>Max Wind:</td>
         <td className='wetter__value'>
-          {_.round(_message?.dayMaxWind || 0 * 3.6)}<font className='wetter__value__unit'>km/h</font>
+          {_.round(message?.dayMaxWind || 0 * 3.6)}<font className='wetter__value__unit'>km/h</font>
         </td>
       </tr>,
     ];

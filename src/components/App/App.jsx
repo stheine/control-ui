@@ -1,4 +1,3 @@
-/* eslint-disable object-property-newline */
 /* eslint-disable react/jsx-props-no-multi-spaces */
 
 import _                         from 'lodash';
@@ -21,14 +20,10 @@ import Dialog                    from '../Dialog/Dialog.jsx';
 import faviconBase64             from '../../favicon.js';
 import {history}                 from '../../store/index.js';
 import Icons                     from '../Icons/Icons.jsx';
-import MqttClientContext         from '../../contexts/MqttClient.js';
+import mqttConfigs               from '../mqttConfigs.js';
+import MqttContext               from '../../contexts/MqttContext.js';
 import mqttSubscribe             from '../../lib/mqttSubscribe.js';
 import Settings                  from '../Settings/Settings.jsx';
-
-const topics = [
-  'control-ui/cmnd/dialog',
-  'control-ui/cmnd/route',
-];
 
 const App = function(props) {
   const {dispatch} = props;
@@ -37,6 +32,7 @@ const App = function(props) {
   const [_mqttClient, setMqttClient] = useState();
 
   const appContextValue = useMemo(() => ({clientId: uuidv4()}), []);
+  const mqttContextValue = useMemo(() => ({messages: _messages, mqttClient: _mqttClient}), [_messages, _mqttClient]);
 
   useEffect(() => {
     // / eslint-disable-next-line no-console
@@ -64,19 +60,29 @@ const App = function(props) {
     };
   }, []);
 
-  useEffect(() => mqttSubscribe({mqttClient: _mqttClient, topics, onMessage({topic, message}) {
-    switch(topic) {
-      case 'control-ui/cmnd/route':
-        dispatch(replace(message));
-        break;
+  useEffect(() => mqttSubscribe({
+    mqttClient: _mqttClient,
+    topics:     _.map(mqttConfigs, 'topic'),
+    onMessage({topic, message}) {
+      // console.log('App:onMessage', {topic, message});
 
-      default:
-        if(message?.clientId === appContextValue.clientId) {
+      switch(topic) {
+        case 'control-ui/cmnd/route':
+          dispatch(replace(message));
+          break;
+
+        case 'control-ui/cmnd/dialog':
+          if(message?.clientId === appContextValue.clientId) {
+            setMessages(prevMessages => ({...prevMessages, [topic]: message}));
+          }
+          break;
+
+        default:
           setMessages(prevMessages => ({...prevMessages, [topic]: message}));
-        }
-        break;
-    }
-  }}), [appContextValue, _mqttClient, dispatch]);
+          break;
+      }
+    },
+  }), [appContextValue, dispatch, _mqttClient]);
 
   if(!_mqttClient) {
     return;
@@ -98,7 +104,7 @@ const App = function(props) {
   return (
     <div className='control'>
       <AppContext.Provider value={appContextValue}>
-        <MqttClientContext.Provider value={_mqttClient}>
+        <MqttContext.Provider value={mqttContextValue}>
           <Favicon url={`data:image/png;base64,${faviconBase64}`} />
           <Router history={history}>
             <Routes>
@@ -117,7 +123,7 @@ const App = function(props) {
               data={dialogData}
             /> :
             null}
-        </MqttClientContext.Provider>
+        </MqttContext.Provider>
       </AppContext.Provider>
     </div>
   );

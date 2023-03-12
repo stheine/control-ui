@@ -53,7 +53,7 @@ export default function mqttSubscribe({mqttClient, topic, topics, onMessage}) {
   }
 
   return async() => {
-    // console.log(`unsubscribing from ${subscribeTopics.join(', ')}`);
+    console.log(`unsubscribing from ${subscribeTopics.join(', ')}`);
     try {
       await mqttClient.unsubscribe(subscribeTopics);
       // console.log(`unsubscribed from ${subscribeTopics.join(', ')}`);

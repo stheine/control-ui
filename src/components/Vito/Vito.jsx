@@ -4,33 +4,31 @@ import React, {
   useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
+import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
 import OffColored        from '../../svg/sargam/OffColored.jsx';
 import OnColored         from '../../svg/sargam/OnColored.jsx';
 import OnOffUnknown      from '../../svg/sargam/OnOffUnknown.jsx';
 
-const topic = 'vito/tele/SENSOR';
-
 export default function Vito() {
-  const [_message, setMessage] = useState();
   const [_sparbetrieb, setSparbetrieb] = useState();
 
-  const mqttClient = useContext(MqttClientContext);
+  const {messages, mqttClient} = useContext(MqttContext);
 
-  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-    [mqttClient]);
+  const siteConfig = mqttConfig[0];
 
-  useEffect(() => setSparbetrieb(Boolean(Number(_message?.hk1BetriebsartSpar))),
-    [_message?.hk1BetriebsartSpar]);
+  const message = messages[siteConfig.topic];
 
-  const heizkreisPumpe    = Boolean(Number(_message?.heizkreisPumpe))     || false;
-  const kesselLeistung    = Number(_message?.kesselLeistung)              || 0;
-  const zirkulationsPumpe = Boolean(Number(_message?.zirkulationsPumpe))  || false;
+  useEffect(() => setSparbetrieb(Boolean(Number(message?.hk1BetriebsartSpar))),
+    [message?.hk1BetriebsartSpar]);
 
-  if(_message) {
-  // console.log('Vito', {_message, _sparbetrieb});
+  const heizkreisPumpe    = Boolean(Number(message?.heizkreisPumpe))     || false;
+  const kesselLeistung    = Number(message?.kesselLeistung)              || 0;
+  const zirkulationsPumpe = Boolean(Number(message?.zirkulationsPumpe))  || false;
+
+  if(message) {
+  // console.log('Vito', {message, _sparbetrieb});
   }
 
   const Sparbetrieb = function() {

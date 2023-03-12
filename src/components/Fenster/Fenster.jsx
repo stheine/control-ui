@@ -1,48 +1,32 @@
-/* eslint-disable object-property-newline */
-
-import _                 from 'lodash';
+import _           from 'lodash';
 import React, {
   useContext,
-  useEffect,
-  useState,
+  useMemo,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
-
-const topics = [
-  'Zigbee/FensterSensor Toilette',
-  'Zigbee/FensterSensor Kinderbad',
-  'Zigbee/FensterSensor Badezimmer',
-  'Zigbee/FensterSensor Büro',
-  'Zigbee/FensterSensor Garage',
-];
+import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
 export default function Fenster() {
-  const mqttClient = useContext(MqttClientContext);
+  const {messages} = useContext(MqttContext);
 
-  const [_messages, setMessages] = useState({});
-
-  useEffect(() => {
-    if(window.screen.height !== 600 && !topics.includes('Zigbee/FensterSensor Sonoff 1')) {
-      topics.push('Zigbee/FensterSensor Sonoff 1');
-    }
-  }, []);
-
-  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
-    setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
+  const controlClient = useMemo(() => window.screen.height === 600, []);
 
   // console.log('Fenster', {_messages});
 
   return (
     <table>
       <tbody>
-        {_.map(topics, topic => {
-          const contact = _messages[topic]?.contact;
-          const label   = topic.replace(/^[^ ]* /, '');
+        {_.map(mqttConfig, config => {
+          if(controlClient && config.topic === 'Zigbee/FensterSensor Sonoff 1') {
+            return;
+          }
+
+          const contact = messages[config.topic]?.contact;
+          const label   = config.topic.replace(/^[^ ]* /, '');
 
           return (
-            <tr key={topic}>
+            <tr key={config.topic}>
               <td>
                 <span
                   style={{

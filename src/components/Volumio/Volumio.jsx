@@ -1,12 +1,10 @@
 import _ from 'lodash';
 import React, {
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
+import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
 import Decrease          from '../../svg/sargam/Decrease.jsx';
 import Dlf               from '../../svg/Dlf.jsx';
@@ -16,20 +14,17 @@ import Increase          from '../../svg/sargam/Increase.jsx';
 import PlayPause         from '../../svg/sargam/PlayPause.jsx';
 // import Stop              from '../../svg/sargam/Stop.jsx';
 
-const topic = 'volumio/stat/pushState';
-
 export default function Volumio() {
   // console.log('Volumio');
 
-  const [_message, setMessage] = useState();
+  const {messages, mqttClient} = useContext(MqttContext);
 
-  const mqttClient = useContext(MqttClientContext);
+  const siteConfig = _.first(mqttConfig);
 
-  useEffect(() => mqttSubscribe({mqttClient, topic, onMessage: ({message}) => setMessage(message)}),
-    [mqttClient]);
+  const message = messages[siteConfig.topic];
 
-  if(_message) {
-    // console.log('Volumio', {_message});
+  if(message) {
+    // console.log('Volumio', {message});
   }
 
   return (
@@ -40,12 +35,12 @@ export default function Volumio() {
             <Dlf dark={true} onClick={() => mqttClient.publish('volumio/cmnd/DLF', '')} />
           </td>
           <td rowSpan={3} className='volumio__title'>
-            <div><span>{_message?.artist ? `${_message.artist} - ` : null}{_message?.title}</span></div>
+            <div><span>{message?.artist ? `${message.artist} - ` : null}{message?.title}</span></div>
           </td>
           <td rowSpan={3} className='volumio__volume'>
             <div>
               <Increase dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"+"')} />
-              <span>{_message?.volume}</span>
+              <span>{message?.volume}</span>
               <Decrease dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"-"')} />
             </div>
           </td>
@@ -56,7 +51,7 @@ export default function Volumio() {
           </td>
         </tr>
         <tr>
-          <td className='volumio__status'>{_.upperFirst(_message?.status)}</td>
+          <td className='volumio__status'>{_.upperFirst(message?.status)}</td>
         </tr>
       </tbody>
     </table>

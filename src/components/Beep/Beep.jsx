@@ -2,14 +2,14 @@ import React, {
   useContext,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
+import MqttContext  from '../../contexts/MqttContext.js';
 
-import Notification           from '../../svg/sargam/Notification.jsx';
+import Notification from '../../svg/sargam/Notification.jsx';
 
 export default function LedToggle() {
-  const mqttClient = useContext(MqttClientContext);
+  const {mqttClient} = useContext(MqttContext);
 
-  // console.log('LedToggle');
+  // console.log('Beep');
 
   return (
     <Notification dark={true} onClick={() => mqttClient.publish('control-io/cmnd/beep', '')} />

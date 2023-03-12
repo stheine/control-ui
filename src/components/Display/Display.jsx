@@ -1,40 +1,26 @@
-/* eslint-disable object-property-newline */
-
 import React, {
   useContext,
-  useEffect,
-  useState,
 } from 'react';
 
-import MqttClientContext from '../../contexts/MqttClient.js';
-import mqttSubscribe     from '../../lib/mqttSubscribe.js';
+// import mqttConfig  from './mqttConfig.js';
+import MqttContext from '../../contexts/MqttContext.js';
 
-import Moon              from '../../svg/sargam/Moon.jsx';
-import ScreenOff         from '../../svg/sargam/ScreenOff.jsx';
-import Sun               from '../../svg/sargam/Sun.jsx';
-
-const topics = [
-  `control-io/brightness/STATE`,
-  `control-io/display/STATE`,
-];
+import Moon        from '../../svg/sargam/Moon.jsx';
+import ScreenOff   from '../../svg/sargam/ScreenOff.jsx';
+import Sun         from '../../svg/sargam/Sun.jsx';
 
 const Display = function() {
-  const mqttClient = useContext(MqttClientContext);
-
-  const [_messages, setMessages] = useState({});
-
-  useEffect(() => mqttSubscribe({mqttClient, topics, onMessage: ({topic, message}) =>
-    setMessages(prevMessages => ({...prevMessages, [topic]: message}))}), [mqttClient]);
+  const {messages, mqttClient} = useContext(MqttContext);
 
   // console.log('Display', _messages);
 
-  const state = _messages['control-io/display/STATE'];
+  const state = messages['control-io/display/STATE'];
 
   return (
     <table style={{padding: '0 30px 0 0'}}>
       <tbody>
         <tr>
-          <td style={{fontSize: 50}}>{_messages['control-io/brightness/STATE'] || 999}</td>
+          <td style={{fontSize: 50}}>{messages['control-io/brightness/STATE'] || 999}</td>
           <td><Sun dark={true} onClick={() => mqttClient.publish(`control-io/cmnd/brightness`, '"-"')} /></td>
         </tr>
         <tr>
