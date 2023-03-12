@@ -15,6 +15,7 @@ import Temperatur  from '../Temperatur/Temperatur.jsx';
 import Vito        from '../Vito/Vito.jsx';
 import Volumio     from '../Volumio/Volumio.jsx';
 import Wetter      from '../Wetter/Wetter.jsx';
+import WetterDwd   from '../WetterDwd/WetterDwd.jsx';
 
 const pages = {
   1: [
@@ -34,6 +35,7 @@ const pages = {
   ],
   3: [
     {width: 1, fit: true, content: <Dreame />},
+    {width: 2,            content: <WetterDwd />},
   ],
 };
 
