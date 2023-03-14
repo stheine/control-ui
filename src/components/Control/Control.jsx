@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/prefer-at */
-
 import _           from 'lodash';
 import React       from 'react';
 import {useParams} from 'react-router-dom';
@@ -20,19 +18,18 @@ import Wetter      from '../Wetter/Wetter.jsx';
 //  {width: 3,            content: <WetterDwd />},
 
 const items = [
-  {width: 1, fit: true, content: <Temperatur site='Außen' />},
-  {width: 1, fit: true, content: <Temperatur site='Wohnen' />},
-  {width: 2,            content: <Wetter />},
-  {width: 1, fit: true, content: <Clock />},
-  {width: 1, fit: true, content: <Solar />},
-  {width: 1, fit: true, content: <Fenster />},
-  {width: 1, fit: true, content: <Temperatur site='Büro' />},
-  {width: 1, fit: true, content: <Temperatur site='AußenVito' />},
-  {width: 1, fit: true, content: <Vito />},
-  {width: 2,            content: <Volumio />},
-  {width: 1, fit: true, content: <Jalousie />},
-  {width: 2,            content: <Wetter />},
-  {width: 1, fit: true, content: <Dreame />},
+  {id: 'tempAussen', width: 1, fit: true, content: <Temperatur site='Außen' />},
+  {id: 'tempWohnen', width: 1, fit: true, content: <Temperatur site='Wohnen' />},
+  {id: 'wetter',     width: 2,            content: <Wetter />},
+  {id: 'clock',      width: 1, fit: true, content: <Clock />},
+  {id: 'solar',      width: 1, fit: true, content: <Solar />},
+  {id: 'fenster',    width: 1, fit: true, content: <Fenster />},
+  {id: 'tempBuero',  width: 1, fit: true, content: <Temperatur site='Büro' />},
+  {id: 'tempVito',   width: 1, fit: true, content: <Temperatur site='AußenVito' />},
+  {id: 'vito',       width: 1, fit: true, content: <Vito />},
+  {id: 'volumio',    width: 2,            content: <Volumio />},
+  {id: 'jalousie',   width: 1, fit: true, content: <Jalousie />},
+  {id: 'dreame',     width: 1, fit: true, content: <Dreame />},
 ];
 
 const itemsToPages = function() {
@@ -57,6 +54,8 @@ const itemsToPages = function() {
     } while(!found);
   }
 
+  // console.log({pages});
+
   return pages;
 };
 
@@ -68,5 +67,5 @@ export default function Control() {
 
   // console.log('Control', {page, params});
 
-  return <Grid page={page} items={pages[page - 1]} maxPages={Number(_.last(_.keys(pages)))} />;
+  return <Grid page={page} items={pages[page - 1]} maxPages={Number(_.keys(pages).length)} />;
 }
