@@ -1,5 +1,6 @@
 const translateCode = function(code) {
   switch(code) {
+    case 0:
     case 1:
       return 'Wolkenlos';
     case 2:
@@ -9,73 +10,80 @@ const translateCode = function(code) {
     case 4:
       return 'Bedeckt';
     case 5:
+    case 45:
       return 'Nebel';
     case 6:
-      return 'Nebel'; // gefrierender Nebel
+    case 48:
+      return 'gefrierender Nebel';
     case 7:
-      return 'Regen'; // leichter Regen
+    case 61:
+      return 'leichter Regen';
     case 8:
+    case 63:
       return 'Regen';
     case 9:
-      return 'Regen'; // kraeftiger Regen
+    case 65:
+      return 'kräftiger Regen';
     case 10:
-      return 'Schneeregen'; // gefrierender Regen
+      return 'gefrierender Regen';
     case 11:
-      return 'Schneeregen'; // kraeftiger gefrierender Regen
+      return 'kräftiger gefrierender Regen';
     case 12:
+    case 66:
       return 'Schneeregen';
     case 13:
-      return 'Schneeregen'; // kraeftiger Schneeregen
+    case 67:
+      return 'kräftiger Schneeregen';
     case 14:
-      return 'Schneefall'; // leichter Schneefall
+    case 71:
+      return 'leichter Schneefall';
     case 15:
+    case 73:
       return 'Schneefall';
     case 16:
-      return 'Schneefall'; // kraeftiger Schneefall
+    case 75:
+      return 'kräftiger Schneefall';
     case 17:
-      return 'Schneefall'; // Eiskoerner
+    case 77:
+      return 'Eiskörner';
     case 18:
+    case 51:
+    case 53:
+    case 80:
+    case 81:
       return 'Regenschauer';
     case 19:
-      return 'Regenschauer'; // kraeftiger Regenschauer
+    case 55:
+    case 82:
+      return 'kräftiger Regenschauer';
     case 20:
       return 'Schneeregenschauer';
     case 21:
-      return 'Schneeschauer'; // kraeftiger Schneeregenschauer
+      return 'kräftiger Schneeregenschauer';
     case 22:
       return 'Schneeschauer';
     case 23:
-      return 'Schneeschauer'; // kraeftiger Schneeschauer
+      return 'kräftiger Schneeschauer';
     case 24:
-      return 'Schneeschauer'; // Graupelschauer
+      return 'Graupelschauer';
     case 25:
-      return 'Schneeschauer'; // kraeftiger Graupelschauer
+      return 'kräftiger Graupelschauer';
     case 26:
-      return 'Gewitter'; // Gewitter ohne Niederschlag
+      return 'Gewitter ohne Niederschlag';
     case 27:
+    case 95:
       return 'Gewitter';
     case 28:
-      return 'Gewitter'; // kraeftiges Gewitter
+      return 'kräftiges Gewitter';
     case 29:
-      return 'Gewitter'; // Gewitter mit Hagel
+    case 96:
+      return 'Gewitter mit Hagel';
+    case 99:
     case 30:
-      return 'Gewitter'; // kraeftiges Gewitter mit Hagel
+      return 'kräftiges Gewitter mit Hagel';
     case 31:
-      return 'Sturm'; // Boen
+      return 'Sturm mit Böen';
 
-// 0           Clear sky
-// 1, 2, 3     Mainly clear, partly cloudy, and overcast
-// 45, 48      Fog and depositing rime fog
-// 51, 53, 55  Drizzle: Light, moderate, and dense intensity
-// 56, 57      Freezing Drizzle: Light and dense intensity
-// 61, 63, 65  Rain: Slight, moderate and heavy intensity
-// 66, 67      Freezing Rain: Light and heavy intensity
-// 71, 73, 75  Snow fall: Slight, moderate, and heavy intensity
-// 77          Snow grains
-// 80, 81, 82  Rain showers: Slight, moderate, and violent
-// 85, 86      Snow showers slight and heavy
-// 95 *        Thunderstorm: Slight or moderate
-// 96, 99 *    Thunderstorm with slight and heavy hail
     default:
       // eslint-disable-next-line no-console
       console.log('translateCode, unhandled', {code});

@@ -34,7 +34,7 @@ const renderDay = function(day) {
     </tr>,
     <tr key='niederschlag'>
       <td>Niederschlag:</td>
-      <td className='wetter__value'>{niederschlag}<font className='wetter__value__unit'>%</font></td>
+      <td className='wetter__value'>{niederschlag}<font className='wetter__value__unit'>mm</font></td>
     </tr>,
 
     <tr key='wind'>
@@ -48,9 +48,30 @@ const renderDay = function(day) {
   ];
 };
 
+const renderWarningTitle = function(warning) {
+  return _.map(_.toLower(warning.event).split(' '), word => _.upperFirst(word)).join(' ');
+};
+
+// https://tc39.es/ecma402/#table-datetimeformat-components
+const dateTimeFormat = {
+  weekday: 'short',
+  day:     'numeric',
+  month:   'short',
+  hour:    'numeric',
+  minute:  'numeric',
+};
+
+const renderWarningTime = function(warning) {
+  const start = new Date(warning.start);
+  const end   = new Date(warning.end);
+
+  // return `${start.toLocaleString('de-DE', {dateStyle: 'short', timeStyle: 'short'})} - ${end.toLocaleString()}`;
+  return `${start.toLocaleString('de-DE', dateTimeFormat)} - ${end.toLocaleString('de-DE', dateTimeFormat)}`;
+};
+
 export default function WetterDwd() {
   const {clientId} = useContext(AppContext);
-  const {messages} = useContext(MqttContext);
+  const {messages, mqttClient} = useContext(MqttContext);
 
   const siteConfig = _.first(mqttConfig);
 
@@ -126,7 +147,7 @@ export default function WetterDwd() {
             <tr key='warnung'>
               <td colSpan={2} className='wetter__warning'>
                 <div className='wetter__warning__text'>
-                  {_.map(warnungen, warnung => _.upperFirst(_.toLower(warnung.event))).join(', ')}
+                  {_.map(warnungen, warnung => renderWarningTitle(warnung)).join(', ')}
                 </div>
                 <div className='wetter__warning__icon'>
                   <Alert
@@ -134,7 +155,11 @@ export default function WetterDwd() {
                     onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
                       clientId,
                       header:   'Wetter Warnung',
-                      data:     warnungen.flatMap(alert => [alert.event, alert.description]),
+                      data:     warnungen.flatMap(warnung => [
+                        warnung.event,
+                        renderWarningTime(warnung),
+                        warnung.description,
+                      ]),
                     }))}
                   />
                 </div>

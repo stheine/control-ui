@@ -1,3 +1,5 @@
 export default [{
-  topic: 'wetter/INFO',
+  topic: 'wetter/openweather/INFO',
+}, {
+  topic: 'wetter/dwd/INFO',
 }];

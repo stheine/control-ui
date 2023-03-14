@@ -35,7 +35,7 @@ module.exports = {
 //    'no-mixed-operators': 0,
     'no-multi-spaces': 0,
     'no-multiple-empty-lines': 0,
-//    'no-plusplus': 0,
+    'no-plusplus': 0,
 //    'no-unused-vars': [2, {caughtErrors: 'none'}],
 //    'no-warning-comments': 0,
     'object-curly-spacing': [2, 'never'],

@@ -4,35 +4,52 @@ import React, {
 } from 'react';
 
 import AppContext  from '../../contexts/AppContext.js';
-import mqttConfig  from './mqttConfig.js';
+// import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
 import Alert       from '../../svg/sargam/Alert.jsx';
+
+// https://tc39.es/ecma402/#table-datetimeformat-components
+const dateTimeFormat = {
+  weekday: 'short',
+  day:     'numeric',
+  month:   'short',
+  hour:    'numeric',
+  minute:  'numeric',
+};
+
+const renderWarningTime = function(warning) {
+  const start = new Date(warning.start);
+  const end   = new Date(warning.end);
+
+  // return `${start.toLocaleString('de-DE', {dateStyle: 'short', timeStyle: 'short'})} - ${end.toLocaleString()}`;
+  return `${start.toLocaleString('de-DE', dateTimeFormat)} - ${end.toLocaleString('de-DE', dateTimeFormat)}`;
+};
+
+const renderWarningTitle = function(warning) {
+  return _.map(_.toLower(warning.event).split(' '), word => _.upperFirst(word)).join(' ');
+};
 
 export default function Wetter() {
   const {clientId} = useContext(AppContext);
   const {messages, mqttClient} = useContext(MqttContext);
 
-  const siteConfig = _.first(mqttConfig);
+  const messageDwd = messages['wetter/dwd/INFO'];
+  const messageOw  = messages['wetter/openweather/INFO'];
 
-  const message = messages[siteConfig.topic];
-
-  if(message) {
-    // console.log('Wetter', {message});
+  if(messageDwd && messageOw) {
+    // console.log('Wetter', {messageDwd, messageOw});
   }
 
-  const {eveningStartsHour} = message || {};
-  const wetter              = message?.current.weather[0].description || '';
-  const temperatur          = message?.current.temp       === undefined ? 99 : message.current.temp;
-  const gefuehlt            = message?.current.feels_like === undefined ? 99 : message.current.feels_like;
-  const bewoelkung          = message?.current.clouds     === undefined ? 99 : message.current.clouds;
-  const luftfeuchtigkeit    = message?.current.humidity   === undefined ? 99 : message.current.humidity;
-  const alerts              = message ? message?.alerts || [] : [{event: 'none'}];
+  const {eveningStartsHour} = messageOw || {};
+  const wetter              = messageOw?.current.weather[0].description || '';
+  const temperatur          = messageOw?.current.temp       === undefined ? 99 : messageOw.current.temp;
+  const gefuehlt            = messageOw?.current.feels_like === undefined ? 99 : messageOw.current.feels_like;
+  const bewoelkung          = messageOw?.current.clouds     === undefined ? 99 : messageOw.current.clouds;
+  const luftfeuchtigkeit    = messageOw?.current.humidity   === undefined ? 99 : messageOw.current.humidity;
+  const warnungen           = messageDwd ? messageDwd?.forecast.warnings || [] : [{event: 'none'}];
+
   // TODO Vorhersage
-
-  if(alerts.length > 1) {
-    // console.log({alerts});
-  }
 
   const renderNight = function() {
     return [
@@ -43,12 +60,12 @@ export default function Wetter() {
         <td>Temperatur:</td>
         <td>
           <font className='wetter__value'>
-            {_.round(message?.nightMinTemp)}
+            {_.round(messageOw?.nightMinTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
           &nbsp;-&nbsp;
           <font className='wetter__value'>
-            {_.round(message?.nightMaxTemp)}
+            {_.round(messageOw?.nightMaxTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
         </td>
@@ -56,7 +73,7 @@ export default function Wetter() {
       <tr key='nightWind'>
         <td>Max Wind:</td>
         <td className='wetter__value'>
-          {_.round(message?.nightMaxWind || 0 * 3.6)}
+          {_.round(messageOw?.nightMaxWind || 0 * 3.6)}
           <font className='wetter__value__unit'>km/h</font>
         </td>
       </tr>,
@@ -72,12 +89,12 @@ export default function Wetter() {
         <td>Temperatur:</td>
         <td>
           <font className='wetter__value'>
-            {_.round(message?.dayMinTemp)}
+            {_.round(messageOw?.dayMinTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
           &nbsp;-&nbsp;
           <font className='wetter__value'>
-            {_.round(message?.dayMaxTemp)}
+            {_.round(messageOw?.dayMaxTemp)}
             <font className='wetter__value__unit'>&deg;C</font>
           </font>
         </td>
@@ -85,7 +102,7 @@ export default function Wetter() {
       <tr key='dayWind'>
         <td>Max Wind:</td>
         <td className='wetter__value'>
-          {_.round(message?.dayMaxWind || 0 * 3.6)}<font className='wetter__value__unit'>km/h</font>
+          {_.round(messageOw?.dayMaxWind || 0 * 3.6)}<font className='wetter__value__unit'>km/h</font>
         </td>
       </tr>,
     ];
@@ -146,12 +163,11 @@ export default function Wetter() {
               </table>
             </td>
           </tr>
-          {alerts.length ?
+          {warnungen.length ?
             <tr key='warnung'>
               <td colSpan={2} className='wetter__warning'>
                 <div className='wetter__warning__text'>
-                  {alerts[0].event}
-                  {alerts.length > 1 ? ` (${alerts.length})` : null}
+                  {_.map(warnungen, warnung => renderWarningTitle(warnung)).join(', ')}
                 </div>
                 <div className='wetter__warning__icon'>
                   <Alert
@@ -159,7 +175,11 @@ export default function Wetter() {
                     onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
                       clientId,
                       header:   'Wetter Warnung',
-                      data:     alerts.flatMap(alert => [alert.event, alert.description]),
+                      data:     warnungen.flatMap(warnung => [
+                        warnung.event,
+                        renderWarningTime(warnung),
+                        warnung.description,
+                      ]),
                     }))}
                   />
                 </div>
@@ -171,3 +191,29 @@ export default function Wetter() {
     </div>
   );
 }
+
+// OpenWeather alerts
+//  const alerts              = messageOw ? messageOw?.alerts || [] : [{event: 'none'}];
+//  if(alerts.length > 1) {
+//    // console.log({alerts});
+//  }
+//          {alerts.length ?
+//            <tr key='warnung'>
+//              <td colSpan={2} className='wetter__warning'>
+//                <div className='wetter__warning__text'>
+//                  {alerts[0].event}
+//                  {alerts.length > 1 ? ` (${alerts.length})` : null}
+//                </div>
+//                <div className='wetter__warning__icon'>
+//                  <Alert
+//                    dark={true}
+//                    onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
+//                      clientId,
+//                      header:   'Wetter Warnung',
+//                      data:     alerts.flatMap(alert => [alert.event, alert.description]),
+//                    }))}
+//                  />
+//                </div>
+//              </td>
+//            </tr> :
+//            null}
