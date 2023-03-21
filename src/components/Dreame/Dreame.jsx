@@ -10,7 +10,7 @@ export default function Dreame() {
   const {messages} = useContext(MqttContext);
 
   if(!_.isEmpty(messages)) {
-    // console.log('Dreame', {messages});
+    // console.log('Dreame', {messages: _.pickBy(messages, (message, topic) => topic.startsWith('valetudo/dreame'))});
   }
 
   const level         = messages['valetudo/dreame-d9/BatteryStateAttribute/level'] || 999;
