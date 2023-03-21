@@ -11,6 +11,7 @@ import Beep        from '../Beep/Beep.jsx';
 import Buttons     from '../Buttons/Buttons.jsx';
 import Display     from '../Display/Display.jsx';
 import Leds        from '../Leds/Leds.jsx';
+import Zigbee      from '../Zigbee/Zigbee.jsx';
 
 const reloadPage = function() {
   window.location.replace(window.location.pathname);
@@ -23,6 +24,7 @@ const pages = {
     {width: 1, fit: true, content: <Leds />},
     {width: 1, fit: true, content: <Buttons />},
     {width: 1, fit: true, content: <Refresh dark={true} onClick={() => reloadPage()} />},
+    {width: 1, fit: true, content: <Zigbee />},
   ],
 };
 

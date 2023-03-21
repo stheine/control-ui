@@ -10,6 +10,7 @@ import VitoConfig       from './Vito/mqttConfig.js';
 import VolumioConfig    from './Volumio/mqttConfig.js';
 import WetterConfig     from './Wetter/mqttConfig.js';
 import WetterDwdConfig  from './WetterDwd/mqttConfig.js';
+import ZigbeeConfig     from './Zigbee/mqttConfig.js';
 
 export default [
   ...AppConfig,
@@ -24,4 +25,5 @@ export default [
   ...VolumioConfig,
   ...WetterConfig,
   ...WetterDwdConfig,
+  ...ZigbeeConfig,
 ];
