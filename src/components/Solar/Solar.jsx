@@ -1,6 +1,9 @@
 import _           from 'lodash';
+import RingBuffer  from '@stheine/ringbufferjs';
 import React, {
   useContext,
+  useRef,
+  useState,
 } from 'react';
 
 import mqttConfig  from './mqttConfig.js';
@@ -21,6 +24,8 @@ export default function Solar() {
   // console.log('Solar');
 
   const {messages} = useContext(MqttContext);
+  const einkaufRing = useRef(new RingBuffer(3));
+  const [_lastUpdateTime, setLastUpdateTime] = useState();
 
   const siteConfig = _.first(mqttConfig);
 
@@ -36,8 +41,16 @@ export default function Solar() {
   const wechselrichterErzeugung = message?.inverter.powerOutgoing || 0;
   const einspeisung             = message?.meter.powerOutgoing    || 0;
   const einkauf                 = message?.meter.powerIncoming    || 0;
+  const updateTime              = message?.time;
 
   const verbrauch               = wechselrichterErzeugung - einspeisung + einkauf;
+
+  if(updateTime !== _lastUpdateTime) {
+    setLastUpdateTime(updateTime);
+
+    einkaufRing.current.enq(einkauf);
+    // console.log(einkaufRing.current.size(), einkaufRing.current.dump());
+  }
 
   return (
     <table className='solar'>
@@ -56,7 +69,7 @@ export default function Solar() {
         </tr>
         <tr>
           <td className='solar__label'>{einspeisung ? 'Einspeisung' : 'Einkauf'}:</td>
-          {displayWattage(einspeisung || -einkauf)}
+          {displayWattage(einspeisung || (einkaufRing.current.size() ? -einkaufRing.current.avg() : 0))}
         </tr>
         <tr>
           <td className='solar__label'>Akku:</td>
