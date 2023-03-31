@@ -1,13 +1,17 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable react/jsx-props-no-multi-spaces */
+/* eslint-disable react/no-array-index-key */
 
 import _                         from 'lodash';
 import {connect}                 from 'react-redux';
 import Favicon                   from 'react-favicon';
 import mqtt                      from 'async-mqtt';
+import ms                        from 'ms';
 import {replace}                 from 'redux-first-history';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
 import {v4 as uuidv4}            from 'uuid';
 import React, {
+  useCallback,
   useEffect,
   useMemo,
   useState,
@@ -28,15 +32,21 @@ import Settings                  from '../Settings/Settings.jsx';
 const App = function(props) {
   const {dispatch} = props;
 
+  const [_dialogContent, setDialogContent] = useState();
+  const [_dialogHeader, setDialogHeader] = useState();
+  const [_dialogTimeout, setDialogTimeout] = useState();
   const [_messages, setMessages] = useState({});
   const [_mqttClient, setMqttClient] = useState();
 
-  const appContextValue = useMemo(() => ({clientId: uuidv4()}), []);
+  const appContextValue = useMemo(() => ({
+    clientId:      uuidv4(),
+    controlClient: window.screen.height === 600,
+  }), []);
   const mqttContextValue = useMemo(() => ({messages: _messages, mqttClient: _mqttClient}), [_messages, _mqttClient]);
 
   useEffect(() => {
     // / eslint-disable-next-line no-console
-    // console.log('Control:useEffect, initial');
+    // console.log('App:useEffect, initial');
 
     let mqttClient;
 
@@ -54,35 +64,63 @@ const App = function(props) {
     initMqtt();
 
     return async() => {
-      await mqttClient.end();
+      if(mqttClient) {
+        await mqttClient.end();
 
-      setMqttClient();
+        setMqttClient();
+      }
     };
   }, []);
 
-  useEffect(() => mqttSubscribe({
-    mqttClient: _mqttClient,
-    topics:     _.map(mqttConfigs, 'topic'),
-    onMessage({topic, message}) {
-      // console.log('App:onMessage', {topic, message});
+  const onMessage = useCallback(({topic, message}) => {
+    // console.log('App:onMessage', {topic, message});
 
-      switch(topic) {
-        case 'control-ui/cmnd/route':
-          dispatch(replace(message));
-          break;
+    switch(topic) {
+      case 'control-ui/cmnd/route':
+        dispatch(replace(message));
+        break;
 
-        case 'control-ui/cmnd/dialog':
-          if(message?.clientId === appContextValue.clientId) {
-            setMessages(prevMessages => ({...prevMessages, [topic]: message}));
+      case 'control-ui/cmnd/dialog':
+        if(message?.clientId === appContextValue.clientId) {
+          setDialogHeader(message?.header);
+          setDialogContent(message?.data?.map((line, key) =>
+            <div key={`${key}-${line}`}>{_.isObject(line) ? JSON.stringify(line) : line}</div>));
+          if(_dialogTimeout) {
+            clearTimeout(_dialogTimeout);
           }
-          break;
+          setDialogTimeout(setTimeout(() => {
+            setDialogTimeout();
+            setDialogHeader();
+            setDialogContent();
+          }, ms('15s')));
+        }
+        break;
 
-        default:
-          setMessages(prevMessages => ({...prevMessages, [topic]: message}));
-          break;
-      }
-    },
-  }), [appContextValue, dispatch, _mqttClient]);
+      default:
+        setMessages(prevMessages => ({...prevMessages, [topic]: message}));
+        break;
+    }
+  }, [appContextValue.clientId, _dialogTimeout, dispatch]);
+
+  useEffect(() => {
+    // / eslint-disable-next-line no-console
+    // console.log('App:useEffect, more');
+
+    return mqttSubscribe({
+      mqttClient: _mqttClient,
+      topics:     _.map(mqttConfigs, 'topic'),
+      onMessage,
+    });
+  }, [_mqttClient, onMessage]);
+
+//  useEffect(() => {
+//    // eslint-disable-next-line no-console
+//    console.log('App:useEffect, _mqttClient');
+//  }, [_mqttClient]);
+//  useEffect(() => {
+//    // eslint-disable-next-line no-console
+//    console.log('App:useEffect, onMessage');
+//  }, [onMessage]);
 
   if(!_mqttClient) {
     return;
@@ -90,15 +128,6 @@ const App = function(props) {
 
   if(!_.isEmpty(_messages)) {
     // console.log('App', {_messages});
-  }
-
-  let dialogData;
-  let dialogHeader;
-
-  if(_messages?.['control-ui/cmnd/dialog']) {
-    dialogHeader = _messages?.['control-ui/cmnd/dialog']?.header;
-    dialogData   = _messages?.['control-ui/cmnd/dialog']?.data?.map(line =>
-      <div key={line}>{_.isObject(line) ? JSON.stringify(line) : line}</div>);
   }
 
   return (
@@ -115,12 +144,17 @@ const App = function(props) {
               <Route path='*'               element={<Control />} />
             </Routes>
           </Router>
-          {dialogData ?
+          {_dialogContent ?
             <Dialog
               key='dialog'
-              onClose={() => setMessages(prevMessages => _.omit(prevMessages, ['control-ui/cmnd/dialog']))}
-              header={dialogHeader}
-              data={dialogData}
+              onClose={() => {
+                clearInterval(_dialogTimeout);
+                setDialogTimeout();
+                setDialogHeader();
+                setDialogContent();
+              }}
+              header={_dialogHeader}
+              data={_dialogContent}
             /> :
             null}
         </MqttContext.Provider>

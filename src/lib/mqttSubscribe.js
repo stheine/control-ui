@@ -1,5 +1,5 @@
-import delay from 'delay';
-import ms    from 'ms';
+// import delay from 'delay';
+// import ms    from 'ms';
 
 export default function mqttSubscribe({mqttClient, topic, topics, onMessage}) {
   if(!mqttClient) {
@@ -26,24 +26,24 @@ export default function mqttSubscribe({mqttClient, topic, topics, onMessage}) {
     });
 
     (async() => {
-      let subscribed = false;
+//      let subscribed = false;
 
-      do {
-        try {
-          await mqttClient.subscribe(subscribeTopics);
+//      do {
+      try {
+        await mqttClient.subscribe(subscribeTopics);
 
-          subscribed = true;
-        } catch(err) {
-          if(!err.message.endsWith('client disconnecting')) {
-            throw err;
-          }
-
-          // eslint-disable-next-line no-console
-          console.log(`subscribe retry for ${subscribeTopics.join(', ')}`);
-
-          await delay(ms('1s'));
+//          subscribed = true;
+      } catch(err) {
+        if(!err.message.endsWith('client disconnecting')) {
+          throw err;
         }
-      } while(!subscribed);
+
+//          // eslint-disable-next-line no-console
+//          console.log(`subscribe retry for ${subscribeTopics.join(', ')}`);
+
+//          await delay(ms('1s'));
+      }
+//      } while(!subscribed);
     })();
 
     // console.log(`subscribed to ${subscribeTopics.join(', ')}`);
@@ -53,7 +53,7 @@ export default function mqttSubscribe({mqttClient, topic, topics, onMessage}) {
   }
 
   return async() => {
-    console.log(`unsubscribing from ${subscribeTopics.join(', ')}`);
+    // console.log(`unsubscribing from ${subscribeTopics.join(', ')}`);
     try {
       await mqttClient.unsubscribe(subscribeTopics);
       // console.log(`unsubscribed from ${subscribeTopics.join(', ')}`);
