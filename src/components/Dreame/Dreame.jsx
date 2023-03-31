@@ -6,8 +6,10 @@ import React, {
 // import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
+import Play        from '../../svg/sargam/Play.jsx';
+
 export default function Dreame() {
-  const {messages} = useContext(MqttContext);
+  const {messages, mqttClient} = useContext(MqttContext);
 
   if(!_.isEmpty(messages)) {
     // console.log('Dreame', {messages: _.pickBy(messages, (message, topic) => topic.startsWith('valetudo/dreame'))});
@@ -38,6 +40,17 @@ export default function Dreame() {
             <td>{error.message}</td>
           </tr> :
           null}
+        <tr>
+          <td colSpan={2}>
+            <div style={{width: '100px'}}>
+              <Play
+                dark={true}
+                onClick={() =>
+                  mqttClient.publish('valetudo/dreame-d9/BasicControlCapability/operation/set', 'START')}
+              />
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   );
