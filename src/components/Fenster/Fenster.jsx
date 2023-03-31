@@ -1,16 +1,15 @@
 import _           from 'lodash';
 import React, {
   useContext,
-  useMemo,
 } from 'react';
 
+import AppContext  from '../../contexts/AppContext.js';
 import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
 export default function Fenster() {
-  const {messages} = useContext(MqttContext);
-
-  const controlClient = useMemo(() => window.screen.height === 600, []);
+  const {controlClient} = useContext(AppContext);
+  const {messages}      = useContext(MqttContext);
 
   // console.log('Fenster', {_messages});
 
