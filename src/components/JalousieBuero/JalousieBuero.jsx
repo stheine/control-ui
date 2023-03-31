@@ -1,0 +1,68 @@
+import React, {
+  useContext,
+} from 'react';
+
+import MqttContext from '../../contexts/MqttContext.js';
+
+import BlindDown   from '../../svg/sargam/BlindDown.jsx';
+import BlindShade  from '../../svg/sargam/BlindShade.jsx';
+import BlindUp     from '../../svg/sargam/BlindUp.jsx';
+import StopCircle  from '../../svg/sargam/StopCircle.jsx';
+
+export default function JalousieBuero() {
+  // console.log('JalousieBuero');
+
+  const {mqttClient} = useContext(MqttContext);
+
+  // Power2 - Hoch
+  // Power1 - Runter
+
+  return (
+    <table>
+      <tbody>
+        <tr>
+          <th colSpan={2}>
+            Büro
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <div style={{width: '100px'}}>
+              <BlindUp dark={true} onClick={() => mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '1')} />
+            </div>
+          </td>
+          <td>
+            <div style={{width: '100px'}}>
+              <StopCircle
+                dark={true}
+                onClick={() => {
+                  mqttClient.publish('tasmota/jalousieBuero/cmnd/Power1', '0');
+                  mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '0');
+                }}
+              />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div style={{width: '100px'}}>
+              <BlindDown dark={true} onClick={() => mqttClient.publish('tasmota/jalousieBuero/cmnd/Power1', '1')} />
+            </div>
+          </td>
+          <td>
+            <div style={{width: '100px'}}>
+              <BlindShade
+                dark={true}
+                onClick={() => {
+                  mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '1');
+
+                  setTimeout(() => mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '0'), 650);
+                }}
+              />
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
+}
