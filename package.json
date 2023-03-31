@@ -1,13 +1,13 @@
 {
-  "name": "control",
+  "name": "control-ui",
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "control.js",
+  "main": "control-ui.js",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint './**'",
-    "start": "node control.js",
+    "start": "node control-ui.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack-cli serve --config webpack.dev.js"
   },
