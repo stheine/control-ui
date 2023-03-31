@@ -2,6 +2,7 @@ import _           from 'lodash';
 import ms          from 'ms';
 import React, {
   useContext,
+  useState,
 } from 'react';
 
 import mqttConfig  from './mqttConfig.js';
@@ -38,6 +39,8 @@ export default function Temperatur(props) {
 
   const {messages} = useContext(MqttContext);
 
+  const [_lastTime, setLastTime] = useState();
+
   const siteConfig = _.find(mqttConfig, {label: site});
 
   if(!siteConfig) {
@@ -46,13 +49,16 @@ export default function Temperatur(props) {
 
   const message = messages[siteConfig.topic];
 
-  if(message) {
-    // console.log({site, message});
+  if(message && site === 'Außen' && message.Time !== _lastTime) {
+    setLastTime(message.Time);
+    // console.log(site, message);
   }
 
-  if(message?.Time && Date.now() - Date.parse(message.Time) > ms('60m')) {
+  const now = Date.now();
+
+  if(message?.Time && now - Date.parse(message.Time) > ms('60m')) {
     // eslint-disable-next-line no-console
-    console.log('Temperatur:outdated', {now: Date.now(), sent: Date.parse(message.Time), string: message.Time});
+    console.log('Temperatur:outdated', {message, now, parsedTime: Date.parse(message.Time), stringTime: message.Time});
 
     return `Outdated`;
   }
