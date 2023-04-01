@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import _           from 'lodash';
+import {connect}   from 'react-redux';
+import {replace}   from 'redux-first-history';
 import React, {
   useContext,
 } from 'react';
@@ -6,15 +8,14 @@ import React, {
 import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
-import Decrease          from '../../svg/sargam/Decrease.jsx';
-import Dlf               from '../../svg/Dlf.jsx';
-import Increase          from '../../svg/sargam/Increase.jsx';
-// import Pause             from '../../svg/sargam/Pause.jsx';
-// import Play              from '../../svg/sargam/Play.jsx';
-import PlayPause         from '../../svg/sargam/PlayPause.jsx';
-// import Stop              from '../../svg/sargam/Stop.jsx';
+import Decrease    from '../../svg/sargam/Decrease.jsx';
+import Dlf         from '../../svg/Dlf.jsx';
+import Increase    from '../../svg/sargam/Increase.jsx';
+import PlayPause   from '../../svg/sargam/PlayPause.jsx';
 
-export default function Volumio() {
+const Volumio = function(props) {
+  const {dispatch} = props;
+
   // console.log('Volumio');
 
   const {messages, mqttClient} = useContext(MqttContext);
@@ -47,7 +48,16 @@ export default function Volumio() {
         </tr>
         <tr>
           <td>
-            <PlayPause dark={true} onClick={() => mqttClient.publish('volumio/cmnd/playPause', '')} />
+            <PlayPause
+              dark={true}
+              onClick={() => {
+                mqttClient.publish('volumio/cmnd/playPause', '');
+
+                if(message?.status === 'stop') {
+                  dispatch(replace('/1'));
+                }
+              }}
+            />
           </td>
         </tr>
         <tr>
@@ -56,4 +66,8 @@ export default function Volumio() {
       </tbody>
     </table>
   );
-}
+};
+
+const mapStateToProps = () => ({});
+
+export default connect(mapStateToProps)(Volumio);

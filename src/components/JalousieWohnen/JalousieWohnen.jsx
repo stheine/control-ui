@@ -18,7 +18,7 @@ export default function JalousieWohnen() {
   date.setMinutes('00');
   date.setSeconds('00');
 
-  console.log({date});
+  // console.log({date});
 
   const {mqttClient} = useContext(MqttContext);
 
