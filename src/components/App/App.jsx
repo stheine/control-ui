@@ -81,7 +81,7 @@ const App = function(props) {
         break;
 
       case 'control-ui/cmnd/dialog':
-        if(message?.clientId === appContextValue.clientId) {
+        if(!message?.clientId || message?.clientId === appContextValue.clientId) {
           setDialogHeader(message?.header);
           setDialogContent(message?.data?.map((line, key) =>
             <div key={`${key}-${line}`}>{_.isObject(line) ? JSON.stringify(line) : line}</div>));
