@@ -4,31 +4,29 @@ import React, {
   useState,
 } from 'react';
 
-import mqttConfig  from './mqttConfig.js';
-import MqttContext from '../../contexts/MqttContext.js';
+import MqttContext  from '../../contexts/MqttContext.js';
 
-import OffColored        from '../../svg/sargam/OffColored.jsx';
-import OnColored         from '../../svg/sargam/OnColored.jsx';
-import OnOffUnknown      from '../../svg/sargam/OnOffUnknown.jsx';
+import OffColored   from '../../svg/sargam/OffColored.jsx';
+import OnColored    from '../../svg/sargam/OnColored.jsx';
+import OnOffUnknown from '../../svg/sargam/OnOffUnknown.jsx';
 
 export default function Vito() {
   const [_sparbetrieb, setSparbetrieb] = useState();
 
   const {messages, mqttClient} = useContext(MqttContext);
 
-  const siteConfig = mqttConfig[0];
+  const hk1BetriebsartSpar = messages['vito/tele/SENSOR']?.hk1BetriebsartSpar;
 
-  const message = messages[siteConfig.topic];
+  useEffect(() => setSparbetrieb(Boolean(Number(hk1BetriebsartSpar))),
+    [hk1BetriebsartSpar]);
 
-  useEffect(() => setSparbetrieb(Boolean(Number(message?.hk1BetriebsartSpar))),
-    [message?.hk1BetriebsartSpar]);
+  const heizkreisPumpe    = Boolean(Number(messages['vito/tele/SENSOR']?.heizkreisPumpe))     || false;
+  const kesselLeistung    = Number(messages['vito/tele/SENSOR']?.kesselLeistung)              || 0;
+  const zirkulationsPumpe = Boolean(Number(messages['vito/tele/SENSOR']?.zirkulationsPumpe))  || false;
+  const vorrat            = messages['vito/tele/STATS']?.vorrat;
 
-  const heizkreisPumpe    = Boolean(Number(message?.heizkreisPumpe))     || false;
-  const kesselLeistung    = Number(message?.kesselLeistung)              || 0;
-  const zirkulationsPumpe = Boolean(Number(message?.zirkulationsPumpe))  || false;
-
-  if(message) {
-  // console.log('Vito', {message, _sparbetrieb});
+  if(messages['vito/tele/SENSOR']) {
+    // console.log('Vito', {SENSOR: messages['vito/tele/SENSOR'], _sparbetrieb, STATS: messages['vito/tele/STATS']});
   }
 
   const Sparbetrieb = function() {
@@ -64,16 +62,20 @@ export default function Vito() {
     <table>
       <tbody>
         <tr>
+          <td>Vorrat:</td>
+          <td style={{whiteSpace: 'nowrap'}}>{vorrat} kg</td>
+        </tr>
+        <tr>
           <td>Heizkreispumpe:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${heizkreisPumpe}`}</td>
+          <td style={{whiteSpace: 'nowrap'}}>{String(heizkreisPumpe)}</td>
         </tr>
         <tr>
           <td>kesselLeistung:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${kesselLeistung}`}</td>
+          <td style={{whiteSpace: 'nowrap'}}>{kesselLeistung}</td>
         </tr>
         <tr>
           <td>zirkulationsPumpe:</td>
-          <td style={{whiteSpace: 'nowrap'}}>{`${zirkulationsPumpe}`}</td>
+          <td style={{whiteSpace: 'nowrap'}}>{String(zirkulationsPumpe)}</td>
         </tr>
         <tr>
           <td colSpan={2}>
