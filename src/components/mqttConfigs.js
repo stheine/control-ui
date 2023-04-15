@@ -4,6 +4,7 @@ import DisplayConfig    from './Display/mqttConfig.js';
 import DreameConfig     from './Dreame/mqttConfig.js';
 import FensterConfig    from './Fenster/mqttConfig.js';
 import InfrarotHeizung  from './InfrarotHeizung/mqttConfig.js';
+import JalousieWohnen   from './JalousieWohnen/mqttConfig.js';
 import LedsConfig       from './Leds/mqttConfig.js';
 import SolarConfig      from './Solar/mqttConfig.js';
 import TemperaturConfig from './Temperatur/mqttConfig.js';
@@ -20,6 +21,7 @@ export default [
   ...DreameConfig,
   ...FensterConfig,
   ...InfrarotHeizung,
+  ...JalousieWohnen,
   ...LedsConfig,
   ...SolarConfig,
   ...TemperaturConfig,
