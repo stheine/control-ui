@@ -58,20 +58,22 @@ export default function Control() {
     topic === 'wetter/dwd/INFO' && message?.forecast.warnings.length).length);
 
   const items = [
-    {id: 'tempAussen',      width: 1, fit: true, content: <Temperatur site='Außen' />},
-    {id: 'tempWohnen',      width: 1, fit: true, content: <Temperatur site='Wohnen' />},
-    {id: 'wetter',          width: 2,            content: <Wetter />,                      calcPriority: calcWetter},
-    {id: 'clock',           width: 1, fit: true, content: <Clock />},
-    {id: 'solar',           width: 1, fit: true, content: <Solar />},
-    {id: 'fenster',         width: 1, fit: true, content: <Fenster />,                     calcPriority: calcFenster},
-    {id: 'jalousieWohnen',  width: 1, fit: true, content: <JalousieWohnen />},
-    {id: 'tempVito',        width: 1, fit: true, content: <Temperatur site='AußenVito' />},
-    {id: 'vito',            width: 1, fit: true, content: <Vito />},
-    {id: 'volumio',         width: 2,            content: <Volumio />,                     calcPriority: calcVolumio},
-    {id: 'tempBuero',       width: 1, fit: true, content: <Temperatur site='Büro' />},
-    {id: 'jalousieBuero',   width: 1, fit: true, content: <JalousieBuero />},
-    {id: 'infrarotHeizung', width: 1, fit: true, content: <InfrarotHeizung />},
-    {id: 'dreame',          width: 1, fit: true, content: <Dreame />,                      calcPriority: calcDreame},
+    {id: 'tempAussen',       width: 1, fit: true, content: <Temperatur site='Außen' />},
+    {id: 'tempWohnen',       width: 1, fit: true, content: <Temperatur site='Wohnen' />},
+    {id: 'wetter',           width: 2,            content: <Wetter />,                      calcPriority: calcWetter},
+    {id: 'clock',            width: 1, fit: true, content: <Clock />},
+    {id: 'solar',            width: 1, fit: true, content: <Solar />},
+    {id: 'fenster',          width: 1, fit: true, content: <Fenster />,                     calcPriority: calcFenster},
+    {id: 'jalousieWohnen',   width: 1, fit: true, content: <JalousieWohnen />},
+    {id: 'tempVito',         width: 1, fit: true, content: <Temperatur site='AußenVito' />},
+    {id: 'tempAussenZigbee', width: 1, fit: true, content: <Temperatur site='AußenZigbee' />},
+    {id: 'tempWohnenZigbee', width: 1, fit: true, content: <Temperatur site='WohnenZigbee' />},
+    {id: 'vito',             width: 1, fit: true, content: <Vito />},
+    {id: 'volumio',          width: 2,            content: <Volumio />,                     calcPriority: calcVolumio},
+    {id: 'tempBuero',        width: 1, fit: true, content: <Temperatur site='Büro' />},
+    {id: 'jalousieBuero',    width: 1, fit: true, content: <JalousieBuero />},
+    {id: 'infrarotHeizung',  width: 1, fit: true, content: <InfrarotHeizung />},
+    {id: 'dreame',           width: 1, fit: true, content: <Dreame />,                      calcPriority: calcDreame},
   ];
 
   const itemsToPages = () => {

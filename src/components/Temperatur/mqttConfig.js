@@ -42,4 +42,28 @@ export default [{
     precision: 0,
     unit:      '%rH',
   }],
+}, {
+  label: 'AußenZigbee',
+  topic: 'Zigbee/LuftSensor Außen',
+  values: [{
+    key:       'temperature',
+    precision: 1,
+    unit:      '°C',
+  }, {
+    key:       'humidity',
+    precision: 0,
+    unit:      '%rH',
+  }],
+}, {
+  label: 'WohnenZigbee',
+  topic: 'Zigbee/LuftSensor Wohnzimmer',
+  values: [{
+    key:       'temperature',
+    precision: 1,
+    unit:      '°C',
+  }, {
+    key:       'humidity',
+    precision: 0,
+    unit:      '%rH',
+  }],
 }];
