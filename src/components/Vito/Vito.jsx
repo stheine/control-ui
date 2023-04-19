@@ -16,9 +16,10 @@ export default function Vito() {
   const {messages, mqttClient} = useContext(MqttContext);
 
   const hk1BetriebsartSpar = messages['vito/tele/SENSOR']?.hk1BetriebsartSpar;
+  const messageTimestamp    = messages['vito/tele/SENSOR']?.timestamp;
 
   useEffect(() => setSparbetrieb(Boolean(Number(hk1BetriebsartSpar))),
-    [hk1BetriebsartSpar]);
+    [messageTimestamp, hk1BetriebsartSpar]);
 
   const heizkreisPumpe    = Boolean(Number(messages['vito/tele/SENSOR']?.heizkreisPumpe))     || false;
   const kesselLeistung    = Number(messages['vito/tele/SENSOR']?.kesselLeistung)              || 0;
