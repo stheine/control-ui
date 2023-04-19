@@ -1,5 +1,17 @@
 export default [{
   label: 'Außen',
+  topic: 'Zigbee/LuftSensor Außen',
+  values: [{
+    key:       'temperature',
+    precision: 1,
+    unit:      '°C',
+  }, {
+    key:       'humidity',
+    precision: 0,
+    unit:      '%rH',
+  }],
+}, {
+  label: 'AußenTasmota',
   topic: 'tasmota/thermometer/tele/SENSOR',
   values: [{
     key:       'AM2301.Temperature',
@@ -32,31 +44,19 @@ export default [{
   }],
 }, {
   label: 'Wohnen',
-  topic: 'Wohnzimmer/tele/SENSOR',
-  values: [{
-    key:       'temperature',
-    precision: 1,
-    unit:      '°C',
-  }, {
-    key:       'humidity',
-    precision: 0,
-    unit:      '%rH',
-  }],
-}, {
-  label: 'AußenZigbee',
-  topic: 'Zigbee/LuftSensor Außen',
-  values: [{
-    key:       'temperature',
-    precision: 1,
-    unit:      '°C',
-  }, {
-    key:       'humidity',
-    precision: 0,
-    unit:      '%rH',
-  }],
-}, {
-  label: 'WohnenZigbee',
   topic: 'Zigbee/LuftSensor Wohnzimmer',
+  values: [{
+    key:       'temperature',
+    precision: 1,
+    unit:      '°C',
+  }, {
+    key:       'humidity',
+    precision: 0,
+    unit:      '%rH',
+  }],
+}, {
+  label: 'WohnenRaspi',
+  topic: 'Wohnzimmer/tele/SENSOR',
   values: [{
     key:       'temperature',
     precision: 1,
