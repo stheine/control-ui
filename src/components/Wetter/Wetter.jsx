@@ -138,6 +138,18 @@ export default function Wetter() {
     ];
   };
 
+  const displayWarningDialog = function() {
+    mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
+      clientId,
+      header:   'Wetter Warnung',
+      data:     warnungen.flatMap(warnung => [
+        warnung.event,
+        renderWarningTime(warnung),
+        warnung.description,
+      ]),
+    }));
+  };
+
   return (
     <div className='wetter'>
       <table>
@@ -166,21 +178,16 @@ export default function Wetter() {
           {warnungen.length ?
             <tr key='warnung'>
               <td colSpan={2} className='wetter__warning'>
-                <div className='wetter__warning__text'>
+                <div
+                  className='wetter__warning__text'
+                  onClick={() => displayWarningDialog()}
+                >
                   {_.map(warnungen, warnung => renderWarningTitle(warnung)).join(', ')}
                 </div>
                 <div className='wetter__warning__icon'>
                   <Alert
                     dark={true}
-                    onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
-                      clientId,
-                      header:   'Wetter Warnung',
-                      data:     warnungen.flatMap(warnung => [
-                        warnung.event,
-                        renderWarningTime(warnung),
-                        warnung.description,
-                      ]),
-                    }))}
+                    onClick={() => displayWarningDialog()}
                   />
                 </div>
               </td>

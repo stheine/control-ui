@@ -57,12 +57,16 @@
 
       .wetter__warning {
          padding-right: 7px;
+          max-width:    calc(293px + 293px);
 
         .wetter__warning__text {
           background-color: #ff6600;
           float:            left;
           padding:          2px 0 0 7px;
-          width:            calc(100% - 45px - 10px);
+          width:            calc(100% - 40px);
+          overflow:         hidden;
+          text-overflow:    ellipsis;
+          white-space:      nowrap;
         }
         .wetter__warning__icon {
           width: 40px;
