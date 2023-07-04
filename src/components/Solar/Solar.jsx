@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 
-import mqttConfig  from './mqttConfig.js';
+import Close       from '../../svg/sargam/Close.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
 import Plus        from '../../svg/sargam/Plus.jsx';
 
@@ -28,21 +28,22 @@ export default function Solar() {
   const einkaufRing = useRef(new RingBuffer(3));
   const [_lastUpdateTime, setLastUpdateTime] = useState();
 
-  const siteConfig = _.first(mqttConfig);
+  const messageSensor = messages['Fronius/solar/tele/SENSOR'];
+  const messageStatus = messages['Fronius/solar/tele/STATUS'];
 
-  const message = messages[siteConfig.topic];
-
-  if(message) {
-    // console.log('Solar', {message});
+  if(messageSensor || messageStatus) {
+    // console.log('Solar', {messageSensor, messageStatus});
   }
 
-  const akkuLadelevel           = message?.battery.stateOfCharge  || 0;
-  const akkuLadung              = message?.battery.powerIncoming  || 0;
-  const solarErzeugung          = _.isNumber(message?.solar.powerOutgoing) ? message.solar.powerOutgoing : 99999;
-  const wechselrichterErzeugung = message?.inverter.powerOutgoing || 0;
-  const einspeisung             = message?.meter.powerOutgoing    || 0;
-  const einkauf                 = message?.meter.powerIncoming    || 0;
-  const updateTime              = message?.time;
+  const akkuLadelevel           = messageSensor?.battery.stateOfCharge  || 0;
+  const akkuLadung              = messageSensor?.battery.powerIncoming  || 0;
+  const solarErzeugung          = _.isNumber(messageSensor?.solar.powerOutgoing) ?
+    messageSensor.solar.powerOutgoing :
+    99999;
+  const wechselrichterErzeugung = messageSensor?.inverter.powerOutgoing || 0;
+  const einspeisung             = messageSensor?.meter.powerOutgoing    || 0;
+  const einkauf                 = messageSensor?.meter.powerIncoming    || 0;
+  const updateTime              = messageSensor?.time;
 
   const verbrauch               = wechselrichterErzeugung - einspeisung + einkauf;
 
@@ -81,12 +82,19 @@ export default function Solar() {
                 Akku:
               </div>
               <div style={{width: '40px'}}>
-                <Plus
-                  dark={true}
-                  onClick={() => {
-                    mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeException: true}));
-                  }}
-                />
+                {messageStatus?.chargeException ?
+                  <Close
+                    dark={true}
+                    onClick={() => {
+                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeException: false}));
+                    }}
+                  /> :
+                  <Plus
+                    dark={true}
+                    onClick={() => {
+                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeException: true}));
+                    }}
+                  />}
               </div>
             </div>
           </td>

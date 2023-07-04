@@ -1,3 +1,5 @@
 export default [{
-  topic: 'Jalousie/tele/TIMES',
+  topic: 'JalousieBackend/tele/STATUS',
+}, {
+  topic: 'JalousieBackend/tele/TIMES',
 }];

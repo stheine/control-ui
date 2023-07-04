@@ -1,14 +1,15 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import React, {
   useContext,
 } from 'react';
 
-import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
 import BlindDown   from '../../svg/sargam/BlindDown.jsx';
 import BlindShade  from '../../svg/sargam/BlindShade.jsx';
 import BlindUp     from '../../svg/sargam/BlindUp.jsx';
+import Close       from '../../svg/sargam/Close.jsx';
+import Next        from '../../svg/sargam/Next.jsx';
 import StopCircle  from '../../svg/sargam/StopCircle.jsx';
 
 // https://tc39.es/ecma402/#table-datetimeformat-components
@@ -33,15 +34,14 @@ export default function JalousieWohnen() {
 
   const {messages, mqttClient} = useContext(MqttContext);
 
-  const siteConfig = _.first(mqttConfig);
+  const messageStatus = messages['JalousieBackend/tele/STATUS'];
+  const messageTimes  = messages['JalousieBackend/tele/TIMES'];
 
-  const message = messages[siteConfig.topic];
-
-  if(message) {
-    // console.log('JalousieWohnen', {message});
+  if(messageStatus || messageTimes) {
+    // console.log('JalousieWohnen', {messageStatus, messageTimes});
   }
 
-  const downTime = new Date(message?.nightDownTime);
+  const downTime = new Date(messageTimes?.nightDownTime);
 
   return (
     <table>
@@ -53,12 +53,12 @@ export default function JalousieWohnen() {
         </tr>
         <tr>
           <td>
-            <div style={{width: '100px'}}>
+            <div style={{width: '90px'}}>
               <BlindUp dark={true} onClick={() => mqttClient.publish('Jalousie/cmnd/full_up', '')} />
             </div>
           </td>
           <td>
-            <div style={{width: '100px'}}>
+            <div style={{width: '90px'}}>
               <StopCircle
                 dark={true}
                 onClick={() => mqttClient.publish('Jalousie/cmnd/stop', '')}
@@ -68,12 +68,12 @@ export default function JalousieWohnen() {
         </tr>
         <tr>
           <td>
-            <div style={{width: '100px'}}>
+            <div style={{width: '90px'}}>
               <BlindDown dark={true} onClick={() => mqttClient.publish('Jalousie/cmnd/full_down', '')} />
             </div>
           </td>
           <td>
-            <div style={{width: '100px'}}>
+            <div style={{width: '90px'}}>
               <BlindShade
                 dark={true}
                 onClick={() => {
@@ -85,8 +85,36 @@ export default function JalousieWohnen() {
           </td>
         </tr>
         <tr style={{fontSize: '200%'}}>
-          <td style={{paddingLeft: '20px'}}>Runter:</td>
-          <td style={{paddingLeft: '30px'}}>{downTime.toLocaleString('de-DE', dateTimeFormat)}</td>
+          <td>
+            <div style={{padding: '0 0 10px 10px'}}>
+              Runter:
+            </div>
+          </td>
+          <td style={{paddingLeft: '30px'}}>
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+              <div
+                style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
+              >
+                {downTime.toLocaleString('de-DE', dateTimeFormat)}
+              </div>
+              <div style={{width: '40px'}}>
+                {messageStatus?.skipNext ?
+                  <Next
+                    dark={true}
+                    onClick={() => {
+                      mqttClient.publish('JalousieBackend/cmnd', JSON.stringify({skipNext: false}));
+                    }}
+                  /> :
+                  <Close
+                    dark={true}
+                    onClick={() => {
+                      mqttClient.publish('JalousieBackend/cmnd', JSON.stringify({skipNext: true}));
+                    }}
+                  />}
+              </div>
+            </div>
+
+          </td>
         </tr>
       </tbody>
     </table>
