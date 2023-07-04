@@ -8,6 +8,7 @@ import React, {
 
 import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
+import Plus        from '../../svg/sargam/Plus.jsx';
 
 const displayWattage = function(value) {
   return [
@@ -23,7 +24,7 @@ const displayWattage = function(value) {
 export default function Solar() {
   // console.log('Solar');
 
-  const {messages} = useContext(MqttContext);
+  const {messages, mqttClient} = useContext(MqttContext);
   const einkaufRing = useRef(new RingBuffer(3));
   const [_lastUpdateTime, setLastUpdateTime] = useState();
 
@@ -72,7 +73,23 @@ export default function Solar() {
           {displayWattage(einspeisung || (einkaufRing.current.size() ? -einkaufRing.current.avg() : 0))}
         </tr>
         <tr>
-          <td className='solar__label'>Akku:</td>
+          <td className='solar__label'>
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+              <div
+                style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
+              >
+                Akku:
+              </div>
+              <div style={{width: '40px'}}>
+                <Plus
+                  dark={true}
+                  onClick={() => {
+                    mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeException: true}));
+                  }}
+                />
+              </div>
+            </div>
+          </td>
           <td className='solar__value'>{_.round(akkuLadelevel * 100, 1)}</td>
           <td className='solar__unit'>%</td>
         </tr>
