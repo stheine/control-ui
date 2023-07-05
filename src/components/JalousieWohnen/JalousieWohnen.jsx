@@ -38,7 +38,7 @@ export default function JalousieWohnen() {
   const messageTimes  = messages['JalousieBackend/tele/TIMES'];
 
   if(messageStatus || messageTimes) {
-    // console.log('JalousieWohnen', {messageStatus, messageTimes});
+    console.log('JalousieWohnen', {messageStatus, messageTimes});
   }
 
   const downTime = new Date(messageTimes?.nightDownTime);
@@ -99,13 +99,13 @@ export default function JalousieWohnen() {
               </div>
               <div style={{width: '40px'}}>
                 {messageStatus?.skipNext ?
-                  <Next
+                  <Close
                     dark={true}
                     onClick={() => {
                       mqttClient.publish('JalousieBackend/cmnd', JSON.stringify({skipNext: false}));
                     }}
                   /> :
-                  <Close
+                  <Next
                     dark={true}
                     onClick={() => {
                       mqttClient.publish('JalousieBackend/cmnd', JSON.stringify({skipNext: true}));
