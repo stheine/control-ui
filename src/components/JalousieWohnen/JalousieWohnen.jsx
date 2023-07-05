@@ -38,7 +38,7 @@ export default function JalousieWohnen() {
   const messageTimes  = messages['JalousieBackend/tele/TIMES'];
 
   if(messageStatus || messageTimes) {
-    console.log('JalousieWohnen', {messageStatus, messageTimes});
+    // console.log('JalousieWohnen', {messageStatus, messageTimes});
   }
 
   const downTime = new Date(messageTimes?.nightDownTime);
