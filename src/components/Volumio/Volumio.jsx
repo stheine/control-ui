@@ -51,9 +51,9 @@ const Volumio = function(props) {
             <PlayPause
               dark={true}
               onClick={() => {
-                mqttClient.publish('volumio/cmnd/playPause', '');
+                mqttClient.publish('volumio/cmnd/toggle', '');
 
-                if(message?.status === 'stop') {
+                if(message?.status !== 'play') {
                   dispatch(replace('/1'));
                 }
               }}
