@@ -16,6 +16,7 @@ import BlindUp                from '../../svg/sargam/BlindUp.jsx';
 import Button                 from '../../svg/Button.jsx';
 import Checked                from '../../svg/sargam/Checked.jsx';
 import Close                  from '../../svg/sargam/Close.jsx';
+import Collect                from '../../svg/sargam/Collect.jsx';
 import Decrease               from '../../svg/sargam/Decrease.jsx';
 import Down                   from '../../svg/sargam/Down.jsx';
 import Home                   from '../../svg/sargam/Home.jsx';
@@ -23,6 +24,7 @@ import Icon                   from '../../svg/sargam/Icon.jsx';
 import Increase               from '../../svg/sargam/Increase.jsx';
 import Led                    from '../../svg/Led.jsx';
 import Left                   from '../../svg/sargam/Left.jsx';
+import Max                    from '../../svg/sargam/Max.jsx';
 import Minus                  from '../../svg/sargam/Minus.jsx';
 import Moon                   from '../../svg/sargam/Moon.jsx';
 import Next                   from '../../svg/sargam/Next.jsx';
@@ -113,6 +115,10 @@ const row4 = [
   <Power key='power' />,
   <Alert key='alert' />,
 ];
+const row5 = [
+  <Collect key='collect' />,
+  <Max key='max' />,
+];
 
 export default function Icons() {
   return (
@@ -129,6 +135,9 @@ export default function Icons() {
       <div className='icons__row'>
         {_.map(row4, icon => <FitBox>{icon}</FitBox>)}
       </div>
+      <div className='icons__row'>
+        {_.map(row5, icon => <FitBox>{icon}</FitBox>)}
+      </div>
       <div className='icons__row dark'>
         {_.map(row2, icon => <FitBox>{React.cloneElement(icon, {dark: true})}</FitBox>)}
       </div>
@@ -137,6 +146,9 @@ export default function Icons() {
       </div>
       <div className='icons__row dark'>
         {_.map(row4, icon => <FitBox>{React.cloneElement(icon, {dark: true})}</FitBox>)}
+      </div>
+      <div className='icons__row dark'>
+        {_.map(row5, icon => <FitBox>{React.cloneElement(icon, {dark: true})}</FitBox>)}
       </div>
     </div>
   );
