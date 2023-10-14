@@ -54,9 +54,13 @@ export default function JalousieBuero() {
               <BlindShade
                 dark={true}
                 onClick={() => {
+                  mqttClient.publish('tasmota/jalousieBuero/cmnd/PulseTime2', '1');
                   mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '1');
 
-                  setTimeout(() => mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '0'), 650);
+                  setTimeout(() => {
+                    mqttClient.publish('tasmota/jalousieBuero/cmnd/PulseTime1', '220');
+                    mqttClient.publish('tasmota/jalousieBuero/cmnd/PulseTime2', '220');
+                  }, 500);
                 }}
               />
             </div>
