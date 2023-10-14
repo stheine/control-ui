@@ -7,8 +7,9 @@ import React, {
 } from 'react';
 
 import Close       from '../../svg/sargam/Close.jsx';
+import Collect     from '../../svg/sargam/Collect.jsx';
+import Max         from '../../svg/sargam/Max.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
-import Plus        from '../../svg/sargam/Plus.jsx';
 
 const displayWattage = function(value) {
   return [
@@ -82,17 +83,32 @@ export default function Solar() {
                 Akku:
               </div>
               <div style={{width: '40px'}}>
-                {messageStatus?.chargeException ?
+                {messageStatus?.chargeMax ?
                   <Close
                     dark={true}
                     onClick={() => {
-                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeException: false}));
+                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeMax: null}));
                     }}
                   /> :
-                  <Plus
+                  <Collect
                     dark={true}
                     onClick={() => {
-                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeException: true}));
+                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeMax: true}));
+                    }}
+                  />}
+              </div>
+              <div style={{width: '40px'}}>
+                {messageStatus?.chargeTo ?
+                  <Close
+                    dark={true}
+                    onClick={() => {
+                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeTo: null}));
+                    }}
+                  /> :
+                  <Max
+                    dark={true}
+                    onClick={() => {
+                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeTo: 100}));
                     }}
                   />}
               </div>
