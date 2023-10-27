@@ -1,4 +1,5 @@
 /* eslint-disable arrow-body-style */
+/* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/jsx-props-no-multi-spaces */
 /* eslint-disable react/no-array-index-key */
 
@@ -24,6 +25,7 @@ import Dialog                    from '../Dialog/Dialog.jsx';
 import faviconBase64             from '../../favicon.js';
 import {history}                 from '../../store/index.js';
 import Icons                     from '../Icons/Icons.jsx';
+import Infrarotheizung           from '../Infrarotheizung/Infrarotheizung.jsx';
 import mqttConfigs               from '../mqttConfigs.js';
 import MqttContext               from '../../contexts/MqttContext.js';
 import mqttSubscribe             from '../../lib/mqttSubscribe.js';
@@ -131,17 +133,31 @@ const App = function(props) {
   }
 
   return (
-    <div className='control'>
+    <div>
       <AppContext.Provider value={appContextValue}>
         <MqttContext.Provider value={mqttContextValue}>
           <Favicon url={`data:image/png;base64,${faviconBase64}`} />
           <Router history={history}>
             <Routes>
-              <Route path='/'               element={<Control />} />
-              <Route path='/:page'          element={<Control />} />
-              <Route path='/icons'          element={<Icons />} />
-              <Route path='/settings/:page' element={<Settings />} />
-              <Route path='*'               element={<Control />} />
+              <Route path='/'                    element={<Control />} />
+              <Route path='/:page'               element={<Control />} />
+              <Route path='/icons'               element={<Icons />} />
+              <Route path='/heizungBuero'        element={
+                <div>
+                  <title>Büro</title>
+                  <Infrarotheizung site='Büro' />
+                </div>
+              }
+              />
+              <Route path='/heizungSchlafzimmer' element={
+                <div>
+                  <title>Schlafzimmer</title>
+                  <Infrarotheizung site='Schlafzimmer' />
+                </div>
+              }
+              />
+              <Route path='/settings/:page'      element={<Settings />} />
+              <Route path='*'                    element={<Control />} />
             </Routes>
           </Router>
           {_dialogContent ?

@@ -12,7 +12,7 @@ import Grid            from '../Grid/Grid.jsx';
 import Clock           from '../Clock/Clock.jsx';
 import Dreame          from '../Dreame/Dreame.jsx';
 import Fenster         from '../Fenster/Fenster.jsx';
-import InfrarotHeizung from '../InfrarotHeizung/InfrarotHeizung.jsx';
+import Infrarotheizung from '../Infrarotheizung/Infrarotheizung.jsx';
 import JalousieBuero   from '../JalousieBuero/JalousieBuero.jsx';
 import JalousieWohnen  from '../JalousieWohnen/JalousieWohnen.jsx';
 import Solar           from '../Solar/Solar.jsx';
@@ -71,11 +71,12 @@ export default function Control() {
     {id: 'dreame',            width: 1, fit: true, content: <Dreame />,                      calcPriority: calcDreame},
 
     {id: 'tempVito',          width: 1, fit: true, content: <Temperatur site='AußenVito' />},
-    {id: 'tempAussenTasmota', width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
+//  {id: 'tempAussenTasmota', width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
     {id: 'tempWohnenRaspi',   width: 1, fit: true, content: <Temperatur site='WohnenRaspi' />},
     {id: 'tempBuero',         width: 1, fit: true, content: <Temperatur site='Büro' />},
     {id: 'jalousieBuero',     width: 1, fit: true, content: <JalousieBuero />},
-    {id: 'infrarotHeizung',   width: 1, fit: true, content: <InfrarotHeizung />},
+    {id: 'infrarotheizungBuero',        width: 1, fit: true, content: <Infrarotheizung site='Büro' />},
+    {id: 'infrarotheizungSchlafzimmer', width: 1, fit: true, content: <Infrarotheizung site='Schlafzimmer' />},
   ];
 
   const itemsToPages = () => {
@@ -119,5 +120,10 @@ export default function Control() {
 
   // console.log('Control', {displayPage, params});
 
-  return <Grid page={displayPage} items={pages[displayPage - 1]} maxPages={Number(_.keys(pages).length)} />;
+  return (
+    <div className='control'>
+      <title>Control</title>
+      <Grid page={displayPage} items={pages[displayPage - 1]} maxPages={Number(_.keys(pages).length)} />
+    </div>
+  );
 }

@@ -123,6 +123,7 @@ const row5 = [
 export default function Icons() {
   return (
     <div className='icons'>
+      <title>Icons</title>
       <div className='icons__row'>
         {_.map(row1, icon => <FitBox>{icon}</FitBox>)}
       </div>

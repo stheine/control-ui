@@ -15,28 +15,44 @@ import OffColored   from '../../svg/sargam/OffColored.jsx';
 import OnColored    from '../../svg/sargam/OnColored.jsx';
 import OnOffUnknown from '../../svg/sargam/OnOffUnknown.jsx';
 
-export default function InfrarotHeizung() {
+export default function Infrarotheizung(props) {
+  const {site} = props;
   const {messages, mqttClient} = useContext(MqttContext);
 
   const [_pulseTime, setPulseTime] = useState();
   const [_pulseTimeInterval, setPulseTimeInterval] = useState();
 
-  const messagePower  = messages['tasmota/infrarotheizung/stat/POWER'];
-  const messageResult = messages['tasmota/infrarotheizung/stat/RESULT'];
+  let topic;
+
+  switch(site) {
+    case 'Büro':
+      topic = 'infrarotheizung-buero';
+      break;
+
+    case 'Schlafzimmer':
+      topic = 'infrarotheizung-schlafzimmer';
+      break;
+
+    default:
+      throw new Error(`Unhandled site='${site}'`);
+  }
+
+  const messagePower  = messages[`tasmota/${topic}/stat/POWER`];
+  const messageResult = messages[`tasmota/${topic}/stat/RESULT`];
 
   const pulseTimeIntervalFunction = useCallback(() => {
     // console.log('trigger PulseTime');
-    mqttClient.publish('tasmota/infrarotheizung/cmnd/PulseTime', '');
-  }, [mqttClient]);
+    mqttClient.publish(`tasmota/${topic}/cmnd/PulseTime`, '');
+  }, [mqttClient, topic]);
 
   useEffect(() => {
-    // console.log('InfrarotHeizung:mount');
+    // console.log('Infrarotheizung:mount');
 
     return () => {
-      // console.log('InfrarotHeizung:dismount');
+      // console.log('Infrarotheizung:dismount');
 
       if(_pulseTimeInterval) {
-        // console.log('InfrarotHeizung:dismount - clearInterval');
+        // console.log('Infrarotheizung:dismount - clearInterval');
         clearInterval(_pulseTimeInterval);
       }
     };
@@ -62,10 +78,10 @@ export default function InfrarotHeizung() {
   }, [messagePower, _pulseTimeInterval, pulseTimeIntervalFunction]);
 
   if(messagePower) {
-    // console.log('InfrarotHeizung', {messagePower});
+    // console.log('Infrarotheizung', {messagePower});
   }
 
-  // console.log('InfrarotHeizung', messages['tasmota/infrarotheizung/stat/RESULT']);
+  // console.log('Infrarotheizung', messages[`tasmota/${topic}/stat/RESULT`]);
 
   const power = messagePower;
 
@@ -76,7 +92,7 @@ export default function InfrarotHeizung() {
           <OnColored
             dark={true}
             onClick={() => {
-              mqttClient.publish('tasmota/infrarotheizung/cmnd/Power', '0');
+              mqttClient.publish(`tasmota/${topic}/cmnd/Power`, '0');
               if(_pulseTimeInterval) {
                 clearInterval(_pulseTimeInterval);
                 setPulseTimeInterval();
@@ -91,8 +107,8 @@ export default function InfrarotHeizung() {
           <OffColored
             dark={true}
             onClick={() => {
-              mqttClient.publish('tasmota/infrarotheizung/cmnd/Power', '1');
-              mqttClient.publish('tasmota/infrarotheizung/cmnd/PulseTime', '');
+              mqttClient.publish(`tasmota/${topic}/cmnd/Power`, '1');
+              mqttClient.publish(`tasmota/${topic}/cmnd/PulseTime`, '');
               setPulseTimeInterval(setInterval(pulseTimeIntervalFunction, ms('1s')));
             }}
           />
@@ -112,7 +128,9 @@ export default function InfrarotHeizung() {
               <div
                 style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
               >
-                InfrarotHeizung
+                Infrarotheizung
+                <br />
+                {site}
               </div>
             </div>
           </td>
