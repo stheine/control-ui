@@ -1,5 +1,4 @@
 /* eslint-disable arrow-body-style */
-/* eslint-disable react/jsx-first-prop-new-line */
 /* eslint-disable react/jsx-props-no-multi-spaces */
 /* eslint-disable react/no-array-index-key */
 
@@ -30,6 +29,26 @@ import mqttConfigs               from '../mqttConfigs.js';
 import MqttContext               from '../../contexts/MqttContext.js';
 import mqttSubscribe             from '../../lib/mqttSubscribe.js';
 import Settings                  from '../Settings/Settings.jsx';
+
+const Standalone = function(props) {
+  const {site} = props;
+
+  return [
+    <meta key='meta' name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no' />,
+    <title key='title'>{site}</title>,
+    <Infrarotheizung
+      key='inhalt'
+      site={site}
+      style={{
+        fontSize: '10vw',
+        position: 'absolute',
+        left:     '50px',
+        right:    '50px',
+        top:    '50px',
+      }}
+    />,
+  ];
+};
 
 const App = function(props) {
   const {dispatch} = props;
@@ -142,20 +161,8 @@ const App = function(props) {
               <Route path='/'                    element={<Control />} />
               <Route path='/:page'               element={<Control />} />
               <Route path='/icons'               element={<Icons />} />
-              <Route path='/heizungBuero'        element={
-                <div>
-                  <title>Büro</title>
-                  <Infrarotheizung site='Büro' />
-                </div>
-              }
-              />
-              <Route path='/heizungSchlafzimmer' element={
-                <div>
-                  <title>Schlafzimmer</title>
-                  <Infrarotheizung site='Schlafzimmer' />
-                </div>
-              }
-              />
+              <Route path='/heizungBuero'        element={<Standalone site='Büro' />} />,
+              <Route path='/heizungSchlafzimmer' element={<Standalone site='Schlafzimmer' />} />,
               <Route path='/settings/:page'      element={<Settings />} />
               <Route path='*'                    element={<Control />} />
             </Routes>

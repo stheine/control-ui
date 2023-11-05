@@ -16,7 +16,7 @@ import OnColored    from '../../svg/sargam/OnColored.jsx';
 import OnOffUnknown from '../../svg/sargam/OnOffUnknown.jsx';
 
 export default function Infrarotheizung(props) {
-  const {site} = props;
+  const {site, style} = props;
   const {messages, mqttClient} = useContext(MqttContext);
 
   const [_pulseTime, setPulseTime] = useState();
@@ -120,7 +120,7 @@ export default function Infrarotheizung(props) {
   };
 
   return (
-    <table>
+    <table style={style}>
       <tbody>
         <tr>
           <td colSpan={2}>
