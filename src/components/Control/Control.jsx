@@ -54,13 +54,13 @@ export default function Control() {
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/status' && message !== 'docked') ||
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/error' && message?.severity.kind !== 'none')).length);
 
-  const calcWetter = () => Boolean(_.filter(messages, (message, topic) =>
-    topic === 'wetter/dwd/INFO' && message?.forecast.warnings.length).length);
+//  const calcWetter = () => Boolean(_.filter(messages, (message, topic) =>
+//    topic === 'wetter/dwd/INFO' && message?.forecast.warnings.length).length);
 
   const items = [
     {id: 'tempAussen',        width: 1, fit: true, content: <Temperatur site='Außen' />},
     {id: 'tempWohnen',        width: 1, fit: true, content: <Temperatur site='Wohnen' />},
-    {id: 'wetter',            width: 2,            content: <Wetter />,                      calcPriority: calcWetter},
+    {id: 'wetter',            width: 2,            content: <Wetter />                /* , calcPriority: calcWetter */},
     {id: 'solar',             width: 1, fit: true, content: <Solar />},
     {id: 'clock',             width: 1, fit: true, content: <Clock />},
 
