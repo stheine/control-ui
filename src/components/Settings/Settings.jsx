@@ -34,5 +34,10 @@ export default function Settings() {
 
   // console.log('Settings', {params, page, pages});
 
-  return <Grid page={page} settings={true} items={pages[page]} maxPages={Number(_.last(_.keys(pages)))} />;
+  return (
+    <div className='control'>
+      <title>Settings</title>
+      <Grid page={page} settings={true} items={pages[page]} maxPages={Number(_.last(_.keys(pages)))} />
+    </div>
+  );
 }
