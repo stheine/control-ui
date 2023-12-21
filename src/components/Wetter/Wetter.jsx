@@ -182,7 +182,7 @@ export default function Wetter() {
                   className='wetter__warning__text'
                   onClick={() => displayWarningDialog()}
                 >
-                  {_.map(warnungen, warnung => renderWarningTitle(warnung)).join(', ')}
+                  {_.map(_.uniqBy(warnungen, 'event'), warnung => renderWarningTitle(warnung)).join(', ')}
                 </div>
                 <div className='wetter__warning__icon'>
                   <Alert
