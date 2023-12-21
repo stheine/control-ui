@@ -1,6 +1,5 @@
 import _           from 'lodash';
 import {connect}   from 'react-redux';
-import {replace}   from 'redux-first-history';
 import React, {
   useContext,
 } from 'react';
@@ -13,9 +12,7 @@ import Dlf         from '../../svg/Dlf.jsx';
 import Increase    from '../../svg/sargam/Increase.jsx';
 import PlayPause   from '../../svg/sargam/PlayPause.jsx';
 
-const Volumio = function(props) {
-  const {dispatch} = props;
-
+const Volumio = function() {
   // console.log('Volumio');
 
   const {messages, mqttClient} = useContext(MqttContext);
@@ -50,13 +47,7 @@ const Volumio = function(props) {
           <td>
             <PlayPause
               dark={true}
-              onClick={() => {
-                mqttClient.publish('volumio/cmnd/toggle', '');
-
-                if(message?.status !== 'play') {
-                  dispatch(replace('/1'));
-                }
-              }}
+              onClick={() => mqttClient.publish('volumio/cmnd/toggle', '')}
             />
           </td>
         </tr>

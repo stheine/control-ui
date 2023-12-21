@@ -1,7 +1,11 @@
 import _               from 'lodash';
+import {connect}       from 'react-redux';
+import {replace}       from 'redux-first-history';
 import {useParams}     from 'react-router-dom';
 import React, {
   useContext,
+  useEffect,
+  useRef,
 } from 'react';
 
 import AppContext      from '../../contexts/AppContext.js';
@@ -21,15 +25,48 @@ import Vito            from '../Vito/Vito.jsx';
 import Volumio         from '../Volumio/Volumio.jsx';
 import Wetter          from '../Wetter/Wetter.jsx';
 
-// import WetterDwd   from '../WetterDwd/WetterDwd.jsx';
-//  {width: 3,            content: <WetterDwd />},
+const Control = function(props) {
+  const {dispatch} = props;
 
-export default function Control() {
-  const {controlClient} = useContext(AppContext);
-  const {messages}      = useContext(MqttContext);
+  const {controlClient}        = useContext(AppContext);
+  const {messages, mqttClient} = useContext(MqttContext);
 
   const params = useParams();
   const displayPage = Number(params.page) || 1;
+
+  const displayPageRef = useRef(displayPage);
+  const volumioStatus  = useRef();
+
+  useEffect(() => {
+    // Use the displayPageRef inside this effect to prevent
+    // re-registering the event handler on every page change
+    mqttClient.on('message', async(messageTopic, messageBuffer) => {
+      if(messageTopic !== 'volumio/stat/pushState') {
+        return;
+      }
+
+      try {
+        const messageRaw = messageBuffer.toString();
+
+        const message = JSON.parse(messageRaw);
+        const {status} = message;
+
+        if(status !== volumioStatus.current) {
+          volumioStatus.current = status;
+
+          if(status === 'play' && displayPageRef.current !== 1) {
+            dispatch(replace('/1'));
+          }
+        }
+      } catch{
+        // nothing
+      }
+    });
+  }, [dispatch, mqttClient]);
+
+  useEffect(() => {
+    displayPageRef.current = displayPage;
+  }, [displayPage]);
 
   const calcFenster = () => Boolean(_.filter(messages, (message, topic) => {
     if(!topic.startsWith('Zigbee/FensterSensor')) {
@@ -126,4 +163,8 @@ export default function Control() {
       <Grid page={displayPage} items={pages[displayPage - 1]} maxPages={Number(_.keys(pages).length)} />
     </div>
   );
-}
+};
+
+const mapStateToProps = () => ({});
+
+export default connect(mapStateToProps)(Control);
