@@ -6,6 +6,7 @@ import FensterConfig    from './Fenster/mqttConfig.js';
 import Infrarotheizung  from './Infrarotheizung/mqttConfig.js';
 import JalousieWohnen   from './JalousieWohnen/mqttConfig.js';
 import LedsConfig       from './Leds/mqttConfig.js';
+import MuellConfig      from './Muell/mqttConfig.js';
 import SolarConfig      from './Solar/mqttConfig.js';
 import TemperaturConfig from './Temperatur/mqttConfig.js';
 import VitoConfig       from './Vito/mqttConfig.js';
@@ -23,6 +24,7 @@ export default [
   ...Infrarotheizung,
   ...JalousieWohnen,
   ...LedsConfig,
+  ...MuellConfig,
   ...SolarConfig,
   ...TemperaturConfig,
   ...VitoConfig,

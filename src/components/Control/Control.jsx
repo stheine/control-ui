@@ -19,6 +19,7 @@ import Fenster         from '../Fenster/Fenster.jsx';
 import Infrarotheizung from '../Infrarotheizung/Infrarotheizung.jsx';
 import JalousieBuero   from '../JalousieBuero/JalousieBuero.jsx';
 import JalousieWohnen  from '../JalousieWohnen/JalousieWohnen.jsx';
+import Muell           from '../Muell/Muell.jsx';
 import Solar           from '../Solar/Solar.jsx';
 import Temperatur      from '../Temperatur/Temperatur.jsx';
 import Vito            from '../Vito/Vito.jsx';
@@ -84,6 +85,9 @@ const Control = function(props) {
     return true;
   }).length);
 
+  const calcMuell = () => Boolean(_.filter(messages, (message, topic) =>
+    topic === 'muell/leerung/morgen' && Boolean(message.length)));
+
   const calcVolumio = () => Boolean(_.filter(messages, (message, topic) =>
     topic === 'volumio/stat/pushState' && message.status === 'play').length);
 
@@ -106,6 +110,7 @@ const Control = function(props) {
     {id: 'vito',              width: 1, fit: true, content: <Vito />},
     {id: 'volumio',           width: 2,            content: <Volumio />,                     calcPriority: calcVolumio},
     {id: 'dreame',            width: 1, fit: true, content: <Dreame />,                      calcPriority: calcDreame},
+    {id: 'muell',             width: 1, fit: true, content: <Muell />,                       calcPriority: calcMuell},
 
     {id: 'tempVito',          width: 1, fit: true, content: <Temperatur site='AußenVito' />},
 //  {id: 'tempAussenTasmota', width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
