@@ -86,7 +86,7 @@ const Control = function(props) {
   }).length);
 
   const calcMuell = () => Boolean(_.filter(messages, (message, topic) =>
-    topic === 'muell/leerung/morgen' && Boolean(message.length)));
+    topic === 'muell/leerung/morgen' && Boolean(message?.length)).length);
 
   const calcVolumio = () => Boolean(_.filter(messages, (message, topic) =>
     topic === 'volumio/stat/pushState' && message.status === 'play').length);
@@ -127,7 +127,7 @@ const Control = function(props) {
     const itemsByPriority = _.sortBy(_.map(items, (item, index) => {
       let priority = index;
 
-      if(item.calcPriority && item.calcPriority({messages})) {
+      if(item.calcPriority && item.calcPriority()) {
         priority -= 100;
       }
 
