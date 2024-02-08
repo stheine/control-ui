@@ -73,7 +73,7 @@ const App = function(props) {
 
     const initMqtt = async function() {
       try {
-        mqttClient = await mqtt.connectAsync('tcp://192.168.6.5:9001'); // TODO from settings
+        mqttClient = await mqtt.connectAsync('tcp://192.168.6.5:9001', {clientId: 'control-ui'}); // TODO from settings
 
         setMqttClient(mqttClient);
       } catch(err) {
