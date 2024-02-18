@@ -56,6 +56,9 @@ export default function Zigbee() {
     <table>
       <tbody>
         <tr>
+          <td colSpan={2} style={{fontSize: '120%', paddingBottom: '20px'}}>zigbee2mqtt</td>
+        </tr>
+        <tr>
           <td>Version:</td>
           <td style={{whiteSpace: 'nowrap'}}>{`${version}`}</td>
         </tr>
