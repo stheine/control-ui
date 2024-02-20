@@ -105,7 +105,7 @@ const Control = function(props) {
     {id: 'solar',             width: 1, fit: true, content: <Solar />},
     {id: 'clock',             width: 1, fit: true, content: <Clock />},
 
-    {id: 'muell',             width: 1, fit: true, content: <Muell />,                       calcPriority: calcMuell},
+    {id: 'muell',             width: 1,            content: <Muell />,                       calcPriority: calcMuell},
     {id: 'fenster',           width: 1, fit: true, content: <Fenster />,                     calcPriority: calcFenster},
     {id: 'volumio',           width: 2,            content: <Volumio />,                     calcPriority: calcVolumio},
     {id: 'vito',              width: 1, fit: true, content: <Vito />},

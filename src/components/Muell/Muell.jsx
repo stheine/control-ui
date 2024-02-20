@@ -1,4 +1,10 @@
-import _ from 'lodash';
+// eslint-disable-next-line import/no-unassigned-import
+import                      'dayjs/locale/de';
+
+import _               from 'lodash';
+import dayjs           from 'dayjs';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import relativeTime    from 'dayjs/plugin/relativeTime';
 import React, {
   useContext,
 } from 'react';
@@ -6,11 +12,14 @@ import React, {
 import Checked     from '../../svg/sargam/Checked.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
 
-const getColor = function(summary) {
+dayjs.extend(localizedFormat);
+dayjs.extend(relativeTime);
+
+const getColor = function(label) {
   let backgroundColor;
   let color;
 
-  switch(summary) {
+  switch(label) {
     case 'Biomüll':
       backgroundColor = '#00cc00';
       color           = '#000000';
@@ -85,41 +94,65 @@ export default function Muell() {
     );
   }
 
+  const renderRelative = date => {
+    const now   = new Date();
+    const start = new Date(date);
+
+    return (
+      <td style={{paddingBottom: '12px'}}>
+        <span style={{fontSize: '120%'}}>
+          {start < now ? 'Heute' : dayjs().locale('de').to(dayjs(date))}
+        </span>
+      </td>
+    );
+  };
+
+  const renderDate = date => {
+    const startDateFormatted = formatter.format(new Date(date));
+
+    return (
+      <td style={{paddingBottom: '12px'}}>
+        <span style={{fontSize: '120%'}}>
+          {startDateFormatted}
+        </span>
+      </td>
+    );
+  };
+
+  const renderLabel = label => {
+    const {backgroundColor, color} = getColor(label);
+
+    return (
+      <td colSpan={2}>
+        <span
+          style={{
+            backgroundColor,
+            color,
+            fontSize:        '220%',
+            padding:         '0 7px 0 7px',
+          }}
+        >
+          {label}
+        </span>
+      </td>
+    );
+  };
+
   return (
-    <table>
+    <table style={{padding: '10px 0 0 10px'}}>
       <tbody>
         {_.map(naechste, leerung => {
           const {startDate, summary} = leerung;
-          const {backgroundColor, color} = getColor(summary);
 
-          const startDateFormatted =
-            formatter.format(new Date(startDate));
-
-          return (
-            <tr key={summary}>
-              <td>
-                <span
-                  style={{
-                    fontSize: '50%',
-                  }}
-                >
-                  {startDateFormatted}
-                </span>
-              </td>
-              <td>
-                <span
-                  style={{
-                    backgroundColor,
-                    color,
-                    fontSize:        '50%',
-                    padding:         '0 7px 0 7px',
-                  }}
-                >
-                  {summary}
-                </span>
-              </td>
-            </tr>
-          );
+          return [
+            <tr key='label'>
+              {renderLabel(summary)}
+            </tr>,
+            <tr key='date'>
+              {renderRelative(startDate)}
+              {renderDate(startDate)}
+            </tr>,
+          ];
         })}
       </tbody>
     </table>
