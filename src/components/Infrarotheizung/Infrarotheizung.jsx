@@ -39,6 +39,7 @@ export default function Infrarotheizung(props) {
 
   const messagePower  = messages[`tasmota/${topic}/stat/POWER`];
   const messageResult = messages[`tasmota/${topic}/stat/RESULT`];
+  const messageLWT    = messages[`tasmota/${topic}/tele/LWT`];
 
   const pulseTimeIntervalFunction = useCallback(() => {
     // console.log('trigger PulseTime');
@@ -60,9 +61,17 @@ export default function Infrarotheizung(props) {
 
   useEffect(() => {
     if(messageResult?.PulseTime) {
-      setPulseTime(messageResult.PulseTime.Remaining[0] - 100);
+      const remaining = messageResult.PulseTime.Remaining[0];
+
+      setPulseTime(remaining > 111 ? remaining - 100 : remaining);
     }
   }, [messageResult]);
+
+  useEffect(() => {
+    if(messagePower === 'OFF') {
+      setPulseTime(0);
+    }
+  }, [messagePower]);
 
   useEffect(() => {
     if(messagePower === 'ON') {
@@ -83,10 +92,8 @@ export default function Infrarotheizung(props) {
 
   // console.log('Infrarotheizung', messages[`tasmota/${topic}/stat/RESULT`]);
 
-  const power = messagePower;
-
-  const PermitJoin = function() {
-    switch(power) {
+  const Switch = function() {
+    switch(messagePower) {
       case 'ON':
         return (
           <OnColored
@@ -126,7 +133,13 @@ export default function Infrarotheizung(props) {
           <td colSpan={2}>
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <div
-                style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
+                style={{
+                  display:        'flex',
+                  flexDirection:  'column',
+                  justifyContent: 'center',
+                  padding:        '0 10px 10px 0',
+                  textDecoration: messageLWT === 'Online' ? null : 'line-through',
+                }}
               >
                 Infrarotheizung
                 <br />
@@ -139,7 +152,7 @@ export default function Infrarotheizung(props) {
           <td colSpan={2}>
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <div style={{width: '100px'}}>
-                <PermitJoin />
+                <Switch />
               </div>
             </div>
           </td>
