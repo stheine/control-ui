@@ -95,21 +95,21 @@ const Control = function(props) {
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/status' && message !== 'docked') ||
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/error' && message?.severity.kind !== 'none')).length);
 
-//  const calcWetter = () => Boolean(_.filter(messages, (message, topic) =>
-//    topic === 'wetter/dwd/INFO' && message?.forecast.warnings.length).length);
+  const calcWetter = () => Boolean(_.filter(messages, (message, topic) =>
+    topic === 'wetter/dwd/INFO' && message?.forecast.warnings.length).length);
 
   const items = [
-    {id: 'tempAussen',        width: 1, fit: true, content: <Temperatur site='Außen' />},
-    {id: 'tempWohnen',        width: 1, fit: true, content: <Temperatur site='Wohnen' />},
-    {id: 'wetter',            width: 2,            content: <Wetter />                /* , calcPriority: calcWetter */},
-    {id: 'solar',             width: 1, fit: true, content: <Solar />},
-    {id: 'clock',             width: 1, fit: true, content: <Clock />},
+    {id: 'tempAussen',        priority: -203, width: 1, fit: true, content: <Temperatur site='Außen' />},
+    {id: 'tempWohnen',        priority: -202, width: 1, fit: true, content: <Temperatur site='Wohnen' />},
+    {id: 'solar',             priority: -201, width: 1, fit: true, content: <Solar />},
+    {id: 'wetter',            priority:  -51, width: 2,            content: <Wetter />, calcPriority: calcWetter},
+    {id: 'clock',             priority:  -50, width: 1, fit: true, content: <Clock />},
 
-    {id: 'muell',             width: 1,            content: <Muell />,                       calcPriority: calcMuell},
-    {id: 'fenster',           width: 1, fit: true, content: <Fenster />,                     calcPriority: calcFenster},
-    {id: 'volumio',           width: 2,            content: <Volumio />,                     calcPriority: calcVolumio},
-    {id: 'vito',              width: 1, fit: true, content: <Vito />},
-    {id: 'jalousieWohnen',    width: 1, fit: true, content: <JalousieWohnen />},
+    {id: 'muell',             priority:    0, width: 1,            content: <Muell />,                       calcPriority: calcMuell},
+    {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />,                     calcPriority: calcFenster},
+    {id: 'volumio',           priority:    0, width: 2,            content: <Volumio />,                     calcPriority: calcVolumio},
+    {id: 'vito',              priority:    0, width: 1, fit: true, content: <Vito />},
+    {id: 'jalousieWohnen',    priority:    0, width: 1, fit: true, content: <JalousieWohnen />},
 
     {id: 'tempVito',          width: 1, fit: true, content: <Temperatur site='AußenVito' />},
 //  {id: 'tempAussenTasmota', width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
@@ -125,7 +125,7 @@ const Control = function(props) {
     const pages = [];
 
     const itemsByPriority = _.sortBy(_.map(items, (item, index) => {
-      let priority = index;
+      let priority = item.priority || index;
 
       if(item.calcPriority && item.calcPriority()) {
         priority -= 100;

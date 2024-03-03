@@ -52,8 +52,6 @@ export default function Muell() {
   const morgen   = messages['muell/leerung/morgen'];
   const naechste = messages['muell/leerung/naechste'];
 
-  // console.log('Muell', {morgen});
-
   if(morgen?.length) {
     return (
       <table style={{width: '100%'}}>
@@ -64,12 +62,17 @@ export default function Muell() {
 
             return [
               <tr key={summary}>
-                <td style={{textAlign: 'center'}}>
+                <td
+                  style={{
+                    textAlign:  'center',
+                    paddingTop: morgen.length === 1 ? '60px' : null,
+                  }}
+                >
                   <span
                     style={{
                       backgroundColor,
                       color,
-                      fontSize: '40%',
+                      fontSize: morgen.length === 1 ? '400%' : '200%',
                       padding:  '0 15px 0 15px',
                     }}
                   >
