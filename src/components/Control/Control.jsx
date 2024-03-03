@@ -102,12 +102,12 @@ const Control = function(props) {
     {id: 'tempAussen',        priority: -203, width: 1, fit: true, content: <Temperatur site='Außen' />},
     {id: 'tempWohnen',        priority: -202, width: 1, fit: true, content: <Temperatur site='Wohnen' />},
     {id: 'solar',             priority: -201, width: 1, fit: true, content: <Solar />},
-    {id: 'wetter',            priority:  -51, width: 2,            content: <Wetter />, calcPriority: calcWetter},
+    {id: 'wetter',            priority:  -51, width: 2,            content: <Wetter />,  calcPriority: calcWetter},
     {id: 'clock',             priority:  -50, width: 1, fit: true, content: <Clock />},
 
-    {id: 'muell',             priority:    0, width: 1,            content: <Muell />,                       calcPriority: calcMuell},
-    {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />,                     calcPriority: calcFenster},
-    {id: 'volumio',           priority:    0, width: 2,            content: <Volumio />,                     calcPriority: calcVolumio},
+    {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
+    {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
+    {id: 'volumio',           priority:    0, width: 2,            content: <Volumio />, calcPriority: calcVolumio},
     {id: 'vito',              priority:    0, width: 1, fit: true, content: <Vito />},
     {id: 'jalousieWohnen',    priority:    0, width: 1, fit: true, content: <JalousieWohnen />},
 
