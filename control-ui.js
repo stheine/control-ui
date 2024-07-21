@@ -1,12 +1,15 @@
+#!/usr/bin/env node
+
 /* eslint-disable no-constant-condition */
 /* eslint-disable unicorn/no-process-exit */
+/* eslint-disable no-process-exit */
 /* eslint-disable no-underscore-dangle */
 
-import http                  from 'http';
-import https                 from 'https';
-import path                  from 'path';
-import readline              from 'readline';
-import url                   from 'url';
+import http                  from 'node:http';
+import https                 from 'node:https';
+import path                  from 'node:path';
+import readline              from 'node:readline';
+import url                   from 'node:url';
 
 import _                     from 'lodash';
 import compression           from 'compression';
@@ -30,7 +33,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
   const packageJson = await fsExtra.readJson('./package.json');
 
   // eslint-disable-next-line no-console
-  console.log('\x1B]2;control\x07'); // windowTitle
+  console.log('\u001B]2;control\u0007'); // windowTitle
   logger.info(`-------------------- Startup --------------------`);
   logger.info(`${packageJson.name} ${packageJson.version}`);
 
@@ -168,7 +171,7 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
       const {stdout} = await execa('/bin/netstat', ['-tulpn']);
       const stdoutLines = stdout.split('\n');
       const usingProcessLine = _.find(stdoutLines, line => line.includes(`:::${serverPort}`));
-      const usingProcessId = usingProcessLine.replace(/^.* (\d+)\/node .*$/, '$1');
+      const usingProcessId = usingProcessLine.replace(/^.* (?<pid>\d+)\/node .*$/, '$<pid>');
 
       logger.error(`Server port '${serverPort}' already in use by process ${usingProcessId}`);
     } else if(environment !== 'production') {

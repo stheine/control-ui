@@ -1,12 +1,13 @@
-/* eslint-disable import/group-exports */
 /* / eslint-disable no-constant-condition */
 
-import {combineReducers}           from 'redux';
-import {configureStore}            from '@reduxjs/toolkit';
 import {createHashHistory}         from 'history';
 import {createReduxHistoryContext} from 'redux-first-history';
 // import {logger}                    from 'redux-logger';
-import thunk                       from 'redux-thunk';
+import {thunk}                     from 'redux-thunk';
+import {
+  combineReducers,
+  configureStore,
+} from '@reduxjs/toolkit';
 
 import * as reducers               from '../reducers/index.js';
 
@@ -19,7 +20,7 @@ const {
   // hashType: 'slash', ???
 })});
 
-const middleware = [
+const middleware = () => [
   routerMiddleware,
   thunk,
 ];
