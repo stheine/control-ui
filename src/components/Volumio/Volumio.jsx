@@ -30,16 +30,16 @@ const Volumio = function() {
       <tbody>
         <tr>
           <td className='volumio__control'>
-            <Dlf dark={true} onClick={() => mqttClient.publish('volumio/cmnd/DLF', '')} />
+            <Dlf dark={true} onClick={async() => await mqttClient.publishAsync('volumio/cmnd/DLF', '')} />
           </td>
           <td rowSpan={3} className='volumio__title'>
             <div><span>{message?.artist ? `${message.artist} - ` : null}{message?.title}</span></div>
           </td>
           <td rowSpan={3} className='volumio__volume'>
             <div>
-              <Increase dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"+"')} />
+              <Increase dark={true} onClick={async() => await mqttClient.publishAsync('volumio/cmnd/volume', '"+"')} />
               <span>{message?.volume}</span>
-              <Decrease dark={true} onClick={() => mqttClient.publish('volumio/cmnd/volume', '"-"')} />
+              <Decrease dark={true} onClick={async() => await mqttClient.publishAsync('volumio/cmnd/volume', '"-"')} />
             </div>
           </td>
         </tr>
@@ -47,7 +47,7 @@ const Volumio = function() {
           <td>
             <PlayPause
               dark={true}
-              onClick={() => mqttClient.publish('volumio/cmnd/toggle', '')}
+              onClick={async() => await mqttClient.publishAsync('volumio/cmnd/toggle', '')}
             />
           </td>
         </tr>

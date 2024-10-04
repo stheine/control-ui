@@ -45,8 +45,8 @@ export default function Dreame() {
             <div style={{width: '100px'}}>
               <Play
                 dark={true}
-                onClick={() =>
-                  mqttClient.publish('valetudo/dreame-d9/BasicControlCapability/operation/set', 'START')}
+                onClick={async() =>
+                  await mqttClient.publishAsync('valetudo/dreame-d9/BasicControlCapability/operation/set', 'START')}
               />
             </div>
           </td>

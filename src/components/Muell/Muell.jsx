@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unassigned-import
 import                      'dayjs/locale/de';
 
 import _               from 'lodash';
@@ -85,7 +84,7 @@ export default function Muell() {
                   <div style={{width: '80px', paddingLeft: '100px'}}>
                     <Checked
                       dark={true}
-                      onClick={() => mqttClient.publish('muell/leerung/morgen', null, {retain: true})}
+                      onClick={async() => await mqttClient.publishAsync('muell/leerung/morgen', null, {retain: true})}
                     />
                   </div>
                 </td>

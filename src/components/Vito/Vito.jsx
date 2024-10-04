@@ -36,9 +36,9 @@ export default function Vito() {
         return (
           <OnColored
             dark={true}
-            onClick={() => {
+            onClick={async() => {
               setSparbetrieb();
-              mqttClient.publish('vito/cmnd/setHK1BetriebsartSpar', '0');
+              await mqttClient.publishAsync('vito/cmnd/setHK1BetriebsartSpar', '0');
             }}
           />
         );
@@ -47,9 +47,9 @@ export default function Vito() {
         return (
           <OffColored
             dark={true}
-            onClick={() => {
+            onClick={async() => {
               setSparbetrieb();
-              mqttClient.publish('vito/cmnd/setHK1BetriebsartSpar', '1');
+              await mqttClient.publishAsync('vito/cmnd/setHK1BetriebsartSpar', '1');
             }}
           />
         );

@@ -12,6 +12,6 @@ export default function LedToggle() {
   // console.log('Beep');
 
   return (
-    <Notification dark={true} onClick={() => mqttClient.publish('control-io/cmnd/beep', '')} />
+    <Notification dark={true} onClick={async() => await mqttClient.publishAsync('control-io/cmnd/beep', '')} />
   );
 }

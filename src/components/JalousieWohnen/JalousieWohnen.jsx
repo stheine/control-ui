@@ -54,14 +54,14 @@ export default function JalousieWohnen() {
         <tr>
           <td>
             <div style={{width: '90px'}}>
-              <BlindUp dark={true} onClick={() => mqttClient.publish('Jalousie/cmnd/full_up', '')} />
+              <BlindUp dark={true} onClick={async() => await mqttClient.publishAsync('Jalousie/cmnd/full_up', '')} />
             </div>
           </td>
           <td>
             <div style={{width: '90px'}}>
               <StopCircle
                 dark={true}
-                onClick={() => mqttClient.publish('Jalousie/cmnd/stop', '')}
+                onClick={async() => await mqttClient.publishAsync('Jalousie/cmnd/stop', '')}
               />
             </div>
           </td>
@@ -69,15 +69,16 @@ export default function JalousieWohnen() {
         <tr>
           <td>
             <div style={{width: '90px'}}>
-              <BlindDown dark={true} onClick={() => mqttClient.publish('Jalousie/cmnd/full_down', '')} />
+              <BlindDown dark={true} onClick={async() =>
+                await mqttClient.publishAsync('Jalousie/cmnd/full_down', '')} />
             </div>
           </td>
           <td>
             <div style={{width: '90px'}}>
               <BlindShade
                 dark={true}
-                onClick={() => {
-                  mqttClient.publish('Jalousie/cmnd/turn', '');
+                onClick={async() => {
+                  await mqttClient.publishAsync('Jalousie/cmnd/turn', '');
                   // Jalousie/cmnd/shadow
                 }}
               />
@@ -101,14 +102,14 @@ export default function JalousieWohnen() {
                 {messageStatus?.skipNext ?
                   <Close
                     dark={true}
-                    onClick={() => {
-                      mqttClient.publish('JalousieBackend/cmnd', JSON.stringify({skipNext: false}));
+                    onClick={async() => {
+                      await mqttClient.publishAsync('JalousieBackend/cmnd', JSON.stringify({skipNext: false}));
                     }}
                   /> :
                   <Next
                     dark={true}
-                    onClick={() => {
-                      mqttClient.publish('JalousieBackend/cmnd', JSON.stringify({skipNext: true}));
+                    onClick={async() => {
+                      await mqttClient.publishAsync('JalousieBackend/cmnd', JSON.stringify({skipNext: true}));
                     }}
                   />}
               </div>

@@ -31,8 +31,9 @@ export default function Zigbee() {
         return (
           <OnColored
             dark={true}
-            onClick={() => {
-              mqttClient.publish('Zigbee/bridge/request/permit_join', JSON.stringify({value: false}));
+            onClick={async() => {
+              await mqttClient.publishAsync('Zigbee/bridge/request/permit_join',
+                JSON.stringify({value: false}));
             }}
           />
         );
@@ -41,8 +42,9 @@ export default function Zigbee() {
         return (
           <OffColored
             dark={true}
-            onClick={() => {
-              mqttClient.publish('Zigbee/bridge/request/permit_join', JSON.stringify({value: true, time: 120}));
+            onClick={async() => {
+              await mqttClient.publishAsync('Zigbee/bridge/request/permit_join',
+                JSON.stringify({value: true, time: 120}));
             }}
           />
         );

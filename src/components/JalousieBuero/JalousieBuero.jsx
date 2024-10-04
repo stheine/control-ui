@@ -28,16 +28,17 @@ export default function JalousieBuero() {
         <tr>
           <td>
             <div style={{width: '100px'}}>
-              <BlindUp dark={true} onClick={() => mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '1')} />
+              <BlindUp dark={true} onClick={async() =>
+                await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power2', '1')} />
             </div>
           </td>
           <td>
             <div style={{width: '100px'}}>
               <StopCircle
                 dark={true}
-                onClick={() => {
-                  mqttClient.publish('tasmota/jalousieBuero/cmnd/Power1', '0');
-                  mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '0');
+                onClick={async() => {
+                  await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power1', '0');
+                  await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power2', '0');
                 }}
               />
             </div>
@@ -46,20 +47,21 @@ export default function JalousieBuero() {
         <tr>
           <td>
             <div style={{width: '100px'}}>
-              <BlindDown dark={true} onClick={() => mqttClient.publish('tasmota/jalousieBuero/cmnd/Power1', '1')} />
+              <BlindDown dark={true} onClick={async() =>
+                await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power1', '1')} />
             </div>
           </td>
           <td>
             <div style={{width: '100px'}}>
               <BlindShade
                 dark={true}
-                onClick={() => {
-                  mqttClient.publish('tasmota/jalousieBuero/cmnd/PulseTime2', '1');
-                  mqttClient.publish('tasmota/jalousieBuero/cmnd/Power2', '1');
+                onClick={async() => {
+                  await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/PulseTime2', '1');
+                  await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power2', '1');
 
-                  setTimeout(() => {
-                    mqttClient.publish('tasmota/jalousieBuero/cmnd/PulseTime1', '220');
-                    mqttClient.publish('tasmota/jalousieBuero/cmnd/PulseTime2', '220');
+                  setTimeout(async() => {
+                    await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/PulseTime1', '220');
+                    await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/PulseTime2', '220');
                   }, 500);
                 }}
               />

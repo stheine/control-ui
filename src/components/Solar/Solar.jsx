@@ -86,14 +86,14 @@ export default function Solar() {
                 {messageStatus?.chargeMax ?
                   <Close
                     dark={true}
-                    onClick={() => {
-                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeMax: null}));
+                    onClick={async() => {
+                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: null}));
                     }}
                   /> :
                   <Collect
                     dark={true}
-                    onClick={() => {
-                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeMax: true}));
+                    onClick={async() => {
+                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: true}));
                     }}
                   />}
               </div>
@@ -101,14 +101,14 @@ export default function Solar() {
                 {messageStatus?.chargeTo ?
                   <Close
                     dark={true}
-                    onClick={() => {
-                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeTo: null}));
+                    onClick={async() => {
+                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: null}));
                     }}
                   /> :
                   <Max
                     dark={true}
-                    onClick={() => {
-                      mqttClient.publish('Fronius/solar/cmnd', JSON.stringify({chargeTo: 100}));
+                    onClick={async() => {
+                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: 100}));
                     }}
                   />}
               </div>

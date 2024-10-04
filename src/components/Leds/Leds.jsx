@@ -29,7 +29,8 @@ export default function Leds() {
                   color={color}
                   dark={true}
                   lit={Boolean(messages[config.topic])}
-                  onClick={() => mqttClient.publish(`control-io/cmnd/${led}`, messages[config.topic] ? '0' : '1')}
+                  onClick={async() =>
+                    await mqttClient.publishAsync(`control-io/cmnd/${led}`, messages[config.topic] ? '0' : '1')}
                 />
               </td>
             );
@@ -39,7 +40,8 @@ export default function Leds() {
     </table>
   );
 }
-//            <tr key={led} onClick={() => mqttClient.publish(`control-io/cmnd/${led}`, state ? '0' : '1')}>
+//            <tr key={led} onClick={async() =>
+//                await mqttClient.publishAsync(`control-io/cmnd/${led}`, state ? '0' : '1')}>
 //              <td style={{whiteSpace: 'nowrap'}}>{led}:</td>
 //              <td>{state}</td>
 //            </tr>

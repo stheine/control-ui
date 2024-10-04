@@ -152,7 +152,7 @@ export default function WetterDwd() {
                 <div className='wetter__warning__icon'>
                   <Alert
                     dark={true}
-                    onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
+                    onClick={async() => await mqttClient.publishAsync(`control-ui/cmnd/dialog`, JSON.stringify({
                       clientId,
                       header:   'Wetter Warnung',
                       data:     warnungen.flatMap(warnung => [
@@ -306,7 +306,7 @@ export default function WetterDwd() {
 //                <div className='wetter__warning__icon'>
 //                  <Alert
 //                    dark={true}
-//                    onClick={() => mqttClient.publish(`control-ui/cmnd/dialog`, JSON.stringify({
+//                    onClick={async() => await mqttClient.publishAsync(`control-ui/cmnd/dialog`, JSON.stringify({
 //                      clientId,
 //                      header:   'Wetter Warnung',
 //                      data:     alerts.flatMap(alert => [alert.event, alert.description]),

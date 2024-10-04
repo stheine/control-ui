@@ -41,9 +41,9 @@ export default function Infrarotheizung(props) {
   const messageResult = messages[`tasmota/${topic}/stat/RESULT`];
   const messageLWT    = messages[`tasmota/${topic}/tele/LWT`];
 
-  const pulseTimeIntervalFunction = useCallback(() => {
+  const pulseTimeIntervalFunction = useCallback(async() => {
     // console.log('trigger PulseTime');
-    mqttClient.publish(`tasmota/${topic}/cmnd/PulseTime`, '');
+    await mqttClient.publishAsync(`tasmota/${topic}/cmnd/PulseTime`, '');
   }, [mqttClient, topic]);
 
   useEffect(() => {
@@ -98,8 +98,8 @@ export default function Infrarotheizung(props) {
         return (
           <OnColored
             dark={true}
-            onClick={() => {
-              mqttClient.publish(`tasmota/${topic}/cmnd/Power`, '0');
+            onClick={async() => {
+              await mqttClient.publishAsync(`tasmota/${topic}/cmnd/Power`, '0');
               if(_pulseTimeInterval) {
                 clearInterval(_pulseTimeInterval);
                 setPulseTimeInterval();
@@ -113,9 +113,9 @@ export default function Infrarotheizung(props) {
         return (
           <OffColored
             dark={true}
-            onClick={() => {
-              mqttClient.publish(`tasmota/${topic}/cmnd/Power`, '1');
-              mqttClient.publish(`tasmota/${topic}/cmnd/PulseTime`, '');
+            onClick={async() => {
+              await mqttClient.publishAsync(`tasmota/${topic}/cmnd/Power`, '1');
+              await mqttClient.publishAsync(`tasmota/${topic}/cmnd/PulseTime`, '');
               setPulseTimeInterval(setInterval(pulseTimeIntervalFunction, ms('1s')));
             }}
           />
