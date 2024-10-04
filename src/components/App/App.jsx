@@ -5,7 +5,7 @@
 import _                         from 'lodash';
 import {connect}                 from 'react-redux';
 import Favicon                   from 'react-favicon';
-import mqtt                      from 'async-mqtt';
+import mqtt                      from 'mqtt';
 import ms                        from 'ms';
 import {replace}                 from 'redux-first-history';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
@@ -27,8 +27,11 @@ import Icons                     from '../Icons/Icons.jsx';
 import Infrarotheizung           from '../Infrarotheizung/Infrarotheizung.jsx';
 import mqttConfigs               from '../mqttConfigs.js';
 import MqttContext               from '../../contexts/MqttContext.js';
-import mqttSubscribe             from '../../lib/mqttSubscribe.js';
 import Settings                  from '../Settings/Settings.jsx';
+import {
+  mqttOnMessage,
+  mqttSubscribe,
+} from '../../lib/mqttSubscribe.js';
 
 const Standalone = function(props) {
   const {site} = props;
@@ -73,7 +76,7 @@ const App = function(props) {
 
     const initMqtt = async function() {
       try {
-        mqttClient = await mqtt.connectAsync('tcp://192.168.6.5:9001', {clientId: 'control-ui'}); // TODO from settings
+        mqttClient = await mqtt.connectAsync('tcp://192.168.6.5:9001', {clientId: `control-ui-${Math.random().toString(16).substr(2, 8)}`}); // TODO from settings
 
         setMqttClient(mqttClient);
       } catch(err) {
@@ -86,7 +89,7 @@ const App = function(props) {
 
     return async() => {
       if(mqttClient) {
-        await mqttClient.end();
+        await mqttClient.endAsync();
 
         setMqttClient();
       }
@@ -125,23 +128,19 @@ const App = function(props) {
 
   useEffect(() => {
     // / eslint-disable-next-line no-console
-    // console.log('App:useEffect, more');
+    // console.log('App:useEffect, _mqttClient');
 
     return mqttSubscribe({
       mqttClient: _mqttClient,
       topics:     _.map(mqttConfigs, 'topic'),
-      onMessage,
     });
-  }, [_mqttClient, onMessage]);
+  }, [_mqttClient]);
+  useEffect(() => {
+    // / eslint-disable-next-line no-console
+    // console.log('App:useEffect, onMessage');
 
-//  useEffect(() => {
-//    // eslint-disable-next-line no-console
-//    console.log('App:useEffect, _mqttClient');
-//  }, [_mqttClient]);
-//  useEffect(() => {
-//    // eslint-disable-next-line no-console
-//    console.log('App:useEffect, onMessage');
-//  }, [onMessage]);
+    mqttOnMessage(onMessage);
+  }, [onMessage]);
 
   if(!_mqttClient) {
     return;

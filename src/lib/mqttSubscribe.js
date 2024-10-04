@@ -1,16 +1,28 @@
-// import delay from 'delay';
-// import ms    from 'ms';
+import _ from 'lodash';
 
-export default function mqttSubscribe({mqttClient, topic, topics, onMessage}) {
+let lastTopics = null;
+let onMessage  = null;
+
+export const mqttOnMessage = function(newOnMessage) {
+  onMessage = newOnMessage;
+};
+
+export const mqttSubscribe = function({mqttClient, topics}) {
   if(!mqttClient) {
     return;
   }
 
-  const subscribeTopics = topics || [topic];
+  if(_.isEqual(topics, lastTopics)) {
+    return;
+  }
 
   try {
     mqttClient.on('message', async(messageTopic, messageBuffer) => {
-      if(!subscribeTopics.includes(messageTopic)) {
+      if(!onMessage) {
+        return;
+      }
+
+      if(!topics.includes(messageTopic)) {
         return;
       }
 
@@ -26,40 +38,29 @@ export default function mqttSubscribe({mqttClient, topic, topics, onMessage}) {
     });
 
     (async() => {
-//      let subscribed = false;
-
-//      do {
       try {
-        await mqttClient.subscribe(subscribeTopics);
-
-//          subscribed = true;
+        await mqttClient.subscribeAsync(topics);
       } catch(err) {
         if(!err.message.endsWith('client disconnecting')) {
           throw err;
         }
-
-//          // eslint-disable-next-line no-console
-//          console.log(`subscribe retry for ${subscribeTopics.join(', ')}`);
-
-//          await delay(ms('1s'));
       }
-//      } while(!subscribed);
     })();
 
-    // console.log(`subscribed to ${subscribeTopics.join(', ')}`);
+    lastTopics = topics;
   } catch(err) {
     // eslint-disable-next-line no-console
-    console.log(`Failed to subscribe to '${subscribeTopics.join(', ')}'`, err.message);
+    console.log(`Failed to subscribe to '${topics.join(', ')}'`, err.message);
   }
 
   return async() => {
-    // console.log(`unsubscribing from ${subscribeTopics.join(', ')}`);
     try {
-      await mqttClient.unsubscribe(subscribeTopics);
-      // console.log(`unsubscribed from ${subscribeTopics.join(', ')}`);
-    } catch{ // (err) {
+      await mqttClient.unsubscribeAsync(topics);
+    } catch(err) {
       // / eslint-disable-next-line no-console
-      // console.log(`failed unsubscribing from ${subscribeTopics.join(', ')}`, err.message);
+      // console.log(`failed unsubscribing from ${topics.join(', ')}`, err.message);
+    } finally {
+      lastTopics = null;
     }
   };
-}
+};
