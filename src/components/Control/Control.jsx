@@ -13,6 +13,7 @@ import MqttContext     from '../../contexts/MqttContext.js';
 
 import Grid            from '../Grid/Grid.jsx';
 
+import Auto            from '../Auto/Auto.jsx';
 import Clock           from '../Clock/Clock.jsx';
 import Dreame          from '../Dreame/Dreame.jsx';
 import Fenster         from '../Fenster/Fenster.jsx';
@@ -98,6 +99,9 @@ const Control = function(props) {
   const calcWetter = () => Boolean(_.filter(messages, (message, topic) =>
     topic === 'wetter/dwd/INFO' && message?.forecast.warnings.length).length);
 
+  const calcAuto = () => Boolean(_.filter(messages, (message, topic) =>
+    topic === 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingStatus/chargingState' & message === 'charging').length);
+
   const items = [
     {id: 'tempAussen',        priority: -203, width: 1, fit: true, content: <Temperatur site='Außen' />},
     {id: 'tempWohnen',        priority: -202, width: 1, fit: true, content: <Temperatur site='Wohnen' />},
@@ -105,6 +109,7 @@ const Control = function(props) {
     {id: 'wetter',            priority:  -51, width: 2,            content: <Wetter />,  calcPriority: calcWetter},
     {id: 'clock',             priority:  -50, width: 1, fit: true, content: <Clock />},
 
+    {id: 'auto',              priority:    0, width: 1,            content: <Auto />,    calcPriority: calcAuto},
     {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
     {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
     {id: 'volumio',           priority:    0, width: 2,            content: <Volumio />, calcPriority: calcVolumio},

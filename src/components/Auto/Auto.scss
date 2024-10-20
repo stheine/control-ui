@@ -1,0 +1,23 @@
+.auto {
+  font-size:   240%;
+
+  .auto__label {
+    font-size:   70%;
+  }
+
+  .auto__value {
+    color:          $value-color;
+//    font-family:    Digitalism;
+    letter-spacing: 0.08em;
+    text-align:     right;
+
+    &.negative {
+      color:        #ff8080;
+    }
+  }
+
+  .auto__unit {
+    font-size:      40%;
+    padding-top:    6%;
+  }
+}

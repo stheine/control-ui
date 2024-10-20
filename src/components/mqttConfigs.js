@@ -1,4 +1,5 @@
 import AppConfig        from './App/mqttConfig.js';
+import AutoConfig       from './Auto/mqttConfig.js';
 import ButtonsConfig    from './Buttons/mqttConfig.js';
 import DisplayConfig    from './Display/mqttConfig.js';
 import DreameConfig     from './Dreame/mqttConfig.js';
@@ -17,6 +18,7 @@ import ZigbeeConfig     from './Zigbee/mqttConfig.js';
 
 export default [
   ...AppConfig,
+  ...AutoConfig,
   ...ButtonsConfig,
   ...DisplayConfig,
   ...DreameConfig,
