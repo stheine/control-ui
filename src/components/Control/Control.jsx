@@ -106,7 +106,6 @@ const Control = function(props) {
     {id: 'tempAussen',        priority: -203, width: 1, fit: true, content: <Temperatur site='Außen' />},
     {id: 'tempWohnen',        priority: -202, width: 1, fit: true, content: <Temperatur site='Wohnen' />},
     {id: 'solar',             priority: -201, width: 1, fit: true, content: <Solar />},
-    {id: 'auto',              priority: -200, width: 1,            content: <Auto />},
     {id: 'wetter',            priority:  -51, width: 2,            content: <Wetter />,  calcPriority: calcWetter},
     {id: 'clock',             priority:  -50, width: 1, fit: true, content: <Clock />},
 
