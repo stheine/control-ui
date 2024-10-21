@@ -64,15 +64,42 @@ export default function Auto() {
   const ladeziel     = messages['vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingSettings/targetSOC_pct'];
   const ladezeit     = messages['vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingStatus/remainingChargingTimeToComplete_min'];
 
+  let ladestatusAction;
   let ladestatusAnzeige;
 
   switch(ladestatus) {
     case 'charging':
       ladestatusAnzeige = 'Lädt';
+      ladestatusAction = (
+        <div style={{width: '40px'}}>
+          <Pause
+            dark={true}
+            onClick={async() => {
+              await mqttClient.publishAsync('vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/charging_writetopic', 'stop');
+              await mqttClient.publishAsync('vwsfriend/mqtt/weconnectForceUpdate_writetopic', '1');
+            }}
+          />
+        </div>
+      );
+      break;
+
+    case 'notReadyForCharging':
+      ladestatusAnzeige = 'Frei';
       break;
 
     case 'readyForCharging':
       ladestatusAnzeige = 'Bereit';
+      ladestatusAction = (
+        <div style={{width: '40px'}}>
+          <Play
+            dark={true}
+            onClick={async() => {
+              await mqttClient.publishAsync('vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/charging_writetopic', 'start');
+              await mqttClient.publishAsync('vwsfriend/mqtt/weconnectForceUpdate_writetopic', '1');
+            }}
+          />
+        </div>
+      );
       break;
 
     default:
@@ -101,15 +128,7 @@ export default function Auto() {
             >
               {ladestatusAnzeige}:
             </div>
-            <div style={{width: '40px'}}>
-              <Pause
-                dark={true}
-                onClick={async() => {
-                  await mqttClient.publishAsync('vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/charging_writetopic', 'stop');
-                  await mqttClient.publishAsync('vwsfriend/mqtt/weconnectForceUpdate_writetopic', '1');
-                }}
-              />
-            </div>
+            {ladestatusAction}
           </div>
         </td>
         <td className='auto__value'>{['ac', 'invalid'].includes(ladetyp) ? null : <span>{ladetyp?.toUpperCase()}} / </span>}{ladeleistung}</td>
@@ -139,15 +158,7 @@ export default function Auto() {
             >
               Status:
             </div>
-            <div style={{width: '40px'}}>
-              <Play
-                dark={true}
-                onClick={async() => {
-                  await mqttClient.publishAsync('vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/charging_writetopic', 'start');
-                  await mqttClient.publishAsync('vwsfriend/mqtt/weconnectForceUpdate_writetopic', '1');
-                }}
-              />
-            </div>
+            {ladestatusAction}
           </div>
         </td>
         <td className='auto__value' colSpan={1} style={{fontSize: '80%', paddingBottom: '11px', paddingTop: '3px'}}>{ladestatusAnzeige}</td>
