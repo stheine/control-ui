@@ -1,3 +1,5 @@
+@use '../../colors.scss' as colors;
+
 .wetter {
   // background-color: #666666;
   display:        flex;
@@ -35,7 +37,7 @@
             }
 
             > tr + tr > td.wetter__label {
-              border-top: 1px dotted $font-color;
+              border-top: 1px dotted colors.$font-color;
             }
 
             .wetter__label {
@@ -43,10 +45,10 @@
             }
 
             .wetter__value {
-              color: $value-color;
+              color: colors.$value-color;
 
               .wetter__value__unit {
-                color:          $font-color;
+                color:          colors.$font-color;
                 font-size:      50%;
                 vertical-align: super;
               }

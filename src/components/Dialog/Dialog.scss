@@ -1,3 +1,5 @@
+@use '../../colors.scss' as colors;
+
 .dialog-layer {
   display:  flex;
   position: fixed;
@@ -14,13 +16,13 @@
     justify-content: center;
 
     .dialog-layer__center__border {
-      background-color: $dialog-frame-color;
+      background-color: colors.$dialog-frame-color;
       padding:          5px;
 
       .dialog-layer__center__border__header {
-        background-color: $dialog-frame-color;
-        color:            $dialog-header-color;
-        border-color:     $dialog-border-color;
+        background-color: colors.$dialog-frame-color;
+        color:            colors.$dialog-header-color;
+        border-color:     colors.$dialog-border-color;
         border-style:     solid;
         border-width:     2px 2px 0 2px;
         display:          flex;
@@ -38,7 +40,7 @@
 
         .dialog-layer__center__border__header__closer {
           // background-color: #f33aaf;
-          border-color:     $dialog-border-color;
+          border-color:     colors.$dialog-border-color;
           border-style:     solid;
           border-width:     0;
           height: 54px;
@@ -47,11 +49,11 @@
       }
 
       .dialog-layer__center__border__content {
-        background-color: $dialog-background-color;
+        background-color: colors.$dialog-background-color;
         font-size:        130%;
-        color:            $dialog-text-color;
+        color:            colors.$dialog-text-color;
         padding:          10px;
-        border-color:     $dialog-border-color;
+        border-color:     colors.$dialog-border-color;
         border-style:     solid;
         border-width:     2px;
       }

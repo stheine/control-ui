@@ -1,3 +1,5 @@
+@use '../../colors.scss' as colors;
+
 .temperatur {
   // background-color: #3b3c5e;
 
@@ -17,20 +19,20 @@
       padding:        0 0 5% 0;
 
       .temperatur__value__number {
-        color:       $value-color;
+        color:       colors.$value-color;
         font-family: "AC Display";
         line-height: 80%;
       }
 
       .temperatur__value__right {
-        color:          $value-color;
+        color:          colors.$value-color;
         line-height:    80%;
         display:        flex;
         flex-direction: column;
         flex:           0 1 auto;
 
         .temperatur__value__unit {
-          color:       $font-color;
+          color:       colors.$font-color;
           line-height: 80%;
           font-size:   20%;
           padding:     10% 0 0 0;

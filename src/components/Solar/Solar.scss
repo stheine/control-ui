@@ -1,10 +1,12 @@
+@use '../../colors.scss' as colors;
+
 .solar {
   .solar__label {
     font-size:   50%;
   }
 
   .solar__value {
-    color:          $value-color;
+    color:          colors.$value-color;
     font-family:    Digitalism;
     letter-spacing: 0.08em;
     text-align:     right;

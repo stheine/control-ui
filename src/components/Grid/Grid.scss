@@ -1,3 +1,5 @@
+@use '../../colors.scss' as colors;
+
 .grid {
   width:                 915px;
   height:                600px;
@@ -10,7 +12,7 @@
   row-gap:               10px;
 
   .grid__action {
-    color:             $font-color;
+    color:             colors.$font-color;
     border-color:      #303030;
     border-style:      solid;
     border-width:      1px;

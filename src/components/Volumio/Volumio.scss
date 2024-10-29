@@ -1,3 +1,5 @@
+@use '../../colors.scss' as colors;
+
 .volumio {
   tbody {
     tr {
@@ -31,7 +33,7 @@
             flex-direction: column;
 
             span {
-              color:       $value-color;
+              color:       colors.$value-color;
               font-size:   200%;
               margin:      0 auto;
             }
@@ -48,7 +50,7 @@
             height:          288px;
 
             span {
-              color:       $value-color;
+              color:       colors.$value-color;
               font-family: Digitalism;
               font-size:   300%;
               margin:      0 auto;
