@@ -1,3 +1,5 @@
+@use '../../colors.scss' as colors;
+
 .auto {
   font-size:   240%;
 
@@ -6,7 +8,7 @@
   }
 
   .auto__value {
-    color:          $value-color;
+    color:          colors.$value-color;
 //    font-family:    Digitalism;
     letter-spacing: 0.08em;
     text-align:     right;
