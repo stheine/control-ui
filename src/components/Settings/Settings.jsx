@@ -2,15 +2,15 @@
 
 import _           from 'lodash';
 import React       from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams} from 'react-router';
 
 import Grid        from '../Grid/Grid.jsx';
 import Refresh     from '../../svg/sargam/Refresh.jsx';
 
 import Beep        from '../Beep/Beep.jsx';
-import Buttons     from '../Buttons/Buttons.jsx';
 import Display     from '../Display/Display.jsx';
 import Leds        from '../Leds/Leds.jsx';
+import PushButtons from '../PushButtons/PushButtons.jsx';
 import Zigbee      from '../Zigbee/Zigbee.jsx';
 
 const reloadPage = function() {
@@ -22,7 +22,7 @@ const pages = {
     {width: 1, fit: true, content: <Display />},
     {width: 1, fit: true, content: <Beep />},
     {width: 1, fit: true, content: <Leds />},
-    {width: 1, fit: true, content: <Buttons />},
+    {width: 1, fit: true, content: <PushButtons />},
     {width: 1, fit: true, content: <Refresh dark={true} onClick={() => reloadPage()} />},
     {width: 1, fit: true, content: <Zigbee />},
   ],

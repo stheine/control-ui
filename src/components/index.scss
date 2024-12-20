@@ -1,5 +1,6 @@
 @use './App/App.scss';
 @use './Auto/Auto.scss';
+@use './Button/Button.scss';
 @use './Clock/Clock.scss';
 @use './Control/Control.scss';
 @use './Dialog/Dialog.scss';
@@ -7,7 +8,9 @@
 @use './Grid/Grid.scss';
 @use './Icons/Icons.scss';
 @use './Solar/Solar.scss';
+@use './Strom/Strom.scss';
 @use './Temperatur/Temperatur.scss';
+@use './Value/Value.scss';
 @use './Volumio/Volumio.scss';
 @use './Wetter/Wetter.scss';
 @use './WetterDwd/WetterDwd.scss';

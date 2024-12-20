@@ -8,6 +8,7 @@ import AppContext  from '../../contexts/AppContext.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
 import Alert       from '../../svg/sargam/Alert.jsx';
+import Value       from '../Value/Value.jsx';
 
 // https://tc39.es/ecma402/#table-datetimeformat-components
 const dateTimeFormat = {
@@ -58,24 +59,13 @@ export default function Wetter() {
       </tr>,
       <tr key='nightTemp'>
         <td>Temperatur:</td>
-        <td>
-          <font className='wetter__value'>
-            {_.round(messageOw?.nightMinTemp)}
-            <font className='wetter__value__unit'>&deg;C</font>
-          </font>
-          &nbsp;-&nbsp;
-          <font className='wetter__value'>
-            {_.round(messageOw?.nightMaxTemp)}
-            <font className='wetter__value__unit'>&deg;C</font>
-          </font>
-        </td>
+        <Value value={_.round(messageOw?.nightMinTemp)} unit={<>&deg;C</>} />
+        <td>&nbsp;-&nbsp;</td>
+        <Value value={_.round(messageOw?.nightMaxTemp)} unit={<>&deg;C</>} />
       </tr>,
       <tr key='nightWind'>
         <td>Max Wind:</td>
-        <td className='wetter__value'>
-          {_.round(messageOw?.nightMaxWind || 0 * 3.6)}
-          <font className='wetter__value__unit'>km/h</font>
-        </td>
+        <Value value={_.round(messageOw?.nightMaxWind || 0 * 3.6)} unit='km/h' />
       </tr>,
     ];
   };
@@ -87,23 +77,13 @@ export default function Wetter() {
       </tr>,
       <tr key='dayTemp'>
         <td>Temperatur:</td>
-        <td>
-          <font className='wetter__value'>
-            {_.round(messageOw?.dayMinTemp)}
-            <font className='wetter__value__unit'>&deg;C</font>
-          </font>
-          &nbsp;-&nbsp;
-          <font className='wetter__value'>
-            {_.round(messageOw?.dayMaxTemp)}
-            <font className='wetter__value__unit'>&deg;C</font>
-          </font>
-        </td>
+        <Value value={_.round(messageOw?.dayMinTemp)} unit={<>&deg;C</>} />
+        <td>&nbsp;-&nbsp;</td>
+        <Value value={_.round(messageOw?.dayMaxTemp)} unit={<>&deg;C</>} />
       </tr>,
       <tr key='dayWind'>
         <td>Max Wind:</td>
-        <td className='wetter__value'>
-          {_.round(messageOw?.dayMaxWind || 0 * 3.6)}<font className='wetter__value__unit'>km/h</font>
-        </td>
+        <Value value={_.round(messageOw?.dayMaxWind || 0 * 3.6)} unit='km/h' />
       </tr>,
     ];
   };
@@ -111,29 +91,24 @@ export default function Wetter() {
   const renderCurrent = function() {
     return [
       <tr key='wetter'>
-        <td colSpan={2}>{wetter}</td>
+        <td>Wetter:</td>
+        <Value value={wetter} />
       </tr>,
       <tr key='bewoelkung'>
         <td>Bewölkung:</td>
-        <td className='wetter__value'>{bewoelkung}<font className='wetter__value__unit'>%</font></td>
+        <Value value={bewoelkung} unit='%' />
       </tr>,
       <tr key='temperatur'>
         <td>Temperatur:</td>
-        <td className='wetter__value'>
-          {_.round(temperatur, 1)}
-          <font className='wetter__value__unit'>&deg;C</font>
-        </td>
+        <Value value={_.round(temperatur, 1)} unit={<>&deg;C</>} />
       </tr>,
       <tr key='gefuehlt'>
         <td>Gefühlt:</td>
-        <td className='wetter__value'>
-          {_.round(gefuehlt, 1)}
-          <font className='wetter__value__unit'>&deg;C</font>
-        </td>
+        <Value value={_.round(gefuehlt, 1)} unit={<>&deg;C</>} />
       </tr>,
       <tr key='luftfeuchtigkeit'>
         <td>Luftfeuchtigkeit:</td>
-        <td className='wetter__value'>{luftfeuchtigkeit}<font className='wetter__value__unit'>%</font></td>
+        <Value value={luftfeuchtigkeit} unit='%' />
       </tr>,
     ];
   };
@@ -165,6 +140,7 @@ export default function Wetter() {
                 </tbody>
               </table>
             </td>
+            <td style={{width: '50px'}} />
             <td>
               <table>
                 <tbody>
@@ -177,7 +153,7 @@ export default function Wetter() {
           </tr>
           {warnungen.length ?
             <tr key='warnung'>
-              <td colSpan={2} className='wetter__warning'>
+              <td colSpan={3} className='wetter__warning'>
                 <div
                   className='wetter__warning__text'
                   onClick={() => displayWarningDialog()}

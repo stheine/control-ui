@@ -1,7 +1,7 @@
 import _                    from 'lodash';
 import {connect}            from 'react-redux';
 import React                from 'react';
-import {replace}            from 'redux-first-history';
+import {useNavigate}        from 'react-router';
 
 import FitBox               from '../FitBox/FitBox.jsx';
 
@@ -11,7 +11,9 @@ import SettingsVerticalDots from '../../svg/sargam/SettingsVerticalDots.jsx';
 import Up                   from '../../svg/sargam/Up.jsx';
 
 const Grid = function(props) {
-  const {dispatch, items, maxPages, page, settings} = props;
+  const {items, maxPages, page, settings} = props;
+
+  const navigate = useNavigate();
 
   // console.log('Grid', {maxPages, page, props});
 
@@ -51,27 +53,27 @@ const Grid = function(props) {
         <div className='navigation__button one'>
           <Up
             dark={true}
-            onClick={() => dispatch(replace(`${settings ? '/settings' : ''}/${page - 1 || maxPages}`))}
+            onClick={() => navigate(`${settings ? '/settings' : ''}/${page - 1 || maxPages}`)}
           />
         </div>
         {settings ?
           <div className='navigation__button two'>
-            <Home dark={true} onClick={() => dispatch(replace('/1'))} />
+            <Home dark={true} onClick={() => navigate('/1')} />
           </div> :
           [
             page !== 1 ?
               <div key='home' className='navigation__button two'>
-                <Home dark={true} onClick={() => dispatch(replace('/1'))} />
+                <Home dark={true} onClick={() => navigate('/1')} />
               </div> :
               null,
             <div key='settings' className='navigation__button three'>
-              <SettingsVerticalDots dark={true} onClick={() => dispatch(replace('/settings/1'))} />
+              <SettingsVerticalDots dark={true} onClick={() => navigate('/settings/1')} />
             </div>,
           ]}
         <div className='navigation__button four'>
           <Down
             dark={true}
-            onClick={() => dispatch(replace(`${settings ? '/settings' : ''}/${(page + 1) % maxPages || maxPages}`))}
+            onClick={() => navigate(`${settings ? '/settings' : ''}/${(page + 1) % maxPages || maxPages}`)}
           />
         </div>
       </div>

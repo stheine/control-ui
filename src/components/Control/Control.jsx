@@ -1,12 +1,14 @@
 import _               from 'lodash';
 import {connect}       from 'react-redux';
-import {replace}       from 'redux-first-history';
-import {useParams}     from 'react-router-dom';
 import React, {
   useContext,
   useEffect,
   useRef,
 } from 'react';
+import {
+  useNavigate,
+  useParams,
+} from 'react-router';
 
 import AppContext      from '../../contexts/AppContext.js';
 import MqttContext     from '../../contexts/MqttContext.js';
@@ -22,13 +24,15 @@ import JalousieBuero   from '../JalousieBuero/JalousieBuero.jsx';
 import JalousieWohnen  from '../JalousieWohnen/JalousieWohnen.jsx';
 import Muell           from '../Muell/Muell.jsx';
 import Solar           from '../Solar/Solar.jsx';
+import Strom           from '../Strom/Strom.jsx';
 import Temperatur      from '../Temperatur/Temperatur.jsx';
 import Vito            from '../Vito/Vito.jsx';
 import Volumio         from '../Volumio/Volumio.jsx';
-import Wetter          from '../Wetter/Wetter.jsx';
 
 const Control = function(props) {
   const {dispatch} = props;
+
+  const navigate = useNavigate();
 
   const {controlClient}        = useContext(AppContext);
   const {messages, mqttClient} = useContext(MqttContext);
@@ -57,14 +61,14 @@ const Control = function(props) {
           volumioStatus.current = status;
 
           if(status === 'play' && displayPageRef.current !== 1) {
-            dispatch(replace('/1'));
+            navigate('/1');
           }
         }
       } catch{
         // nothing
       }
     });
-  }, [dispatch, mqttClient]);
+  }, [dispatch, mqttClient, navigate]);
 
   useEffect(() => {
     displayPageRef.current = displayPage;
@@ -96,20 +100,18 @@ const Control = function(props) {
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/status' && message !== 'docked') ||
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/error' && message?.severity.kind !== 'none')).length);
 
-  const calcWetter = () => Boolean(_.filter(messages, (message, topic) =>
-    topic === 'wetter/dwd/INFO' && message?.forecast.warnings.length).length);
-
-  const calcAuto = () => Boolean(_.filter(messages, (message, topic) =>
-    topic === 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingStatus/chargingState' & message === 'charging').length);
+  // const calcAuto = () => Boolean(_.filter(messages, (message, topic) =>
+  //   topic === 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingStatus/chargingState' &&
+  //   message === 'charging').length);
 
   const items = [
-    {id: 'tempAussen',        priority: -203, width: 1, fit: true, content: <Temperatur site='Außen' />},
-    {id: 'tempWohnen',        priority: -202, width: 1, fit: true, content: <Temperatur site='Wohnen' />},
-    {id: 'solar',             priority: -201, width: 1, fit: true, content: <Solar />},
-    {id: 'wetter',            priority:  -51, width: 2,            content: <Wetter />,  calcPriority: calcWetter},
-    {id: 'clock',             priority:  -50, width: 1, fit: true, content: <Clock />},
+    {id: 'tempAussen',        priority: -204, width: 1,            content: <Temperatur site='Außen' />},
+    {id: 'tempWohnen',        priority: -203, width: 1,            content: <Temperatur site='Wohnen' />},
+    {id: 'clock',             priority: -100, width: 1, fit: true, content: <Clock />},
+    {id: 'auto',              priority:  -53, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
+    {id: 'strom',             priority:  -52, width: 1, fit: true, content: <Strom />},
+    {id: 'solar',             priority:  -51, width: 1, fit: true, content: <Solar />},
 
-    {id: 'auto',              priority:    0, width: 1,            content: <Auto />,    calcPriority: calcAuto},
     {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
     {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
     {id: 'volumio',           priority:    0, width: 2,            content: <Volumio />, calcPriority: calcVolumio},

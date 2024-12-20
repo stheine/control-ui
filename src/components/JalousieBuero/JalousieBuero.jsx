@@ -28,8 +28,10 @@ export default function JalousieBuero() {
         <tr>
           <td>
             <div style={{width: '100px'}}>
-              <BlindUp dark={true} onClick={async() =>
-                await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power2', '1')} />
+              <BlindUp
+                dark={true}
+                onClick={async() => await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power2', '1')}
+              />
             </div>
           </td>
           <td>
@@ -47,8 +49,10 @@ export default function JalousieBuero() {
         <tr>
           <td>
             <div style={{width: '100px'}}>
-              <BlindDown dark={true} onClick={async() =>
-                await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power1', '1')} />
+              <BlindDown
+                dark={true}
+                onClick={async() => await mqttClient.publishAsync('tasmota/jalousieBuero/cmnd/Power1', '1')}
+              />
             </div>
           </td>
           <td>

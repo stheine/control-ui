@@ -1,0 +1,21 @@
+@use '../../colors.scss' as colors;
+
+.value__value {
+  color:          colors.$value-color;
+//    font-family:    Digitalism;
+  letter-spacing: 0.08em;
+  text-align:     right;
+
+  &.negative {
+    color:        #ff8080;
+  }
+}
+
+.value__unit {
+  font-size:      40%;
+  padding-top:    6%;
+}
+
+.dialog-layer .value__value {
+  color:   black;
+}

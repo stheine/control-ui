@@ -1,6 +1,8 @@
 export default [{
   topic: 'vwsfriend/mqtt/weconnectConnected',
 }, {
+  topic: 'vwsfriend/mqtt/weconnectUpdated',
+}, {
   topic: 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/batteryStatus/cruisingRangeElectric_km',
 }, {
   topic: 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/batteryStatus/currentSOC_pct',

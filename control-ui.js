@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 /* eslint-disable no-constant-condition */
-/* eslint-disable unicorn/no-process-exit */
 /* eslint-disable no-process-exit */
 /* eslint-disable no-underscore-dangle */
 
@@ -13,7 +12,7 @@ import url                   from 'node:url';
 
 import _                     from 'lodash';
 import compression           from 'compression';
-import execa                 from 'execa';
+import {execa}               from 'execa';
 import express               from 'express';
 import fqdn                  from 'fqdn-multi';
 import fsExtra               from 'fs-extra';

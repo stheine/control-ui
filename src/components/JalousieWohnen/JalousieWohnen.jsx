@@ -69,8 +69,10 @@ export default function JalousieWohnen() {
         <tr>
           <td>
             <div style={{width: '90px'}}>
-              <BlindDown dark={true} onClick={async() =>
-                await mqttClient.publishAsync('Jalousie/cmnd/full_down', '')} />
+              <BlindDown
+                dark={true}
+                onClick={async() => await mqttClient.publishAsync('Jalousie/cmnd/full_down', '')}
+              />
             </div>
           </td>
           <td>

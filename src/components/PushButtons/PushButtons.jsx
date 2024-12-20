@@ -8,11 +8,11 @@ import MqttContext from '../../contexts/MqttContext.js';
 
 import Button      from '../../svg/Button.jsx';
 
-export default function Buttons() {
+export default function PushButtons() {
   const {messages} = useContext(MqttContext);
 
   if(!_.isEmpty(messages)) {
-    // console.log('Button', {messages});
+    // console.log('PushButtons', {messages});
   }
 
   return (

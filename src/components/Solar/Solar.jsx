@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 
+import AppContext  from '../../contexts/AppContext.js';
 import Close       from '../../svg/sargam/Close.jsx';
 import Collect     from '../../svg/sargam/Collect.jsx';
 import Max         from '../../svg/sargam/Max.jsx';
@@ -25,6 +26,7 @@ const displayWattage = function(value) {
 export default function Solar() {
   // console.log('Solar');
 
+  const {setAppDialog} = useContext(AppContext);
   const {messages, mqttClient} = useContext(MqttContext);
   const einkaufRing = useRef(new RingBuffer(3));
   const [_lastUpdateTime, setLastUpdateTime] = useState();
@@ -56,68 +58,73 @@ export default function Solar() {
   }
 
   return (
-    <table className='solar'>
-      <tbody>
-        <tr>
-          <td className='solar__label'>Solar:</td>
-          {displayWattage(solarErzeugung)}
-        </tr>
-        <tr>
-          <td className='solar__label'>Verbrauch:</td>
-          {displayWattage(verbrauch)}
-        </tr>
-        <tr>
-          <td className='solar__label'>Akkuladung:</td>
-          {displayWattage(akkuLadung)}
-        </tr>
-        <tr>
-          <td className='solar__label'>{einspeisung ? 'Einspeisung' : 'Einkauf'}:</td>
-          {displayWattage(einspeisung || (einkaufRing.current.size() ? -einkaufRing.current.avg() : 0))}
-        </tr>
-        <tr>
-          <td className='solar__label'>
-            <div style={{display: 'flex', flexDirection: 'row'}}>
-              <div
-                style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
-              >
-                Akku:
+    <div
+      className='solarDiv'
+      onClick={() => setAppDialog({content: 'SolarForecast', header: 'PV Vorhersage', timeout: '30s'})}
+    >
+      <table className='solar'>
+        <tbody>
+          <tr>
+            <td className='solar__label'>Solar:</td>
+            {displayWattage(solarErzeugung)}
+          </tr>
+          <tr>
+            <td className='solar__label'>Verbrauch:</td>
+            {displayWattage(verbrauch)}
+          </tr>
+          <tr>
+            <td className='solar__label'>Akkuladung:</td>
+            {displayWattage(akkuLadung)}
+          </tr>
+          <tr>
+            <td className='solar__label'>{einspeisung ? 'Einspeisung' : 'Einkauf'}:</td>
+            {displayWattage(einspeisung || (einkaufRing.current.size() ? -einkaufRing.current.avg() : 0))}
+          </tr>
+          <tr>
+            <td className='solar__label'>
+              <div style={{display: 'flex', flexDirection: 'row'}}>
+                <div
+                  style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
+                >
+                  Akku:
+                </div>
+                <div style={{width: '40px'}}>
+                  {messageStatus?.chargeMax ?
+                    <Close
+                      dark={true}
+                      onClick={async() => {
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: null}));
+                      }}
+                    /> :
+                    <Collect
+                      dark={true}
+                      onClick={async() => {
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: true}));
+                      }}
+                    />}
+                </div>
+                <div style={{width: '40px'}}>
+                  {messageStatus?.chargeTo ?
+                    <Close
+                      dark={true}
+                      onClick={async() => {
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: null}));
+                      }}
+                    /> :
+                    <Max
+                      dark={true}
+                      onClick={async() => {
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: 100}));
+                      }}
+                    />}
+                </div>
               </div>
-              <div style={{width: '40px'}}>
-                {messageStatus?.chargeMax ?
-                  <Close
-                    dark={true}
-                    onClick={async() => {
-                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: null}));
-                    }}
-                  /> :
-                  <Collect
-                    dark={true}
-                    onClick={async() => {
-                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: true}));
-                    }}
-                  />}
-              </div>
-              <div style={{width: '40px'}}>
-                {messageStatus?.chargeTo ?
-                  <Close
-                    dark={true}
-                    onClick={async() => {
-                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: null}));
-                    }}
-                  /> :
-                  <Max
-                    dark={true}
-                    onClick={async() => {
-                      await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: 100}));
-                    }}
-                  />}
-              </div>
-            </div>
-          </td>
-          <td className='solar__value'>{_.round(akkuLadelevel * 100, 1)}</td>
-          <td className='solar__unit'>%</td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td className='solar__value'>{_.round(akkuLadelevel * 100, 1)}</td>
+            <td className='solar__unit'>%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 }

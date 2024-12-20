@@ -1,5 +1,4 @@
 /* eslint-disable arrow-body-style */
-/* eslint-disable react/jsx-props-no-multi-spaces */
 /* eslint-disable react/no-array-index-key */
 
 import _                         from 'lodash';
@@ -7,22 +6,24 @@ import {connect}                 from 'react-redux';
 import Favicon                   from 'react-favicon';
 import mqtt                      from 'mqtt';
 import ms                        from 'ms';
-import {replace}                 from 'redux-first-history';
-import {HistoryRouter as Router} from 'redux-first-history/rr6';
 import {v4 as uuidv4}            from 'uuid';
+import {
+  HashRouter,
+  Route,
+  Routes,
+  // useNavigate,
+} from 'react-router';
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useState,
 } from 'react';
-import {Route, Routes}           from 'react-router';
 
 import AppContext                from '../../contexts/AppContext.js';
 import Control                   from '../Control/Control.jsx';
 import Dialog                    from '../Dialog/Dialog.jsx';
 import faviconBase64             from '../../favicon.js';
-import {history}                 from '../../store/index.js';
 import Icons                     from '../Icons/Icons.jsx';
 import Infrarotheizung           from '../Infrarotheizung/Infrarotheizung.jsx';
 import mqttConfigs               from '../mqttConfigs.js';
@@ -53,8 +54,8 @@ const Standalone = function(props) {
   ];
 };
 
-const App = function(props) {
-  const {dispatch} = props;
+const App = function() {
+  // const navigate = useNavigate();
 
   const [_dialogContent, setDialogContent] = useState();
   const [_dialogHeader, setDialogHeader] = useState();
@@ -62,10 +63,24 @@ const App = function(props) {
   const [_messages, setMessages] = useState({});
   const [_mqttClient, setMqttClient] = useState();
 
+  const openDialog = useCallback(({content, header, timeout = '15s'}) => {
+    setDialogContent(content);
+    setDialogHeader(header);
+    if(_dialogTimeout) {
+      clearTimeout(_dialogTimeout);
+    }
+    setDialogTimeout(setTimeout(() => {
+      setDialogTimeout();
+      setDialogHeader();
+      setDialogContent();
+    }, ms(timeout)));
+  }, [_dialogTimeout]);
+
   const appContextValue = useMemo(() => ({
     clientId:      uuidv4(),
     controlClient: window.screen.height === 600,
-  }), []);
+    setAppDialog:  openDialog,
+  }), [openDialog]);
   const mqttContextValue = useMemo(() => ({messages: _messages, mqttClient: _mqttClient}), [_messages, _mqttClient]);
 
   useEffect(() => {
@@ -76,7 +91,8 @@ const App = function(props) {
 
     const initMqtt = async function() {
       try {
-        mqttClient = await mqtt.connectAsync('tcp://192.168.6.5:9001', {clientId: `control-ui-${Math.random().toString(16).substr(2, 8)}`}); // TODO from settings
+        mqttClient = await mqtt.connectAsync('tcp://192.168.6.5:9001',
+          {clientId: `control-ui-${Math.random().toString(16).slice(2, 8)}`}); // TODO from settings
 
         setMqttClient(mqttClient);
       } catch(err) {
@@ -101,22 +117,18 @@ const App = function(props) {
 
     switch(topic) {
       case 'control-ui/cmnd/route':
-        dispatch(replace(message));
+        // eslint-disable-next-line no-console
+        console.log('unhandled', {topic, message});
+        // navigate(message);
         break;
 
       case 'control-ui/cmnd/dialog':
         if(!message?.clientId || message?.clientId === appContextValue.clientId) {
-          setDialogHeader(message?.header);
-          setDialogContent(message?.data?.map((line, key) =>
-            <div key={`${key}-${line}`}>{_.isObject(line) ? JSON.stringify(line) : line}</div>));
-          if(_dialogTimeout) {
-            clearTimeout(_dialogTimeout);
-          }
-          setDialogTimeout(setTimeout(() => {
-            setDialogTimeout();
-            setDialogHeader();
-            setDialogContent();
-          }, ms('15s')));
+          openDialog({
+            content: message?.data?.map((line, key) =>
+              <div key={`${key}-${line}`}>{_.isObject(line) ? JSON.stringify(line) : line}</div>),
+            header: message?.header,
+          });
         }
         break;
 
@@ -124,7 +136,7 @@ const App = function(props) {
         setMessages(prevMessages => ({...prevMessages, [topic]: message}));
         break;
     }
-  }, [appContextValue.clientId, _dialogTimeout, dispatch]);
+  }, [appContextValue.clientId, openDialog]);
 
   useEffect(() => {
     // / eslint-disable-next-line no-console
@@ -152,10 +164,10 @@ const App = function(props) {
 
   return (
     <div>
-      <AppContext.Provider value={appContextValue}>
-        <MqttContext.Provider value={mqttContextValue}>
+      <AppContext value={appContextValue}>
+        <MqttContext value={mqttContextValue}>
           <Favicon url={`data:image/png;base64,${faviconBase64}`} />
-          <Router history={history}>
+          <HashRouter>
             <Routes>
               <Route path='/'                    element={<Control />} />
               <Route path='/:page'               element={<Control />} />
@@ -165,7 +177,7 @@ const App = function(props) {
               <Route path='/settings/:page'      element={<Settings />} />
               <Route path='*'                    element={<Control />} />
             </Routes>
-          </Router>
+          </HashRouter>
           {_dialogContent ?
             <Dialog
               key='dialog'
@@ -176,11 +188,11 @@ const App = function(props) {
                 setDialogContent();
               }}
               header={_dialogHeader}
-              data={_dialogContent}
+              content={_dialogContent}
             /> :
             null}
-        </MqttContext.Provider>
-      </AppContext.Provider>
+        </MqttContext>
+      </AppContext>
     </div>
   );
 };

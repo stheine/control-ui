@@ -1,0 +1,18 @@
+@use '../../colors.scss' as colors;
+
+.button {
+  background-color: colors.$button-background-color;
+  border:           3px solid black;
+  border-radius:    10px;
+  padding:          10px;
+  margin:           0px;
+  margin-left:      20px;
+
+  &:first-of-type {
+    margin-left:    0px;
+  }
+
+  &.active {
+    background-color: colors.$button-active-background-color;
+  }
+}

@@ -56,7 +56,7 @@ export const mqttSubscribe = function({mqttClient, topics}) {
   return async() => {
     try {
       await mqttClient.unsubscribeAsync(topics);
-    } catch(err) {
+    } catch{
       // / eslint-disable-next-line no-console
       // console.log(`failed unsubscribing from ${topics.join(', ')}`, err.message);
     } finally {

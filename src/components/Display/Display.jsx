@@ -21,8 +21,11 @@ const Display = function() {
       <tbody>
         <tr>
           <td style={{fontSize: 50}}>{messages['control-io/brightness/STATE'] || 999}</td>
-          <td><Sun dark={true} onClick={async() =>
-            await mqttClient.publishAsync(`control-io/cmnd/brightness`, '"-"')} />
+          <td>
+            <Sun
+              dark={true}
+              onClick={async() => await mqttClient.publishAsync(`control-io/cmnd/brightness`, '"-"')}
+            />
           </td>
         </tr>
         <tr>
@@ -35,8 +38,11 @@ const Display = function() {
               }}
             />
           </td>
-          <td><Moon dark={true} onClick={async() =>
-            await mqttClient.publishAsync(`control-io/cmnd/brightness`, '"+"')} />
+          <td>
+            <Moon
+              dark={true}
+              onClick={async() => await mqttClient.publishAsync(`control-io/cmnd/brightness`, '"+"')}
+            />
           </td>
         </tr>
       </tbody>
