@@ -25,65 +25,75 @@ import logger                from './logger.js';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
-(async() => {
-  // Read config
-  const {cert, environment, key, scheme, serverPort} = appConfig;
-  const hostName    = await fqdn();
-  const packageJson = await fsExtra.readJson('./package.json');
+// ###########################################################################
+// Process handling
 
-  // eslint-disable-next-line no-console
-  console.log('\u001B]2;control\u0007'); // windowTitle
-  logger.info(`-------------------- Startup --------------------`);
-  logger.info(`${packageJson.name} ${packageJson.version}`);
+const stopProcess = async function() {
+  logger.info(`Shutdown -------------------------------------------------`);
 
-  // Init express
-  const app = express();
+  process.exit(0);
+};
 
-  // Enable compression
-  app.use(compression());
+process.on('SIGTERM', () => stopProcess());
 
-  // Register routes for static files. No authentication.
-  app.use('/', express.static(path.join(__dirname, 'dist')));
+// Read config
+const {cert, environment, key, scheme, serverPort} = appConfig;
+const hostName    = await fqdn();
+const packageJson = await fsExtra.readJson('./package.json');
 
-  // Register route for favicon. No authentication.
-  app.use('/favicon.ico', async(req, res) =>
-    res.set({'Content-type': 'image/png'}).send(Buffer.from(faviconBase64, 'base64')));
+// eslint-disable-next-line no-console
+console.log('\u001B]2;control\u0007'); // windowTitle
+logger.info(`-------------------- Startup --------------------`);
+logger.info(`${packageJson.name} ${packageJson.version}`);
 
-  // Sends human-readable json output in res.json()
-  app.set('json spaces', 2);
+// Init express
+const app = express();
 
-  // route params
-  const params = {
-    appConfig,
-  }; // TODO
+// Enable compression
+app.use(compression());
 
-  // Register routes from the routes directory
-  /* eslint-disable no-shadow */
-  const registerRoutes = async function(routes, path) {
-    for(const [key, value] of Object.entries(routes)) {
-      if(_.isPlainObject(value)) {
-        await registerRoutes(value, (path ? `${path}/` : '') + key);
+// Register routes for static files. No authentication.
+app.use('/', express.static(path.join(__dirname, 'dist')));
 
-        continue;
-      }
+// Register route for favicon. No authentication.
+app.use('/favicon.ico', async(req, res) =>
+  res.set({'Content-type': 'image/png'}).send(Buffer.from(faviconBase64, 'base64')));
 
-      if(typeof value !== 'function') {
-        throw new Error(`routes[${key}] not a function`);
-      }
+// Sends human-readable json output in res.json()
+app.set('json spaces', 2);
 
-      const route = await value(params);
-      const authentication = _.isNil(route.authentication) ? true : route.authentication;
-      const withMulter = _.isNil(route.multer) ? false : route.multer;
-      const functions = [];
-      let   url = route.url || `/${key}`;
+// route params
+const params = {
+  appConfig,
+}; // TODO
 
-      if(typeof route.fn !== 'function') {
-        throw new Error(`routes[${key}].fn not a function`);
-      }
+// Register routes from the routes directory
+/* eslint-disable no-shadow */
+const registerRoutes = async function(routes, path) {
+  for(const [key, value] of Object.entries(routes)) {
+    if(_.isPlainObject(value)) {
+      await registerRoutes(value, (path ? `${path}/` : '') + key);
 
-      if(_.isRegExp(url)) {
-        throw new Error(`RegExp handling needed for '${key}'`);
-      }
+      continue;
+    }
+
+    if(typeof value !== 'function') {
+      throw new Error(`routes[${key}] not a function`);
+    }
+
+    const route = await value(params);
+    const authentication = _.isNil(route.authentication) ? true : route.authentication;
+    const withMulter = _.isNil(route.multer) ? false : route.multer;
+    const functions = [];
+    let   url = route.url || `/${key}`;
+
+    if(typeof route.fn !== 'function') {
+      throw new Error(`routes[${key}].fn not a function`);
+    }
+
+    if(_.isRegExp(url)) {
+      throw new Error(`RegExp handling needed for '${key}'`);
+    }
 
 //      if(authentication) {
 //        functions.push(tokenMiddleware);
@@ -92,115 +102,114 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 //        functions.push(multer({dest: 'attachments/'}).any());
 //      }
 
-      functions.push(route.fn);
+    functions.push(route.fn);
 
-      url = `/api${path ? `/${path}` : ''}${url}`;
-      app[route.method](url, functions);
+    url = `/api${path ? `/${path}` : ''}${url}`;
+    app[route.method](url, functions);
 
-      logger.trace(`Registered ` +
-        `${authentication ? 'auth' : 'open'} ` +
-        `${withMulter ? 'multer' : 'basic'} ` +
-        `route ` +
-        `${route.method.toUpperCase()} ${url}`);
-    }
-  };
-  /* eslint-enable no-shadow */
+    logger.trace(`Registered ` +
+      `${authentication ? 'auth' : 'open'} ` +
+      `${withMulter ? 'multer' : 'basic'} ` +
+      `route ` +
+      `${route.method.toUpperCase()} ${url}`);
+  }
+};
+/* eslint-enable no-shadow */
 
-  const routes = await importDir(path.join(__dirname, 'routes'), {recurse: true});
+const routes = await importDir(path.join(__dirname, 'routes'), {recurse: true});
 
-  await registerRoutes(routes);
+await registerRoutes(routes);
 
-  // catch 404 and forward to error handler
-  app.use((req, res) => {
-  //  logger.error(req);
-    const err = new Error(`Not Found: ${req.method} ${req.originalUrl}`);
+// catch 404 and forward to error handler
+app.use((req, res) => {
+//  logger.error(req);
+  const err = new Error(`Not Found: ${req.method} ${req.originalUrl}`);
 
-    err.status = 404;
-
-    if(environment !== 'production') {
-      // development error handler
-      // will print stacktrace
-
-      logger.error(`${err.status} - ${err.message}`, err);
-      res.status(err.status).json({
-        message: err.message,
-        error:   err,
-      });
-    } else {
-      // production error handler
-      // no stacktrace leaked to user
-
-      // logger.error(err.status + ' - ' + err.message, err);
-      res.status(err.status).json({
-        message: err.message,
-        error:   {},
-      });
-    }
-  });
+  err.status = 404;
 
   if(environment !== 'production') {
-    // eslint-disable-next-line no-unused-vars
-    app.use((err, req, res, next) => {
-      let status = 500;
+    // development error handler
+    // will print stacktrace
 
-      if(err.status) {
-        ({status} = err);
-      }
-
-      logger.error(`${status} - ${err.message}`, err);
-      res.status(status).json({
-        message: err.message,
-        details: err.details,
-        error:   err,
-      });
+    logger.error(`${err.status} - ${err.message}`, err);
+    res.status(err.status).json({
+      message: err.message,
+      error:   err,
     });
-  }
-
-  // Startup web server
-  let server;
-
-  if(scheme === 'https') {
-    server = https.createServer({cert, key}, app);
   } else {
-    server = http.createServer(app);
+    // production error handler
+    // no stacktrace leaked to user
+
+    // logger.error(err.status + ' - ' + err.message, err);
+    res.status(err.status).json({
+      message: err.message,
+      error:   {},
+    });
+  }
+});
+
+if(environment !== 'production') {
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, req, res, next) => {
+    let status = 500;
+
+    if(err.status) {
+      ({status} = err);
+    }
+
+    logger.error(`${status} - ${err.message}`, err);
+    res.status(status).json({
+      message: err.message,
+      details: err.details,
+      error:   err,
+    });
+  });
+}
+
+// Startup web server
+let server;
+
+if(scheme === 'https') {
+  server = https.createServer({cert, key}, app);
+} else {
+  server = http.createServer(app);
+}
+
+server.on('error', async err => {
+  if(err.code === 'EADDRINUSE') {
+    const {stdout} = await execa('/bin/netstat', ['-tulpn']);
+    const stdoutLines = stdout.split('\n');
+    const usingProcessLine = _.find(stdoutLines, line => line.includes(`:::${serverPort}`));
+    const usingProcessId = usingProcessLine.replace(/^.* (?<pid>\d+)\/node .*$/, '$<pid>');
+
+    logger.error(`Server port '${serverPort}' already in use by process ${usingProcessId}`);
+  } else if(environment !== 'production') {
+    logger.error(err);
   }
 
-  server.on('error', async err => {
-    if(err.code === 'EADDRINUSE') {
-      const {stdout} = await execa('/bin/netstat', ['-tulpn']);
-      const stdoutLines = stdout.split('\n');
-      const usingProcessLine = _.find(stdoutLines, line => line.includes(`:::${serverPort}`));
-      const usingProcessId = usingProcessLine.replace(/^.* (?<pid>\d+)\/node .*$/, '$<pid>');
+  process.exit(2);
+});
 
-      logger.error(`Server port '${serverPort}' already in use by process ${usingProcessId}`);
-    } else if(environment !== 'production') {
-      logger.error(err);
-    }
+server.listen(serverPort, async err => {
+  if(err) {
+    throw err;
+  }
 
-    process.exit(2);
+  logger.info(`Server: ${scheme}://${hostName}:${serverPort}`);
+
+  const line = readline.createInterface({
+    input:  process.stdin,
+    output: process.stdout,
   });
 
-  server.listen(serverPort, async err => {
-    if(err) {
-      throw err;
-    }
-
-    logger.info(`Server: ${scheme}://${hostName}:${serverPort}`);
-
-    const line = readline.createInterface({
-      input:  process.stdin,
-      output: process.stdout,
+  while(true) {
+    await new Promise(resolve => {
+      line.question('', resolve);
     });
 
-    while(true) {
-      await new Promise(resolve => {
-        line.question('', resolve);
-      });
-
-      for(let i = 0; i < windowSize.get().height; i++) {
-        // eslint-disable-next-line no-console
-        console.log('');
-      }
+    for(let i = 0; i < windowSize.get().height; i++) {
+      // eslint-disable-next-line no-console
+      console.log('');
     }
-  });
-})();
+  }
+});
