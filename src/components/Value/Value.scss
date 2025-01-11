@@ -2,9 +2,17 @@
 
 .value__value {
   color:          colors.$value-color;
-//    font-family:    Digitalism;
   letter-spacing: 0.08em;
   text-align:     right;
+  white-space:    nowrap;
+
+  &.digitalism {
+    font-family:  Digitalism;
+
+    >font {
+      font-size: 138%;
+    }
+  }
 
   &.negative {
     color:        #ff8080;
@@ -13,7 +21,23 @@
 
 .value__unit {
   font-size:      40%;
-  padding-top:    6%;
+  white-space:    nowrap;
+
+  &.value__unit__on-bottom {
+    padding-top:    6%;
+
+    &.digitalism {
+      padding-top:  4%;
+    }
+  }
+
+  &.value__unit__on-top {
+    padding-bottom: 4%;
+
+    &.digitalism {
+      padding-bottom:  11%;
+    }
+  }
 }
 
 .dialog-layer .value__value {

@@ -45,13 +45,18 @@ export default function Strompreise() {
 
   // console.log({sunriseHour, sunsetHour});
 
+  const yDomain = [0, 'auto'];
 //  const maxCent           = _.max(_.map(futureStrompreise, 'cent'));
-//  const minCent           = _.min(_.map(futureStrompreise, 'cent'));
+  const minCent           = _.min(_.map(futureStrompreise, 'cent'));
 
   // console.log('Strompreise', {strompreise, sunTimes});
 
+  if(minCent < 0) {
+    yDomain[0] = minCent - 0.5;
+  }
+
   return (
-    <BarChart width={950} height={450} data={futureStrompreise} margin={{left: 10, top: 20}}>
+    <BarChart width={980} height={500} data={futureStrompreise} margin={{left: 10, top: 20}}>
       <Bar
         dataKey='cent'
         fill='#000088'
@@ -93,6 +98,7 @@ export default function Strompreise() {
       />
       <YAxis
         dataKey='cent'
+        domain={yDomain}
         interval={0}
         label={{value: 'Cent', angle: -90, position: 'insideLeft'}}
         scale='linear'

@@ -1,0 +1,46 @@
+.autoLaden {
+  .daten {
+  }
+
+  .lademodus {
+    .buttons {
+      div {
+        display:        flex;
+        flex-direction: row;
+
+        .button {
+          height: 60px;
+          width:  120px;
+        }
+      }
+    }
+  }
+
+  .ladestrom {
+    .buttons {
+      div {
+        display:        flex;
+        flex-direction: row;
+
+        .button {
+          height: 60px;
+          width:  120px;
+        }
+      }
+    }
+  }
+
+  .ladeziel {
+    .buttons {
+      div {
+        display:        flex;
+        flex-direction: row;
+
+        .button {
+          height: 60px;
+          width:  120px;
+        }
+      }
+    }
+  }
+}

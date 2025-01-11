@@ -31,12 +31,12 @@
     "react-favicon": "2.0.7",
     "react-redux": "9.2.0",
     "react-refresh": "0.16.0",
-    "react-router": "7.0.2",
+    "react-router": "7.1.1",
     "recharts": "2.15.0",
     "redux-logger": "3.0.6",
     "redux-thunk": "3.1.0",
     "url": "0.11.4",
-    "uuid": "11.0.3",
+    "uuid": "11.0.5",
     "window-size": "1.1.1"
   },
   "devDependencies": {
@@ -48,13 +48,12 @@
     "ajv": "8.17.1",
     "babel-loader": "9.2.1",
     "css-loader": "7.1.2",
-    "eslint-plugin-react": "7.37.2",
     "html-webpack-plugin": "5.6.3",
-    "sass": "1.83.0",
+    "sass": "1.83.1",
     "sass-loader": "16.0.4",
     "style-loader": "4.0.0",
     "webpack": "5.97.1",
-    "webpack-cli": "5.1.4",
+    "webpack-cli": "6.0.1",
     "webpack-dev-server": "5.2.0"
   }
 }

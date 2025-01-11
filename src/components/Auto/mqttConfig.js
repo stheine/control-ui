@@ -1,4 +1,8 @@
 export default [{
+  topic: 'auto/tele/STATUS',
+}, {
+  topic: 'Fronius/solar/tele/SENSOR',
+}, {
   topic: 'vwsfriend/mqtt/weconnectConnected',
 }, {
   topic: 'vwsfriend/mqtt/weconnectUpdated',

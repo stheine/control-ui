@@ -3,110 +3,176 @@ import React, {
   useContext,
 } from 'react';
 
-import Button      from '../Button/Button.jsx';
-import MqttContext from '../../contexts/MqttContext.js';
-import Value       from '../Value/Value.jsx';
+import Button                  from '../Button/Button.jsx';
+import MqttContext             from '../../contexts/MqttContext.js';
+import Value                   from '../Value/Value.jsx';
+import {wallboxStateToAnzeige} from '../Auto/Auto.jsx';
 
-const messagePrefix = 'vwsfriend/vehicles/WVWZZZE1ZPP505932';
+const buttonsLademodus = [
+  'Überschuss',
+  'Nachts',
+  'Sofort',
+  'Aus',
+];
+const buttonsLadestrom = [
+  '-',
+  '4kW',
+  '11kW',
+  '+',
+];
+const buttonsSocTarget = [
+  70,
+  80,
+  90,
+  100,
+];
+const messagePrefix = 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging';
 
 export default function AutoLaden() {
   const {messages, mqttClient} = useContext(MqttContext);
 
-  const ladestrom    = messages['Wallbox/evse/external_current'].current;
-  const reichweite   = messages[`${messagePrefix}/domains/charging/batteryStatus/cruisingRangeElectric_km`];
-  const ladelevel    = messages[`${messagePrefix}/domains/charging/batteryStatus/currentSOC_pct`];
-  const ladeleistung = messages[`${messagePrefix}/domains/charging/chargingStatus/chargePower_kW`];
-  const ladetyp      = messages[`${messagePrefix}/domains/charging/chargingStatus/chargeType`];
-  const ladezeit     = messages[`${messagePrefix}/domains/charging/chargingStatus/remainingChargingTimeToComplete_min`];
-  const ladeziel     = messages[`${messagePrefix}/domains/charging/chargingSettings/targetSOC_pct`];
-  const status       = messages['auto/tele/STATUS'];
+  const ladestrom       = messages['Wallbox/evse/external_current'].current;
+  const reichweite      = messages[`${messagePrefix}/batteryStatus/cruisingRangeElectric_km`];
+  const ladelevel       = messages[`${messagePrefix}/batteryStatus/currentSOC_pct`];
+  const ladeleistung    = messages[`${messagePrefix}/chargingStatus/chargePower_kW`];
+//  const ladetyp         = messages[`${messagePrefix}/chargingStatus/chargeType`];
+  const ladezeit        = messages[`${messagePrefix}/chargingStatus/remainingChargingTimeToComplete_min`];
+  const ladeziel        = messages[`${messagePrefix}/chargingSettings/targetSOC_pct`];
+  const ladezielPending = messages['auto/cmnd/vwTargetSocPending'];
+  const status          = messages['auto/tele/STATUS'];
 
   const {chargeMode: activeChargeMode, wallboxState} = status;
+  const ladestatusAnzeige = wallboxStateToAnzeige(wallboxState);
 
-  // console.log('AutoLaden', {status, ladestrom});
+  // console.log('AutoLaden', {status, ladestrom, ladeziel});
 
-  const fields = [{
+  const fields = _.compact([{
     label: 'Akku',
     value: ladelevel,
     unit:  '%',
-  }, {
-    label: 'Status',
-    value: wallboxState,
   }, {
     label: 'Reichweite',
     value: reichweite,
     unit:  'km',
   }, {
-    label: 'Ladeleisung (Wallbox)',
-    value: ladestrom * 3 * 230 / 1000 / 1000,
-    unit:  'kW',
-  }, {
-    label: 'Ladeleistung (Auto)',
-    value: ladeleistung,
-    unit:  'kW',
-  }, {
-    label: 'Ladetyp',
-    value: ladetyp,
-  }, {
-    label: 'Ladedauer',
-    value: `${Math.trunc(ladezeit / 60)}:${_.padStart(ladezeit % 60, 2, '0')}`,
-  }, {
+    label: 'Status',
+    value: ladestatusAnzeige,
+  },
+  ladestatusAnzeige === 'Lädt' ?
+    {
+      label: 'Ladeleistung (Wallbox)',
+      value: _.round(ladestrom * 3 * 230 / 1000 / 1000, 1),
+      unit:  'kW',
+    } :
+    null,
+  ladestatusAnzeige === 'Lädt' ?
+    {
+      label: 'Ladeleistung (Auto)',
+      value: ladeleistung,
+      unit:  'kW',
+    } :
+    null,
+// ladestatusAnzeige === 'Lädt' ?
+// {
+//    label: 'Ladetyp',
+//    value: ladetyp,
+// } :
+// null,
+  ladestatusAnzeige === 'Lädt' ?
+    {
+      label: 'Ladedauer',
+      value: `${Math.trunc(ladezeit / 60)}:${_.padStart(ladezeit % 60, 2, '0')}`,
+    } :
+    null,
+  {
     label: 'Ladeziel',
     value: ladeziel,
     unit:  '%',
-  }];
-
-  const buttons = [
-    'Überschuss',
-    'Schnell',
-    'Nachts',
-    // 'NachtsTest',
-    'Aus',
-  ];
+  }]);
 
   return (
-    <table>
+    <table className='autoLaden'>
       <tbody>
-        <tr>
-          <td colSpan={buttons.length}>
-            <table>
-              <tbody>
-                {fields.map(field => (
-                  <tr key={field.label}>
-                    <td>
-                      {field.label}:
-                    </td>
-                    <Value value={field.value} unit={field.unit} />
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {fields.map(field => (
+          <tr key={field.label} className='daten'>
+            <td style={{width: '100px'}}>
+              {field.label}:
+            </td>
+            <Value value={field.value} unit={field.unit} />
+          </tr>
+        ))}
+        <tr className='lademodus'>
+          <td colSpan={3} className='buttons'>
+            <div>
+              {buttonsLademodus.map(button => (
+                <Button
+                  key={button}
+                  className='button'
+                  active={activeChargeMode === button}
+                  onClick={async() => await mqttClient.publishAsync('auto/cmnd/setChargeMode', button)}
+                >
+                  {button}
+                </Button>
+              ))}
+            </div>
           </td>
         </tr>
-        <tr>
-          {buttons.map(button => (
-            <td key={button}>
-              <Button
-                active={activeChargeMode === button}
-                onClick={async() => await mqttClient.publishAsync('auto/cmnd/setChargeMode', button)}
-              >
-                {button}
-              </Button>
+        {['Nachts', 'Sofort'].includes(activeChargeMode) ?
+          <tr className='ladeziel'>
+            <td colSpan={3} className='buttons'>
+              <div>
+                {buttonsSocTarget.map(button => {
+                  let buttonText;
+
+                  if(ladezielPending) {
+                    if(button === ladezielPending) {
+                      buttonText = `${button} (pending)`;
+                    } else if(button === ladeziel) {
+                      buttonText = `${button} (old)`;
+                    } else {
+                      buttonText = button;
+                    }
+                  } else {
+                    buttonText = button;
+                  }
+
+                  return (
+                    <Button
+                      key={button}
+                      className='button'
+                      active={ladezielPending ? button === ladezielPending : button === ladeziel}
+                      onClick={async() =>
+                        await mqttClient.publishAsync(`auto/cmnd/vwTargetSocPending`, String(button), {retain: true})}
+                    >
+                      {buttonText}
+                    </Button>
+                  );
+                })}
+              </div>
             </td>
-          ))}
-        </tr>
-        <tr>
-          {buttons.map(button => (
-            <td key={button}>
-              <Button
-                active={activeChargeMode === button}
-                onClick={async() => await mqttClient.publishAsync('auto/cmnd/setChargeCurrent', JSON.stringify(6000))}
-              >
-                {button}
-              </Button>
+          </tr> :
+          null
+        }
+        {activeChargeMode === 'Schnell' ?
+          <tr className='ladestrom'>
+            <td colSpan={3} className='buttons'>
+              <div>
+                {buttonsLadestrom.map(button => (
+                  <Button
+                    key={button}
+                    className='button'
+                    active={activeChargeMode === button}
+                    onClick={async() =>
+                      await mqttClient.publishAsync('auto/cmnd/setChargeCurrent', JSON.stringify(6000))}
+                  >
+                    {button}
+                  </Button>
+                ))}
+              </div>
             </td>
-          ))}
-        </tr>
+          </tr> :
+          null
+        }
       </tbody>
     </table>
   );

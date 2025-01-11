@@ -7,24 +7,17 @@ import React, {
 } from 'react';
 
 import AppContext  from '../../contexts/AppContext.js';
+import Close       from '../../svg/sargam/Close.jsx';
+import Collect     from '../../svg/sargam/Collect.jsx';
+import Max         from '../../svg/sargam/Max.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
-
-const displayWattage = function(value) {
-  return [
-    <td key='value' className={`solar__value${value < 0 ? ' negative' : ''}`}>
-      {value < 1000 ? _.round(value) : _.round(value / 1000, 1).toFixed(1)}
-    </td>,
-    <td key='unit' className='solar__unit'>
-      {value < 1000 ? 'W' : 'kW'}
-    </td>,
-  ];
-};
+import Value       from '../Value/Value.jsx';
 
 export default function Strom() {
   // console.log('Strom');
 
   const {setAppDialog} = useContext(AppContext);
-  const {messages} = useContext(MqttContext);
+  const {messages, mqttClient} = useContext(MqttContext);
   const einkaufRing = useRef(new RingBuffer(3));
   const [_lastUpdateTime, setLastUpdateTime] = useState();
 
@@ -62,21 +55,68 @@ export default function Strom() {
       <table className='strom'>
         <tbody>
           <tr>
-            <td className='solar__label'>Verbrauch:</td>
-            {displayWattage(verbrauch)}
+            <td className='strom__label'>Verbrauch:</td>
+            <Value
+              className='digitalism'
+              value={verbrauch < 1000 ? _.round(verbrauch) : _.round(verbrauch / 1000, 1).toFixed(1)}
+              unit={verbrauch < 1000 ? 'W' : 'kW'}
+              unitOn='top'
+            />
           </tr>
           <tr>
-            <td className='solar__label'>
+            <td className='strom__label'>
               <div style={{display: 'flex', flexDirection: 'row'}}>
                 <div
                   style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
                 >
                   Akku:
                 </div>
+                <div style={{width: '40px'}}>
+                  {messageStatus?.chargeMax ?
+                    <Close
+                      dark={true}
+                      onClick={async event => {
+                        event.stopPropagation();
+
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: null}));
+                      }}
+                    /> :
+                    <Collect
+                      dark={true}
+                      onClick={async event => {
+                        event.stopPropagation();
+
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: true}));
+                      }}
+                    />}
+                </div>
+                <div style={{width: '40px'}}>
+                  {messageStatus?.chargeTo ?
+                    <Close
+                      dark={true}
+                      onClick={async event => {
+                        event.stopPropagation();
+
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: null}));
+                      }}
+                    /> :
+                    <Max
+                      dark={true}
+                      onClick={async event => {
+                        event.stopPropagation();
+
+                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: 100}));
+                      }}
+                    />}
+                </div>
               </div>
             </td>
-            <td className='solar__value'>{_.round(akkuLadelevel * 100, 1)}</td>
-            <td className='solar__unit'>%</td>
+            <Value
+              className='digitalism'
+              value={_.round(akkuLadelevel * 100, 1)}
+              unit='%'
+              unitOn='bottom'
+            />
           </tr>
         </tbody>
       </table>

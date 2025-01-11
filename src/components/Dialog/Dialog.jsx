@@ -4,6 +4,7 @@ import AutoLaden     from '../AutoLaden/AutoLaden.jsx';
 import Close         from '../../svg/sargam/Close.jsx';
 import SolarForecast from '../SolarForecast/SolarForecast.jsx';
 import Strompreise   from '../Strompreise/Strompreise.jsx';
+import VolumioDialog from '../VolumioDialog/VolumioDialog.jsx';
 import Wetter        from '../Wetter/Wetter.jsx';
 
 export default function Dialog(props) {
@@ -22,6 +23,10 @@ export default function Dialog(props) {
 
     case 'Strompreise':
       renderContent = <Strompreise />;
+      break;
+
+    case 'VolumioDialog':
+      renderContent = <VolumioDialog />;
       break;
 
     case 'Wetter':

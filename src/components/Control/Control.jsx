@@ -1,5 +1,6 @@
 import _               from 'lodash';
 import {connect}       from 'react-redux';
+import ms              from 'ms';
 import React, {
   useContext,
   useEffect,
@@ -29,6 +30,8 @@ import Temperatur      from '../Temperatur/Temperatur.jsx';
 import Vito            from '../Vito/Vito.jsx';
 import Volumio         from '../Volumio/Volumio.jsx';
 
+let    clickTimeout;
+
 const Control = function(props) {
   const {dispatch} = props;
 
@@ -46,26 +49,44 @@ const Control = function(props) {
   useEffect(() => {
     // Use the displayPageRef inside this effect to prevent
     // re-registering the event handler on every page change
-    mqttClient.on('message', async(messageTopic, messageBuffer) => {
-      if(messageTopic !== 'volumio/stat/pushState') {
-        return;
-      }
+    mqttClient.on('message', async(topic, messageBuffer) => {
+      const messageRaw = messageBuffer.toString();
 
       try {
-        const messageRaw = messageBuffer.toString();
+        let message;
 
-        const message = JSON.parse(messageRaw);
-        const {status} = message;
-
-        if(status !== volumioStatus.current) {
-          volumioStatus.current = status;
-
-          if(status === 'play' && displayPageRef.current !== 1) {
-            navigate('/1');
-          }
+        try {
+          message = JSON.parse(messageRaw);
+        } catch{
+          // ignore
         }
-      } catch{
-        // nothing
+
+        switch(topic) {
+          case 'control-ui/cmnd/route':
+            // Diese route kommt von Display.jsx und aus control-io/control-ui.js und setzt das
+            // UI zurueck auf die Startseite.
+            navigate(message);
+            break;
+
+          case 'volumio/stat/pushState': {
+            const {status} = message || {};
+
+            if(status !== volumioStatus.current) {
+              volumioStatus.current = status;
+
+              if(status === 'play' && displayPageRef.current !== 1) {
+                navigate('/1');
+              }
+            }
+            break;
+          }
+
+          default:
+            break;
+        }
+      } catch(err) {
+        // eslint-disable-next-line no-console
+        console.log('mqtt handler failed', {topic, messageRaw, errMessage: err.message});
       }
     });
   }, [dispatch, mqttClient, navigate]);
@@ -109,23 +130,23 @@ const Control = function(props) {
     {id: 'tempWohnen',        priority: -203, width: 1,            content: <Temperatur site='Wohnen' />},
     {id: 'clock',             priority: -100, width: 1, fit: true, content: <Clock />},
     {id: 'auto',              priority:  -53, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
-    {id: 'strom',             priority:  -52, width: 1, fit: true, content: <Strom />},
-    {id: 'solar',             priority:  -51, width: 1, fit: true, content: <Solar />},
+    {id: 'strom',             priority:  -52, width: 1,            content: <Strom />},
+    {id: 'solar',             priority:  -51, width: 1,            content: <Solar />},
 
     {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
     {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
-    {id: 'volumio',           priority:    0, width: 2,            content: <Volumio />, calcPriority: calcVolumio},
+    {id: 'volumio',           priority:    0, width: 1,            content: <Volumio />, calcPriority: calcVolumio},
     {id: 'vito',              priority:    0, width: 1, fit: true, content: <Vito />},
     {id: 'jalousieWohnen',    priority:    0, width: 1, fit: true, content: <JalousieWohnen />},
 
-    {id: 'tempVito',          width: 1, fit: true, content: <Temperatur site='AußenVito' />},
-//  {id: 'tempAussenTasmota', width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
-    {id: 'tempWohnenRaspi',   width: 1, fit: true, content: <Temperatur site='WohnenRaspi' />},
-    {id: 'tempBuero',         width: 1, fit: true, content: <Temperatur site='Büro' />},
-    {id: 'dreame',            width: 1, fit: true, content: <Dreame />,                      calcPriority: calcDreame},
-    {id: 'jalousieBuero',     width: 1, fit: true, content: <JalousieBuero />},
-    {id: 'infrarotheizungBuero',        width: 1, fit: true, content: <Infrarotheizung site='Büro' />},
-    {id: 'infrarotheizungSchlafzimmer', width: 1, fit: true, content: <Infrarotheizung site='Schlafzimmer' />},
+    {id: 'tempVito',                          width: 1, fit: true, content: <Temperatur site='AußenVito' />},
+//  {id: 'tempAussenTasmota',                 width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
+    {id: 'tempWohnenRaspi',                   width: 1, fit: true, content: <Temperatur site='WohnenRaspi' />},
+    {id: 'tempBuero',                         width: 1, fit: true, content: <Temperatur site='Büro' />},
+    {id: 'dreame',                            width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
+    {id: 'jalousieBuero',                     width: 1, fit: true, content: <JalousieBuero />},
+    {id: 'infrarotheizungBuero',              width: 1, fit: true, content: <Infrarotheizung site='Büro' />},
+    {id: 'infrarotheizungSchlafzimmer',       width: 1, fit: true, content: <Infrarotheizung site='Schlafzimmer' />},
   ];
 
   const itemsToPages = () => {
@@ -170,7 +191,19 @@ const Control = function(props) {
   // console.log('Control', {displayPage, params});
 
   return (
-    <div className='control'>
+    <div
+      className='control'
+      onClick={() => {
+        if(clickTimeout) {
+          clearTimeout(clickTimeout);
+          clickTimeout = undefined;
+        }
+
+        clickTimeout = setTimeout(() => {
+          navigate('/1');
+        }, ms('30s'));
+      }}
+    >
       <title>Control</title>
       <Grid page={displayPage} items={pages[displayPage - 1]} maxPages={Number(_.keys(pages).length)} />
     </div>

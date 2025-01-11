@@ -14,7 +14,9 @@ export default function Button(props) {
       ])}
       onClick={onClick}
     >
-      {children}
+      <p>
+        {children}
+      </p>
     </div>
   );
 }

@@ -12,5 +12,26 @@
 
   .auto__label {
     font-size: 70%;
+
+    &.twoLine {
+      vertical-align: top;
+      padding-top:    5px;
+    }
+  }
+
+  .auto__value {
+    font-size: 60%;
+    padding:   3px 0 11px 0;
+
+    .auto__value__extra {
+      font-size: 60%;
+    }
+
+    .auto__value__highlight {
+      background-color: #ffff00;
+      color:            #000000;
+      border-radius:    5px;
+      padding:          0 8px 0 8px;
+    }
   }
 }

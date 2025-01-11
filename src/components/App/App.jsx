@@ -116,12 +116,6 @@ const App = function() {
     // console.log('App:onMessage', {topic, message});
 
     switch(topic) {
-      case 'control-ui/cmnd/route':
-        // eslint-disable-next-line no-console
-        console.log('unhandled', {topic, message});
-        // navigate(message);
-        break;
-
       case 'control-ui/cmnd/dialog':
         if(!message?.clientId || message?.clientId === appContextValue.clientId) {
           openDialog({

@@ -6,6 +6,7 @@ export default [{
     precision: 1,
     unit:      '°C',
   }, {
+    className: 'small',
     key:       'humidity',
     precision: 0,
     unit:      '%rH',
@@ -18,6 +19,7 @@ export default [{
     precision: 1,
     unit:      '°C',
   }, {
+    className: 'small',
     key:       'AM2301.Humidity',
     precision: 0,
     unit:      '%rH',
@@ -38,6 +40,7 @@ export default [{
     precision: 1,
     unit:      '°C',
   }, {
+    className: 'small',
     key:       'humidity',
     precision: 0,
     unit:      '%rH',
@@ -50,6 +53,7 @@ export default [{
     precision: 1,
     unit:      '°C',
   }, {
+    className: 'small',
     key:       'humidity',
     precision: 0,
     unit:      '%rH',

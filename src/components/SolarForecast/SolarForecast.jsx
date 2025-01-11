@@ -49,6 +49,7 @@ export default function SolarForecast() {
 
       referenceLines.push(
         <ReferenceLine
+          key={forecast.startDate}
           x={result.length - 1}
           stroke='gray'
           strokeWidth={1}

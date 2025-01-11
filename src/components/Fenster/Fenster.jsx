@@ -31,7 +31,7 @@ export default function Fenster() {
                   style={{
                     margin: '2px',
                     padding: '1px 5px 1px 5px',
-                    ...contact ? {color: '#33ff33'} : {backgroundColor: '#ff0000'},
+                    ...contact ? {color: '#33ff33'} : {backgroundColor: '#ff0000', borderRadius: '5px'},
                   }}
                 >
                   {label}

@@ -1,4 +1,5 @@
 import _           from 'lodash';
+import classNames  from 'classnames';
 import ms          from 'ms';
 import React, {
   useContext,
@@ -17,7 +18,7 @@ const renderValue = function(value, config) {
 
   return (
     <div className='temperatur__value'>
-      <div className='temperatur__value__number'>
+      <div className={classNames(['temperatur__value__number', config.className])}>
         {number}
       </div>
       <div className='temperatur__value__right'>
