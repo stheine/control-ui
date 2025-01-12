@@ -58,7 +58,7 @@ export default function Strom() {
             <td className='strom__label'>Verbrauch:</td>
             <Value
               className='digitalism'
-              value={verbrauch < 1000 ? _.round(verbrauch) : _.round(verbrauch / 1000, 1).toFixed(1)}
+              value={verbrauch < 1000 ? _.round(verbrauch) : Number(_.round(verbrauch / 1000, 1).toFixed(1))}
               unit={verbrauch < 1000 ? 'W' : 'kW'}
               unitOn='top'
             />
