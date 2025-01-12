@@ -12,9 +12,9 @@ import Value       from '../Value/Value.jsx';
 
 const wattage = function(value) {
   return {
-    color: value < 0 ? '#ff8080' : null,
-    value: value < 1000 ? _.round(value) : _.round(value / 1000, 1).toFixed(1),
-    unit:  value < 1000 ? 'W' : 'kW',
+    color: value <    0 ? '#ff8080'      : null,
+    value: value < 1000 ? _.round(value) : Number(_.round(value / 1000, 1).toFixed(1)),
+    unit:  value < 1000 ? 'W'            : 'kW',
   };
 };
 
