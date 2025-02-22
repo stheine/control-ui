@@ -7,6 +7,7 @@ import React, {
 import MqttContext from '../../contexts/MqttContext.js';
 
 import Play        from '../../svg/sargam/Play.jsx';
+import Value       from '../Value/Value.jsx';
 
 export default function Dreame() {
   const {messages, mqttClient} = useContext(MqttContext);
@@ -20,6 +21,28 @@ export default function Dreame() {
   const error         = messages['valetudo/dreame-d9/StatusStateAttribute/error'];
   const errorSeverity = error?.severity.kind || 'none';
 
+  let akkuBackgroundColor;
+  let statusBackgroundColor;
+
+  if(level < 40) {
+    akkuBackgroundColor = '#ff0000';
+  } else if(level < 80) {
+    akkuBackgroundColor = '#ffff00';
+  }
+
+  switch(status) {
+    case 'docked':
+      break;
+
+    case 'error':
+      statusBackgroundColor = '#ff0000';
+      break;
+
+    default:
+      statusBackgroundColor = '#ffff00';
+      break;
+  }
+
   return (
     <table>
       <tbody>
@@ -28,11 +51,20 @@ export default function Dreame() {
         </tr>
         <tr>
           <td>Status:</td>
-          <td>{status}</td>
+          <Value
+            backgroundColor={statusBackgroundColor}
+            value={status}
+          />
         </tr>
         <tr>
           <td>Akku:</td>
-          <td>{level}%</td>
+          <Value
+            backgroundColor={akkuBackgroundColor}
+            className='digitalism'
+            value={level}
+            unit='%'
+            unitOn='bottom'
+          />
         </tr>
         {errorSeverity !== 'none' ?
           <tr>

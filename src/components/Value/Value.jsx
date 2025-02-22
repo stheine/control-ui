@@ -1,4 +1,3 @@
-import _          from 'lodash';
 import classNames from 'classnames';
 import React      from 'react';
 
@@ -30,34 +29,16 @@ export default function Value(props) {
   const {backgroundColor, className, color, value, unit, unitOn} = props;
 
   const displayValue = value;
-  const fontStyle    = {};
   const valueStyle   = {};
 
-  valueStyle.width = '100px';
-
-  if(_.isNumber(value)) {
-//    if(value < 1000) {
-//      displayValue = _.round(value);
-//    } else {
-//      displayValue = _.round(value / 1000, 1).toFixed(1);
-//    }
-  } else {
-    valueStyle.fontSize      = '60%';
-    valueStyle.paddingBottom = '11px';
-    valueStyle.paddingTop    = '3px';
-  }
-
   if(backgroundColor) {
-    fontStyle.backgroundColor = backgroundColor;
+    valueStyle.backgroundColor = backgroundColor;
 
     if(lightOrDark(backgroundColor) === 'light') {
-      fontStyle.color = '#000000';
+      valueStyle.color = '#000000';
     }
-
-    fontStyle.borderRadius    = '5px';
-    fontStyle.padding         = '0 8px 0 8px';
   } else if(color) {
-    fontStyle.color = color;
+    valueStyle.color = color;
   }
 
   return [
@@ -68,22 +49,35 @@ export default function Value(props) {
         value < 0 ? 'negative' : null,
         className,
       ])}
-      style={valueStyle}
+      colSpan={unit === null ? 2 : null}
     >
-      <font style={fontStyle}>
-        {displayValue}
+      <font
+        className={classNames([
+          backgroundColor ? 'background' : null,
+        ])}
+        style={valueStyle}
+      >
+        <font
+          className={classNames([
+            backgroundColor ? 'background-font' : null,
+          ])}
+        >
+          {displayValue}
+        </font>
       </font>
     </td>,
-    <td
-      key='unit'
-      className={classNames([
-        'value__unit',
-        unitOn === 'bottom' ? 'value__unit__on-bottom' : null,
-        unitOn === 'top' ? 'value__unit__on-top' : null,
-        className,
-      ])}
-    >
-      {unit}
-    </td>,
+    unit === null ?
+      null :
+      <td
+        key='unit'
+        className={classNames([
+          'value__unit',
+          unitOn === 'bottom' ? 'value__unit__on-bottom' : null,
+          unitOn === 'top' ? 'value__unit__on-top' : null,
+          className,
+        ])}
+      >
+        {unit}
+      </td>,
   ];
 }

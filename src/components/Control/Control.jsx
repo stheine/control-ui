@@ -115,7 +115,7 @@ const Control = function(props) {
     topic === 'muell/leerung/morgen' && Boolean(message?.length)).length);
 
   const calcVolumio = () => Boolean(_.filter(messages, (message, topic) =>
-    topic === 'volumio/stat/pushState' && message.status === 'play').length);
+    topic === 'volumio/stat/pushState' && ['...', 'play'].includes(message.status)).length);
 
   const calcDreame = () => Boolean(_.filter(messages, (message, topic) =>
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/status' && message !== 'docked') ||
@@ -128,10 +128,10 @@ const Control = function(props) {
   const items = [
     {id: 'tempAussen',        priority: -204, width: 1,            content: <Temperatur site='Außen' />},
     {id: 'tempWohnen',        priority: -203, width: 1,            content: <Temperatur site='Wohnen' />},
-    {id: 'clock',             priority: -100, width: 1, fit: true, content: <Clock />},
-    {id: 'auto',              priority:  -53, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
-    {id: 'strom',             priority:  -52, width: 1,            content: <Strom />},
-    {id: 'solar',             priority:  -51, width: 1,            content: <Solar />},
+    {id: 'auto',              priority: -103, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
+    {id: 'strom',             priority: -102, width: 1,            content: <Strom />},
+    {id: 'solar',             priority: -101, width: 1,            content: <Solar />},
+    {id: 'clock',             priority:  -60, width: 1, fit: true, content: <Clock />},
 
     {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
     {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},

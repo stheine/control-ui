@@ -1,5 +1,8 @@
 .autoLaden {
   .daten {
+    td {
+      white-space: nowrap;
+    }
   }
 
   .lademodus {
@@ -38,7 +41,9 @@
 
         .button {
           height: 60px;
-          width:  120px;
+          width:  65px;
+
+          white-space: nowrap;
         }
       }
     }

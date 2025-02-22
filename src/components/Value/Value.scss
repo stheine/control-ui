@@ -5,17 +5,45 @@
   letter-spacing: 0.08em;
   text-align:     right;
   white-space:    nowrap;
+  width:          100px;
+
+  >.background {
+    border-radius: 5px;
+    padding:       0px 3px 0 6px;
+  }
 
   &.digitalism {
     font-family:  Digitalism;
 
+    >.background {
+      >.background-font {
+        position:      relative;
+        top:           5px;
+      }
+    }
+
     >font {
       font-size: 138%;
+
+      :not(.background) {
+        position:      relative;
+        top:           5px;
+      }
     }
   }
 
   &.negative {
     color:        #ff8080;
+  }
+
+  &.small {
+    // padding:      3px 0 11px 0;
+
+    font {
+      font-size:     80%;
+      position:      relative;
+      bottom:        2px;
+    }
   }
 }
 

@@ -14,13 +14,15 @@ const buttonsLademodus = [
   'Sofort',
   'Aus',
 ];
-const buttonsLadestrom = [
-  '-',
-  '4kW',
-  '11kW',
-  '+',
-];
+const buttonsLadestrom = {
+  4:   6000,
+  6:   8500,
+  8:  11000,
+  11: 16000,
+};
 const buttonsSocTarget = [
+  50,
+  60,
   70,
   80,
   90,
@@ -34,15 +36,16 @@ export default function AutoLaden() {
   const ladestrom       = messages['Wallbox/evse/external_current'].current;
   const reichweite      = messages[`${messagePrefix}/batteryStatus/cruisingRangeElectric_km`];
   const ladelevel       = messages[`${messagePrefix}/batteryStatus/currentSOC_pct`];
-  const ladeleistung    = messages[`${messagePrefix}/chargingStatus/chargePower_kW`];
-//  const ladetyp         = messages[`${messagePrefix}/chargingStatus/chargeType`];
+  // const ladeleistung    = messages[`${messagePrefix}/chargingStatus/chargePower_kW`];
+  // const ladetyp         = messages[`${messagePrefix}/chargingStatus/chargeType`];
   const ladezeit        = messages[`${messagePrefix}/chargingStatus/remainingChargingTimeToComplete_min`];
   const ladeziel        = messages[`${messagePrefix}/chargingSettings/targetSOC_pct`];
   const ladezielPending = messages['auto/cmnd/vwTargetSocPending'];
-  const status          = messages['auto/tele/STATUS'];
+  const autoStatus      = messages['auto/tele/STATUS'];
 
-  const {chargeMode: activeChargeMode, wallboxState} = status;
-  const ladestatusAnzeige = wallboxStateToAnzeige(wallboxState);
+  const activeLadestromButton = _.findKey(buttonsLadestrom, buttonLadestrom => buttonLadestrom === ladestrom);
+  const {atHome, chargeMode: activeChargeMode, wallboxState} = autoStatus;
+  const ladestatusAnzeige = wallboxStateToAnzeige({atHome, wallboxState});
 
   // console.log('AutoLaden', {status, ladestrom, ladeziel});
 
@@ -65,13 +68,13 @@ export default function AutoLaden() {
       unit:  'kW',
     } :
     null,
-  ladestatusAnzeige === 'Lädt' ?
-    {
-      label: 'Ladeleistung (Auto)',
-      value: ladeleistung,
-      unit:  'kW',
-    } :
-    null,
+//  ladestatusAnzeige === 'Lädt' ?
+//    {
+//      label: 'Ladeleistung (Auto)',
+//      value: ladeleistung,
+//      unit:  'kW',
+//    } :
+//    null,
 // ladestatusAnzeige === 'Lädt' ?
 // {
 //    label: 'Ladetyp',
@@ -84,11 +87,12 @@ export default function AutoLaden() {
       value: `${Math.trunc(ladezeit / 60)}:${_.padStart(ladezeit % 60, 2, '0')}`,
     } :
     null,
-  {
-    label: 'Ladeziel',
-    value: ladeziel,
-    unit:  '%',
-  }]);
+//  {
+//    label: 'Ladeziel',
+//    value: ladeziel,
+//    unit:  '%',
+//  },
+  ]);
 
   return (
     <table className='autoLaden'>
@@ -117,23 +121,23 @@ export default function AutoLaden() {
             </div>
           </td>
         </tr>
-        {['Nachts', 'Sofort'].includes(activeChargeMode) ?
+        {['Nachts', 'Sofort', 'Überschuss'].includes(activeChargeMode) ?
           <tr className='ladeziel'>
-            <td colSpan={3} className='buttons'>
+            <td colSpan={5} className='buttons'>
               <div>
                 {buttonsSocTarget.map(button => {
                   let buttonText;
 
                   if(ladezielPending) {
                     if(button === ladezielPending) {
-                      buttonText = `${button} (pending)`;
+                      buttonText = `${button} % .`;
                     } else if(button === ladeziel) {
-                      buttonText = `${button} (old)`;
+                      buttonText = `${button} % .`;
                     } else {
-                      buttonText = button;
+                      buttonText = `${button} %`;
                     }
                   } else {
-                    buttonText = button;
+                    buttonText = `${button} %`;
                   }
 
                   return (
@@ -153,19 +157,19 @@ export default function AutoLaden() {
           </tr> :
           null
         }
-        {activeChargeMode === 'Schnell' ?
+        {activeChargeMode === 'Sofort' ?
           <tr className='ladestrom'>
             <td colSpan={3} className='buttons'>
               <div>
-                {buttonsLadestrom.map(button => (
+                {Object.keys(buttonsLadestrom).map(button => (
                   <Button
                     key={button}
                     className='button'
-                    active={activeChargeMode === button}
-                    onClick={async() =>
-                      await mqttClient.publishAsync('auto/cmnd/setChargeCurrent', JSON.stringify(6000))}
+                    active={button === activeLadestromButton}
+                    onClick={async() => await mqttClient.publishAsync('auto/cmnd/setChargeCurrent',
+                      JSON.stringify(buttonsLadestrom[button]))}
                   >
-                    {button}
+                    {button}kW
                   </Button>
                 ))}
               </div>

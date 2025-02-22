@@ -50,6 +50,8 @@ import Stop                   from '../../svg/sargam/Stop.jsx';
 import StopCircle             from '../../svg/sargam/StopCircle.jsx';
 import Sun                    from '../../svg/sargam/Sun.jsx';
 import Up                     from '../../svg/sargam/Up.jsx';
+import VolumeDown             from '../../svg/sargam/VolumeDown.jsx';
+import VolumeUp               from '../../svg/sargam/VolumeUp.jsx';
 
 const row1 = [
   <Back key='back' />,
@@ -93,10 +95,8 @@ const row3 = [
   <Icon key='icon' />,
   <Close key='close' />,
   <Checked key='checked' />,
-  <BlindDown key='blindDown' />,
-  <BlindShade key='blindShade' />,
-  <BlindUp key='blindUp' />,
-  <StopCircle key='stopCircle' />,
+  <VolumeDown key='volumeDown' />,
+  <VolumeUp key='volumeUp' />,
 ];
 const row4 = [
   <Sun key='sun' />,
@@ -118,6 +118,10 @@ const row4 = [
 const row5 = [
   <Collect key='collect' />,
   <Max key='max' />,
+  <BlindDown key='blindDown' />,
+  <BlindShade key='blindShade' />,
+  <BlindUp key='blindUp' />,
+  <StopCircle key='stopCircle' />,
 ];
 
 export default function Icons() {

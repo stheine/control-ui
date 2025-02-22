@@ -6,55 +6,26 @@ import React, {
   useState,
 } from 'react';
 
-import AppContext  from '../../contexts/AppContext.js';
-import MqttContext from '../../contexts/MqttContext.js';
-import repeatEvery from '../Clock/repeatEvery.js';
-import Value       from '../Value/Value.jsx';
-
-const messagePrefix = 'vwsfriend/vehicles/WVWZZZE1ZPP505932';
+import AppContext      from '../../contexts/AppContext.js';
+import {messagePrefix} from './mqttConfig.js';
+import MqttContext     from '../../contexts/MqttContext.js';
+import repeatEvery     from '../Clock/repeatEvery.js';
+import Value           from '../Value/Value.jsx';
 
 let refreshInterval;
 
-// Writeable
-// vwsfriend/mqtt/weconnectForceUpdate_writetopic       => true
-// vwsfriend/mqtt/weconnectUpdateInterval_s_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/charging_writetopic      =>  start / stop
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/climatisation_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/wakeup_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/controls/windowheating_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/batteryChargingCare/chargingCareSettings/batteryCareMode_writetopic,
-
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingCareSettings/batteryCareMode_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingSettings/autoUnlockPlugWhenChargedAC_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingSettings/autoUnlockPlugWhenCharged_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingSettings/maxChargeCurrentAC_writetopic
-//   => maximum / reduced
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingSettings/targetSOC_pct_writetopic,
-
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/climatisation/climatisationSettings/climatizationAtUnlock_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/climatisation/climatisationSettings/targetTemperature_C_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/climatisation/climatisationSettings/targetTemperature_F_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/climatisation/climatisationSettings/windowHeatingEnabled_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/climatisation/climatisationSettings/zoneFrontLeftEnabled_writetopic,
-// vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/climatisation/climatisationSettings/zoneFrontRightEnabled_writetopic
-
-export const wallboxStateToAnzeige = function(wallboxState) {
+export const wallboxStateToAnzeige = function({atHome, wallboxState}) {
   switch(wallboxState) {
     case 'Lädt':
       return 'Lädt';
 
-//    case 'chargePurposeReachedAndNotConservationCharging':
-//      ladestatusAnzeige = 'Voll';
-//      break;
-//
-//    case 'TODO error als Fehler zeigen: error':
-//      ladestatusAnzeige = 'Fehler';
-//      break;
-//
     case 'Nicht verbunden':
-      return 'Getrennt';
+      if(atHome) {
+        return 'Getrennt';
+      }
 
-//    case 'error':
+      return 'Unterwegs';
+
     case 'Warte auf Ladefreigabe':
       return 'Bereit';
 
@@ -99,7 +70,7 @@ export default function Auto() {
   const reichweite     = messages[`${messagePrefix}/domains/charging/batteryStatus/cruisingRangeElectric_km`];
   const ladelevel      = messages[`${messagePrefix}/domains/charging/batteryStatus/currentSOC_pct`];
 
-  const ladeleistung   = messages[`${messagePrefix}/domains/charging/chargingStatus/chargePower_kW`];
+//  const ladeleistung   = messages[`${messagePrefix}/domains/charging/chargingStatus/chargePower_kW`];
 //  const ladetyp      = messages[`${messagePrefix}/domains/charging/chargingStatus/chargeType`];
 //  const ladestatus   = messages[`${messagePrefix}/domains/charging/chargingStatus/chargingState`];
 //  const ladezeit   = messages[`${messagePrefix}/domains/charging/chargingStatus/remainingChargingTimeToComplete_min`];
@@ -113,7 +84,7 @@ export default function Auto() {
 
   const pvProductionKw = pvSensor.solar.powerOutgoing / 1000;
 
-  const {atHome, chargeMode: activeChargeMode, wallboxState} = autoStatus;
+  const {atHome, chargeMode: activeChargeMode, ladeleistungKw, wallboxState} = autoStatus;
   let   ladelevelColor;
 
   if(ladelevel >= 70) {
@@ -122,11 +93,11 @@ export default function Auto() {
     ladelevelColor = '#ffff00';
   } else if(ladelevel >= 30) {
     ladelevelColor = '#ffcc00';
-  } else {
+  } else if(ladelevel) {
     ladelevelColor = '#ff0000';
   }
 
-  const ladestatusAnzeige = wallboxStateToAnzeige(wallboxState);
+  const ladestatusAnzeige = wallboxStateToAnzeige({atHome, wallboxState});
 
   // console.log(_.map(_.filter(_.keys(messages), topic => topic.startsWith('vwsfriend')), topic =>
   //   `${topic}: ${messages[topic]}`).join('\n'));
@@ -136,8 +107,8 @@ export default function Auto() {
       <td className='auto__label'>Akku:</td>
       <Value
         backgroundColor={ladelevelColor}
-        className='digitalism'
-        value={ladelevel}
+        className={ladelevel ? 'digitalism' : null}
+        value={ladelevel || '?'}
         unit='%'
         unitOn='bottom'
       />
@@ -145,63 +116,85 @@ export default function Auto() {
     <tr key='reichweite'>
       <td className='auto__label'>Reichweite:</td>
       <Value
-        value={reichweite}
+        value={reichweite || '?'}
         unit='km'
         unitOn='bottom'
       />
     </tr>,
   ];
 
-  switch(wallboxState) {
-    case 'Lädt':
+  if(wallboxState === 'Lädt') {
+    rows.push(
+      <tr key='status'>
+        <td className='auto__label'>
+          <div className='auto__label__multi'>
+            {ladestatusAnzeige} <div className='auto__label__small'>{ladeziel}%</div>:
+          </div>
+        </td>
+        <Value
+          value={ladeleistungKw}
+          unit='kW'
+          unitOn='top'
+        />
+      </tr>
+    );
+    rows.push(
+      <tr key='mode'>
+        <td className='auto__label'>
+          Mode:
+        </td>
+        <Value
+          className='small'
+          value={activeChargeMode}
+          unit={null}
+        />
+      </tr>
+    );
+//    if(ladeziel) {
+//      rows.push(
+//        <tr key='ziel'>
+//          <td className='auto__label'>Ziel:</td>
+//          <Value
+//            value={ladeziel}
+//            unit='%'
+//            unitOn='bottom'
+//          />
+//        </tr>
+//      );
+//    }
+  } else {
+    let ladestatusBackgroundColor;
+
+    if(atHome && ladelevel < 80 && ladestatusAnzeige === 'Getrennt' && pvProductionKw > 4) {
+      ladestatusBackgroundColor = '#ffff00';
+    }
+
+    rows.push(
+      <tr key='status'>
+        <td className='auto__label'>
+          Status:
+        </td>
+        <Value
+          backgroundColor={ladestatusBackgroundColor}
+          className='small'
+          value={ladestatusAnzeige}
+          unit={null}
+        />
+      </tr>
+    );
+    if(atHome) {
       rows.push(
-        <tr key='status'>
+        <tr key='mode'>
           <td className='auto__label'>
-            {ladestatusAnzeige}:
+            Mode:
           </td>
           <Value
-            value={ladeleistung}
-            unit='kW'
-            unitOn='top'
+            className='small'
+            value={activeChargeMode}
+            unit={null}
           />
         </tr>
       );
-      if(ladeziel) {
-        rows.push(
-          <tr key='ziel'>
-            <td className='auto__label'>Ziel:</td>
-            <Value
-              value={ladeziel}
-              unit='%'
-              unitOn='bottom'
-            />
-          </tr>
-        );
-      }
-      break;
-
-    default: {
-      let ladestatusClassName;
-
-      if(atHome && ladelevel < 80 && ladestatusAnzeige === 'Getrennt' && pvProductionKw > 4) {
-        ladestatusClassName = 'auto__value__highlight';
-      }
-
-      rows.push(
-        <tr key='status'>
-          <td className='auto__label twoLine'>
-            Status:
-          </td>
-          <td className='auto__value'>
-            <font className={ladestatusClassName}>
-              {ladestatusAnzeige}
-            </font>
-            <br />
-            <font className='auto__value__extra'>({activeChargeMode})</font>
-          </td>
-        </tr>
-      );
-      break;
     }
   }
 
@@ -223,7 +216,7 @@ export default function Auto() {
   return (
     <div
       className='autoDiv'
-      onClick={() => setAppDialog({content: 'AutoLaden', header: 'Auto laden', timeout: '30m'})}
+      onClick={() => setAppDialog({content: 'AutoLaden', header: 'Auto laden', timeout: '30s'})}
     >
       <table className='auto'>
         <tbody>

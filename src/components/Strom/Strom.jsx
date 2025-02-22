@@ -13,6 +13,9 @@ import Max         from '../../svg/sargam/Max.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
 import Value       from '../Value/Value.jsx';
 
+//TODO button akku sparen (use grid)
+//TODO button jetzt akku fuellen (bis x%)
+
 export default function Strom() {
   // console.log('Strom');
 
@@ -58,8 +61,8 @@ export default function Strom() {
             <td className='strom__label'>Verbrauch:</td>
             <Value
               className='digitalism'
-              value={verbrauch < 1000 ? _.round(verbrauch) : Number(_.round(verbrauch / 1000, 1).toFixed(1))}
-              unit={verbrauch < 1000 ? 'W' : 'kW'}
+              value={verbrauch <= 1000 ? _.round(verbrauch) : Number(_.round(verbrauch / 1000, 1).toFixed(1))}
+              unit={verbrauch <= 1000 ? 'W' : 'kW'}
               unitOn='top'
             />
           </tr>

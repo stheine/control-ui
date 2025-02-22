@@ -70,6 +70,7 @@ export default function Muell() {
                   <span
                     style={{
                       backgroundColor,
+                      borderRadius: '5px',
                       color,
                       fontSize: morgen.length === 1 ? '400%' : '200%',
                       padding:  '0 15px 0 15px',
@@ -129,6 +130,7 @@ export default function Muell() {
         <span
           style={{
             backgroundColor,
+            borderRadius: '5px',
             color,
             fontSize:        '220%',
             padding:         '0 7px 0 7px',

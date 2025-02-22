@@ -8,9 +8,23 @@ import AppContext  from '../../contexts/AppContext.js';
 import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
-import Decrease    from '../../svg/sargam/Decrease.jsx';
-import Increase    from '../../svg/sargam/Increase.jsx';
-import PlayPause   from '../../svg/sargam/PlayPause.jsx';
+import Play        from '../../svg/sargam/Play.jsx';
+import Stop        from '../../svg/sargam/Stop.jsx';
+import VolumeDown  from '../../svg/sargam/VolumeDown.jsx';
+import VolumeUp    from '../../svg/sargam/VolumeUp.jsx';
+
+const Button = function(props) {
+  switch(props.status) {
+    case '...':
+      return;
+
+    case 'play':
+      return <Stop {...props} />;
+
+    default:
+      return <Play {...props} />;
+  }
+};
 
 const Volumio = function() {
   // console.log('Volumio');
@@ -34,8 +48,9 @@ const Volumio = function() {
       <div className='volumio'>
         <div className='volumio__row'>
           <div className='volumio__control'>
-            <PlayPause
+            <Button
               dark={true}
+              status={message?.status}
               onClick={async event => {
                 event.stopPropagation();
 
@@ -44,7 +59,7 @@ const Volumio = function() {
             />
           </div>
           <div className='volumio__volume'>
-            <Increase
+            <VolumeUp
               dark={true}
               onClick={async event => {
                 event.stopPropagation();
@@ -71,7 +86,7 @@ const Volumio = function() {
             {_.upperFirst(message?.status)}
           </div>
           <div className='volumio__volume'>
-            <Decrease
+            <VolumeDown
               dark={true}
               onClick={async event => {
                 event.stopPropagation();

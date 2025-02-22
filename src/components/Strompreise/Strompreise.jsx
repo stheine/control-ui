@@ -22,7 +22,7 @@ export default function Strompreise() {
   const now               = dayjs();
   const strompreise       = messages['strom/tele/preise'];
   const futureStrompreise = _.reduce(strompreise, (result, strompreis) => {
-    if(dayjs(strompreis.startTime) < now) {
+    if(dayjs(strompreis.startTime) < now.subtract(1, 'hour')) {
       return result;
     }
 

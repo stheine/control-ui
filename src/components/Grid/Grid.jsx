@@ -21,9 +21,9 @@ const Grid = function(props) {
     return (
       <div key='grid' className='grid'>
         {_.map(items, (item, key) => {
-          // console.log('Page', {key, item});
+          // console.log('Grid', {key, item});
 
-          let className = 'grid__action';
+          let className = `grid__action grid__item${key}`;
 
           if(item.width === 2) {
             className += ' double';

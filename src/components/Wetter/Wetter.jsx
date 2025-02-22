@@ -92,7 +92,7 @@ export default function Wetter() {
     return [
       <tr key='wetter'>
         <td>Wetter:</td>
-        <Value value={wetter} />
+        <Value className='small' value={wetter} />
       </tr>,
       <tr key='bewoelkung'>
         <td>Bewölkung:</td>
