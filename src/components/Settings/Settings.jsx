@@ -9,6 +9,7 @@ import Refresh     from '../../svg/sargam/Refresh.jsx';
 
 import Beep        from '../Beep/Beep.jsx';
 import Display     from '../Display/Display.jsx';
+import Info        from '../Info/Info.jsx';
 import Leds        from '../Leds/Leds.jsx';
 import PushButtons from '../PushButtons/PushButtons.jsx';
 import Zigbee      from '../Zigbee/Zigbee.jsx';
@@ -25,6 +26,10 @@ const pages = {
     {width: 1, fit: true, content: <PushButtons />},
     {width: 1, fit: true, content: <Refresh dark={true} onClick={() => reloadPage()} />},
     {width: 1, fit: true, content: <Zigbee />},
+  ],
+
+  2: [
+    {width: 1, fit: true, content: <Info />},
   ],
 };
 

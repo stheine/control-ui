@@ -1,5 +1,5 @@
 export default [{
-  label: 'Außen',
+  label: 'AußenFunk',
   topic: 'Zigbee/LuftSensor Außen',
   values: [{
     key:       'temperature',
@@ -25,7 +25,7 @@ export default [{
     unit:      '%rH',
   }],
 }, {
-  label: 'AußenVito',
+  label: 'Außen',
   topic: 'vito/tele/SENSOR',
   values: [{
     key:       'tempAussen',

@@ -6,13 +6,16 @@ import React, {
 import Button                  from '../Button/Button.jsx';
 import MqttContext             from '../../contexts/MqttContext.js';
 import Value                   from '../Value/Value.jsx';
+import {vwId}                  from '../Auto/mqttConfig.js';
 import {wallboxStateToAnzeige} from '../Auto/Auto.jsx';
 
 const buttonsLademodus = [
   'Überschuss',
+  'Überschuss+',
   'Nachts',
   'Sofort',
-  'Aus',
+  'Sofort+',
+  // 'Aus',
 ];
 const buttonsLadestrom = {
   4:   6000,
@@ -28,18 +31,14 @@ const buttonsSocTarget = [
   90,
   100,
 ];
-const messagePrefix = 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging';
 
 export default function AutoLaden() {
   const {messages, mqttClient} = useContext(MqttContext);
 
   const ladestrom       = messages['Wallbox/evse/external_current'].current;
-  const reichweite      = messages[`${messagePrefix}/batteryStatus/cruisingRangeElectric_km`];
-  const ladelevel       = messages[`${messagePrefix}/batteryStatus/currentSOC_pct`];
-  // const ladeleistung    = messages[`${messagePrefix}/chargingStatus/chargePower_kW`];
-  // const ladetyp         = messages[`${messagePrefix}/chargingStatus/chargeType`];
-  const ladezeit        = messages[`${messagePrefix}/chargingStatus/remainingChargingTimeToComplete_min`];
-  const ladeziel        = messages[`${messagePrefix}/chargingSettings/targetSOC_pct`];
+  const reichweite      = messages[`carconnectivity/garage/${vwId}/drives/primary/range`];
+  const ladelevel       = messages[`carconnectivity/garage/${vwId}/drives/primary/level`];
+  const ladeziel        = messages[`carconnectivity/garage/${vwId}/charging/settings/target_level`];
   const ladezielPending = messages['auto/cmnd/vwTargetSocPending'];
   const autoStatus      = messages['auto/tele/STATUS'];
 
@@ -81,12 +80,12 @@ export default function AutoLaden() {
 //    value: ladetyp,
 // } :
 // null,
-  ladestatusAnzeige === 'Lädt' ?
-    {
-      label: 'Ladedauer',
-      value: `${Math.trunc(ladezeit / 60)}:${_.padStart(ladezeit % 60, 2, '0')}`,
-    } :
-    null,
+//  ladestatusAnzeige === 'Lädt' ?
+//    {
+//      label: 'Ladedauer',
+//      value: `${Math.trunc(ladezeit / 60)}:${_.padStart(ladezeit % 60, 2, '0')}`,
+//    } :
+//    null,
 //  {
 //    label: 'Ladeziel',
 //    value: ladeziel,
@@ -121,7 +120,27 @@ export default function AutoLaden() {
             </div>
           </td>
         </tr>
-        {['Nachts', 'Sofort', 'Überschuss'].includes(activeChargeMode) ?
+        {['Sofort', 'Sofort+'].includes(activeChargeMode) ?
+          <tr className='ladestrom'>
+            <td colSpan={3} className='buttons'>
+              <div>
+                {Object.keys(buttonsLadestrom).map(button => (
+                  <Button
+                    key={button}
+                    className='button'
+                    active={button === activeLadestromButton}
+                    onClick={async() => await mqttClient.publishAsync('auto/cmnd/setChargeCurrent',
+                      JSON.stringify(buttonsLadestrom[button]))}
+                  >
+                    {button}kW
+                  </Button>
+                ))}
+              </div>
+            </td>
+          </tr> :
+          null
+        }
+        {['Nachts', 'Sofort', 'Sofort+', 'Überschuss', 'Überschuss+'].includes(activeChargeMode) ?
           <tr className='ladeziel'>
             <td colSpan={5} className='buttons'>
               <div>
@@ -152,26 +171,6 @@ export default function AutoLaden() {
                     </Button>
                   );
                 })}
-              </div>
-            </td>
-          </tr> :
-          null
-        }
-        {activeChargeMode === 'Sofort' ?
-          <tr className='ladestrom'>
-            <td colSpan={3} className='buttons'>
-              <div>
-                {Object.keys(buttonsLadestrom).map(button => (
-                  <Button
-                    key={button}
-                    className='button'
-                    active={button === activeLadestromButton}
-                    onClick={async() => await mqttClient.publishAsync('auto/cmnd/setChargeCurrent',
-                      JSON.stringify(buttonsLadestrom[button]))}
-                  >
-                    {button}kW
-                  </Button>
-                ))}
               </div>
             </td>
           </tr> :

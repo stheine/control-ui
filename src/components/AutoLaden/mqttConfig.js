@@ -1,11 +1,11 @@
-import {messagePrefix} from '../Auto/mqttConfig.js';
+import {vwId} from '../Auto/mqttConfig.js';
 
 export default [{
   topic: 'auto/cmnd/vwTargetSocPending',
 }, {
   topic: 'auto/tele/STATUS',
 }, {
-  topic: 'Wallbox/evse/external_current',
+  topic: `carconnectivity/garage/${vwId}/charging/settings/target_level`,
 }, {
-  topic: `${messagePrefix}/domains/charging/chargingSettings/targetSOC_pct`,
+  topic: 'Wallbox/evse/external_current',
 }];

@@ -104,7 +104,7 @@ const Control = function(props) {
       return false;
     }
 
-    if(message.contact) {
+    if(message.contact !== false) {
       return false;
     }
 
@@ -121,12 +121,8 @@ const Control = function(props) {
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/status' && message !== 'docked') ||
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/error' && message?.severity.kind !== 'none')).length);
 
-  // const calcAuto = () => Boolean(_.filter(messages, (message, topic) =>
-  //   topic === 'vwsfriend/vehicles/WVWZZZE1ZPP505932/domains/charging/chargingStatus/chargingState' &&
-  //   message === 'charging').length);
-
   const items = [
-    {id: 'tempAussen',        priority: -204, width: 1,            content: <Temperatur site='Außen' />},
+    {id: 'tempVito',          priority: -204, width: 1,            content: <Temperatur site='Außen' />},
     {id: 'tempWohnen',        priority: -203, width: 1,            content: <Temperatur site='Wohnen' />},
     {id: 'auto',              priority: -103, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
     {id: 'strom',             priority: -102, width: 1,            content: <Strom />},
@@ -136,15 +132,15 @@ const Control = function(props) {
     {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
     {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
     {id: 'volumio',           priority:    0, width: 1,            content: <Volumio />, calcPriority: calcVolumio},
-    {id: 'vito',              priority:    0, width: 1, fit: true, content: <Vito />},
     {id: 'jalousieWohnen',    priority:    0, width: 1, fit: true, content: <JalousieWohnen />},
+    {id: 'jalousieBuero',     priority:    0, width: 1, fit: true, content: <JalousieBuero />},
+    {id: 'dreame',            priority:    0, width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
+    {id: 'vito',              priority:    0, width: 1, fit: true, content: <Vito />},
 
-    {id: 'tempVito',                          width: 1, fit: true, content: <Temperatur site='AußenVito' />},
+//  {id: 'tempAussen',                        width: 1, fit: true, content: <Temperatur site='AußenFunk' />},
 //  {id: 'tempAussenTasmota',                 width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
-    {id: 'tempWohnenRaspi',                   width: 1, fit: true, content: <Temperatur site='WohnenRaspi' />},
-    {id: 'tempBuero',                         width: 1, fit: true, content: <Temperatur site='Büro' />},
-    {id: 'dreame',                            width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
-    {id: 'jalousieBuero',                     width: 1, fit: true, content: <JalousieBuero />},
+//  {id: 'tempWohnenRaspi',                   width: 1, fit: true, content: <Temperatur site='WohnenRaspi' />},
+//  {id: 'tempBuero',                         width: 1, fit: true, content: <Temperatur site='Büro' />},
     {id: 'infrarotheizungBuero',              width: 1, fit: true, content: <Infrarotheizung site='Büro' />},
     {id: 'infrarotheizungSchlafzimmer',       width: 1, fit: true, content: <Infrarotheizung site='Schlafzimmer' />},
   ];

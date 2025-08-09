@@ -24,6 +24,8 @@ export default function Fenster() {
           const contact = messages[config.topic]?.contact;
           const label   = config.topic.replace(/^[^ ]* /, '');
 
+          // console.log('Fenster', {label, contact});
+
           return (
             <tr key={config.topic}>
               <td>

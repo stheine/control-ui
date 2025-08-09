@@ -12,9 +12,17 @@ import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
 const renderValue = function(value, config) {
-  const rounded = _.round(value, config.precision);
-  const valueString = rounded.toString();
-  const [number, decimals] = valueString.split('.');
+  let decimals;
+  let number;
+
+  if(_.isNil(value)) {
+    number = <>&nbsp;</>;
+  } else {
+    const rounded = _.round(value, config.precision);
+    const valueString = rounded.toString();
+
+    [number, decimals] = valueString.split('.');
+  }
 
   return (
     <div className='temperatur__value'>
@@ -57,14 +65,14 @@ export default function Temperatur(props) {
 
   const message = messages[siteConfig.topic];
 
-  if(message && site === 'Außen' && message.Time !== _lastTime) {
+  if(message && site === 'AußenFunk' && message.Time !== _lastTime) {
     setLastTime(message.Time);
     // console.log(site, message);
   }
 
   let warnungen;
 
-  if(site === 'Außen') {
+  if(['Außen', 'AußenFunk'].includes(site)) {
     const messageDwd = messages['wetter/dwd/INFO'];
 
     warnungen = messageDwd ? messageDwd?.forecast.warnings || [] : [{event: 'none'}];
@@ -100,6 +108,17 @@ export default function Temperatur(props) {
               </td>
             </tr>
           ))}
+          {
+            siteConfig.values.length < 2 ?
+              <tr>
+                <td>
+                  <div className='temperatur__content'>
+                    {renderValue(null, {className: 'small'})}
+                  </div>
+                </td>
+              </tr> :
+              null
+          }
           {warnungen?.length ?
             <tr key='warnung'>
               <td colSpan={2} className='temperatur__warning'>

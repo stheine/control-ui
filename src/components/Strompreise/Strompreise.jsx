@@ -6,6 +6,7 @@ import {
   Bar,
   BarChart,
   Cell,
+  ReferenceArea,
   ReferenceLine,
   XAxis,
   YAxis,
@@ -15,6 +16,9 @@ import React, {
 } from 'react';
 
 import MqttContext from '../../contexts/MqttContext.js';
+
+const strokeOpacity = 0.5;
+const strokeWidth   = 5;
 
 export default function Strompreise() {
   const {messages} = useContext(MqttContext);
@@ -36,6 +40,10 @@ export default function Strompreise() {
   const sunTimes = messages['sunTimes/INFO'];
   const {sunrise, sunset, sunriseTomorrow, sunsetTomorrow} = sunTimes;
 
+  const yDomain = [0, 'auto'];
+  const maxCent           = _.max(_.map(futureStrompreise, 'cent'));
+  const minCent           = _.min(_.map(futureStrompreise, 'cent'));
+
   const sunriseHour = sunrise > now ?
     dayjs(sunrise).hour() :
     dayjs(sunriseTomorrow).hour();
@@ -43,11 +51,74 @@ export default function Strompreise() {
     dayjs(sunset).hour() :
     dayjs(sunsetTomorrow).hour();
 
-  // console.log({sunriseHour, sunsetHour});
+  let   startH = null;
+  let   endH   = null;
+  let   aktuellerHintergrund;
+  const hintergruende = [];
 
-  const yDomain = [0, 'auto'];
-//  const maxCent           = _.max(_.map(futureStrompreise, 'cent'));
-  const minCent           = _.min(_.map(futureStrompreise, 'cent'));
+  for(const timeH of _.map(futureStrompreise, 'timeH')) {
+    if(startH === null) {
+      startH = timeH;
+    }
+    if(endH === null) {
+      endH = timeH;
+    }
+
+    if(timeH === sunriseHour) {
+      hintergruende.push(
+        <ReferenceArea
+          key='nacht'
+          x1={startH}
+          x2={timeH - 1}
+          y1={maxCent}
+          y2={0}
+          stroke='gray'
+          strokeOpacity={strokeOpacity}
+          strokeWidth={strokeWidth}
+          label={{value: 'Nacht', angle: 0, position: 'insideTop', offset: 50}}
+        />
+      );
+      startH = null;
+      aktuellerHintergrund = 'Nacht';
+    } else if(timeH === sunsetHour) {
+      hintergruende.push(
+        <ReferenceArea
+          key='tag'
+          x1={startH}
+          x2={timeH - 1}
+          y1={maxCent}
+          y2={0}
+          stroke='yellow'
+          strokeOpacity={strokeOpacity}
+          strokeWidth={strokeWidth}
+          label={{value: 'Tag', angle: 0, position: 'insideTop', offset: 50}}
+        />
+      );
+      startH = null;
+      aktuellerHintergrund = 'Tag';
+    }
+  }
+
+  if(startH !== null) {
+    hintergruende.push(
+      <ReferenceArea
+        key='naechster'
+        x1={startH}
+        x2={_.map(futureStrompreise, 'timeH').at(-1)}
+        y1={maxCent}
+        y2={0}
+        stroke={aktuellerHintergrund === 'Nacht' ? 'yellow' : 'gray'}
+        strokeOpacity={strokeOpacity}
+        strokeWidth={strokeWidth}
+        label={{value: aktuellerHintergrund === 'Nacht' ? 'Tag' : 'Nacht', angle: 0, position: 'insideTop', offset: 50}}
+        ifOverflow='hidden'
+      />
+    );
+    startH = null;
+    aktuellerHintergrund = 'Tag';
+  }
+
+  // console.log({sunriseHour, sunsetHour});
 
   // console.log('Strompreise', {strompreise, sunTimes});
 
@@ -57,6 +128,7 @@ export default function Strompreise() {
 
   return (
     <BarChart width={980} height={500} data={futureStrompreise} margin={{left: 10, top: 20}}>
+      {hintergruende}
       <Bar
         dataKey='cent'
         fill='#000088'

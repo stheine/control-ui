@@ -1,4 +1,3 @@
-// import _  from 'lodash';
 import ms from 'ms';
 import React, {
   useContext,
@@ -6,11 +5,11 @@ import React, {
   useState,
 } from 'react';
 
-import AppContext      from '../../contexts/AppContext.js';
-import {messagePrefix} from './mqttConfig.js';
-import MqttContext     from '../../contexts/MqttContext.js';
-import repeatEvery     from '../Clock/repeatEvery.js';
-import Value           from '../Value/Value.jsx';
+import AppContext  from '../../contexts/AppContext.js';
+import MqttContext from '../../contexts/MqttContext.js';
+import repeatEvery from '../Clock/repeatEvery.js';
+import Value       from '../Value/Value.jsx';
+import {vwId}      from './mqttConfig.js';
 
 let refreshInterval;
 
@@ -63,18 +62,13 @@ export default function Auto() {
     };
   }, []);
 
-//  const connected    = messages['vwsfriend/mqtt/weconnectConnected'];
-  const updated        = messages['vwsfriend/mqtt/weconnectUpdated'];
+  const updated        = messages['carconnectivity/connectors/volkswagen/last_update'];
   const updatedSeconds = Math.round((_now - new Date(updated)) / 1000);
 
-  const reichweite     = messages[`${messagePrefix}/domains/charging/batteryStatus/cruisingRangeElectric_km`];
-  const ladelevel      = messages[`${messagePrefix}/domains/charging/batteryStatus/currentSOC_pct`];
+  const reichweite     = messages[`carconnectivity/garage/${vwId}/drives/primary/range`];
+  const ladelevel      = messages[`carconnectivity/garage/${vwId}/drives/primary/level`];
 
-//  const ladeleistung   = messages[`${messagePrefix}/domains/charging/chargingStatus/chargePower_kW`];
-//  const ladetyp      = messages[`${messagePrefix}/domains/charging/chargingStatus/chargeType`];
-//  const ladestatus   = messages[`${messagePrefix}/domains/charging/chargingStatus/chargingState`];
-//  const ladezeit   = messages[`${messagePrefix}/domains/charging/chargingStatus/remainingChargingTimeToComplete_min`];
-  const ladeziel       = messages[`${messagePrefix}/domains/charging/chargingSettings/targetSOC_pct`];
+  const ladeziel       = messages[`carconnectivity/garage/${vwId}/charging/settings/target_level`];
   const autoStatus     = messages['auto/tele/STATUS'];
   const pvSensor       = messages['Fronius/solar/tele/SENSOR'];
 
@@ -98,9 +92,6 @@ export default function Auto() {
   }
 
   const ladestatusAnzeige = wallboxStateToAnzeige({atHome, wallboxState});
-
-  // console.log(_.map(_.filter(_.keys(messages), topic => topic.startsWith('vwsfriend')), topic =>
-  //   `${topic}: ${messages[topic]}`).join('\n'));
 
   const rows = [
     <tr key='akku'>
@@ -165,7 +156,7 @@ export default function Auto() {
   } else {
     let ladestatusBackgroundColor;
 
-    if(atHome && ladelevel < 80 && ladestatusAnzeige === 'Getrennt' && pvProductionKw > 4) {
+    if(atHome && ladelevel < 75 && ladestatusAnzeige === 'Getrennt' && pvProductionKw > 4) {
       ladestatusBackgroundColor = '#ffff00';
     }
 
