@@ -1,13 +1,13 @@
 import React from 'react';
 
 export default function Icon(props) {
-  const {dark, onClick} = props;
+  const {dark, onClick, onMouseDown, onMouseUp} = props;
   const color     = dark ? '#e0e0e0' : '#000000';
   const fillColor = dark ? '#000000' : '#e0e0e0';
 
   return (
     <svg viewBox='0 -40 440 480'>
-      <g onClick={onClick}>
+      <g onClick={onClick} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
         <rect id='handleOnClickOnUnfilledArea' pointerEvents='all' x='0' y='0' width='100%' height='100%' fill='none' />
         <g stroke={color} strokeWidth='14' strokeLinejoin='round' fill={fillColor}>
           <rect x='38' y='23' width='362' height='20' fill={color} />

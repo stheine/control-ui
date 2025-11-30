@@ -1,7 +1,9 @@
 import AppConfig           from './App/mqttConfig.js';
 import AutoConfig          from './Auto/mqttConfig.js';
 import AutoLadenConfig     from './AutoLaden/mqttConfig.js';
+import CasambiConfig       from './Casambi/mqttConfig.js';
 import DisplayConfig       from './Display/mqttConfig.js';
+import Dreame2Config       from './Dreame2/mqttConfig.js';
 import DreameConfig        from './Dreame/mqttConfig.js';
 import FensterConfig       from './Fenster/mqttConfig.js';
 import Infrarotheizung     from './Infrarotheizung/mqttConfig.js';
@@ -24,8 +26,10 @@ export default [
   ...AppConfig,
   ...AutoConfig,
   ...AutoLadenConfig,
+  ...CasambiConfig,
   ...DisplayConfig,
   ...DreameConfig,
+  ...Dreame2Config,
   ...FensterConfig,
   ...Infrarotheizung,
   ...JalousieWohnen,

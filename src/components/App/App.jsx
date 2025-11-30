@@ -26,6 +26,7 @@ import Dialog                    from '../Dialog/Dialog.jsx';
 import faviconBase64             from '../../favicon.js';
 import Icons                     from '../Icons/Icons.jsx';
 import Infrarotheizung           from '../Infrarotheizung/Infrarotheizung.jsx';
+import Light                     from '../Light/Light.jsx';
 import mqttConfigs               from '../mqttConfigs.js';
 import MqttContext               from '../../contexts/MqttContext.js';
 import Settings                  from '../Settings/Settings.jsx';
@@ -168,6 +169,7 @@ const App = function() {
               <Route path='/icons'               element={<Icons />} />
               <Route path='/heizungBuero'        element={<Standalone site='Büro' />} />,
               <Route path='/heizungSchlafzimmer' element={<Standalone site='Schlafzimmer' />} />,
+              <Route path='/light/:page'         element={<Light />} />
               <Route path='/settings/:page'      element={<Settings />} />
               <Route path='*'                    element={<Control />} />
             </Routes>

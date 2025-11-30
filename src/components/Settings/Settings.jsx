@@ -20,12 +20,12 @@ const reloadPage = function() {
 
 const pages = {
   1: [
-    {width: 1, fit: true, content: <Display />},
-    {width: 1, fit: true, content: <Beep />},
-    {width: 1, fit: true, content: <Leds />},
-    {width: 1, fit: true, content: <PushButtons />},
     {width: 1, fit: true, content: <Refresh dark={true} onClick={() => reloadPage()} />},
     {width: 1, fit: true, content: <Zigbee />},
+    {width: 1, fit: true, content: <Leds />},
+    {width: 1, fit: true, content: <PushButtons />},
+    {width: 1, fit: true, content: <Beep />},
+    {width: 1, fit: true, content: <Display />},
   ],
 
   2: [
@@ -42,7 +42,7 @@ export default function Settings() {
   return (
     <div className='control'>
       <title>Settings</title>
-      <Grid page={page} settings={true} items={pages[page]} maxPages={Number(_.last(_.keys(pages)))} />
+      <Grid route='settings' page={page} items={pages[page]} maxPages={Number(_.last(_.keys(pages)))} />
     </div>
   );
 }

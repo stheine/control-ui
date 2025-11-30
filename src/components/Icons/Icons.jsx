@@ -24,6 +24,7 @@ import Icon                   from '../../svg/sargam/Icon.jsx';
 import Increase               from '../../svg/sargam/Increase.jsx';
 import Led                    from '../../svg/Led.jsx';
 import Left                   from '../../svg/sargam/Left.jsx';
+import Light                  from '../../svg/sargam/Light.jsx';
 import Max                    from '../../svg/sargam/Max.jsx';
 import Minus                  from '../../svg/sargam/Minus.jsx';
 import Moon                   from '../../svg/sargam/Moon.jsx';
@@ -122,6 +123,7 @@ const row5 = [
   <BlindShade key='blindShade' />,
   <BlindUp key='blindUp' />,
   <StopCircle key='stopCircle' />,
+  <Light key='light' />,
 ];
 
 export default function Icons() {

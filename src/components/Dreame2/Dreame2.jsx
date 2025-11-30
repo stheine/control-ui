@@ -10,16 +10,16 @@ import Pause       from '../../svg/sargam/Pause.jsx';
 import Play        from '../../svg/sargam/Play.jsx';
 import Value       from '../Value/Value.jsx';
 
-export default function Dreame() {
+export default function Dreame2() {
   const {messages, mqttClient} = useContext(MqttContext);
 
   if(!_.isEmpty(messages)) {
-    // console.log('Dreame', {messages: _.pickBy(messages, (message, topic) => topic.startsWith('valetudo/dreame'))});
+    // console.log('Dreame2', {messages: _.pickBy(messages, (message, topic) => topic.startsWith('valetudo/dreame-d9-2'))});
   }
 
-  const level         = messages['valetudo/dreame-d9/BatteryStateAttribute/level'] || 999;
-  const status        = messages['valetudo/dreame-d9/StatusStateAttribute/status'] || 'Unknown';
-  const error         = messages['valetudo/dreame-d9/StatusStateAttribute/error'];
+  const level         = messages['valetudo/dreame-d9-2/BatteryStateAttribute/level'] || 999;
+  const status        = messages['valetudo/dreame-d9-2/StatusStateAttribute/status'] || 'Unknown';
+  const error         = messages['valetudo/dreame-d9-2/StatusStateAttribute/error'];
   const errorSeverity = error?.severity.kind || 'none';
 
   let akkuBackgroundColor;
@@ -48,7 +48,7 @@ export default function Dreame() {
     <table>
       <tbody>
         <tr>
-          <th colSpan={2}>Dumbo (EG)</th>
+          <th colSpan={2}>Dumbo (OG)</th>
         </tr>
         <tr>
           <td>Status:</td>
@@ -80,12 +80,12 @@ export default function Dreame() {
                 <Pause
                   dark={true}
                   onClick={async() =>
-                    await mqttClient.publishAsync('valetudo/dreame-d9/BasicControlCapability/operation/set', 'PAUSE')}
+                    await mqttClient.publishAsync('valetudo/dreame-d9-2/BasicControlCapability/operation/set', 'PAUSE')}
                 /> :
                 <Play
                   dark={true}
                   onClick={async() =>
-                    await mqttClient.publishAsync('valetudo/dreame-d9/BasicControlCapability/operation/set', 'START')}
+                    await mqttClient.publishAsync('valetudo/dreame-d9-2/BasicControlCapability/operation/set', 'START')}
                 />
               }
             </div>

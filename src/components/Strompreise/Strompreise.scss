@@ -1,0 +1,22 @@
+.strompreise {
+  .chart {
+    height: 430px;
+    width:  980px;
+  }
+
+  .buttons {
+    display:         flex;
+    flex-direction:  row;
+    justify-content: center;
+    padding-top:     15px;
+
+    .button {
+      height: 30px;
+      width:  115px;
+    }
+
+    .label {
+      padding-top: 10px;
+    }
+  }
+}

@@ -67,6 +67,9 @@
     &.double {
       grid-row-end: span 2;
     }
+    &.triple {
+      grid-row-end: span 3;
+    }
 
     &.one {
       grid-row-start: 1;

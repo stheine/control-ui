@@ -19,6 +19,7 @@ import Grid            from '../Grid/Grid.jsx';
 import Auto            from '../Auto/Auto.jsx';
 import Clock           from '../Clock/Clock.jsx';
 import Dreame          from '../Dreame/Dreame.jsx';
+import Dreame2         from '../Dreame2/Dreame2.jsx';
 import Fenster         from '../Fenster/Fenster.jsx';
 import Infrarotheizung from '../Infrarotheizung/Infrarotheizung.jsx';
 import JalousieBuero   from '../JalousieBuero/JalousieBuero.jsx';
@@ -121,6 +122,10 @@ const Control = function(props) {
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/status' && message !== 'docked') ||
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/error' && message?.severity.kind !== 'none')).length);
 
+  const calcDreame2 = () => Boolean(_.filter(messages, (message, topic) =>
+    (topic === 'valetudo/dreame-d9-2/StatusStateAttribute/status' && message !== 'docked') ||
+    (topic === 'valetudo/dreame-d9-2/StatusStateAttribute/error' && message?.severity.kind !== 'none')).length);
+
   const items = [
     {id: 'tempVito',          priority: -204, width: 1,            content: <Temperatur site='Außen' />},
     {id: 'tempWohnen',        priority: -203, width: 1,            content: <Temperatur site='Wohnen' />},
@@ -130,12 +135,13 @@ const Control = function(props) {
     {id: 'clock',             priority:  -60, width: 1, fit: true, content: <Clock />},
 
     {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
-    {id: 'fenster',           priority:    0, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
-    {id: 'volumio',           priority:    0, width: 1,            content: <Volumio />, calcPriority: calcVolumio},
-    {id: 'jalousieWohnen',    priority:    0, width: 1, fit: true, content: <JalousieWohnen />},
-    {id: 'jalousieBuero',     priority:    0, width: 1, fit: true, content: <JalousieBuero />},
-    {id: 'dreame',            priority:    0, width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
-    {id: 'vito',              priority:    0, width: 1, fit: true, content: <Vito />},
+    {id: 'fenster',           priority:    1, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
+    {id: 'volumio',           priority:    2, width: 1,            content: <Volumio />, calcPriority: calcVolumio},
+    {id: 'jalousieWohnen',    priority:    3, width: 1, fit: true, content: <JalousieWohnen />},
+    {id: 'dreame',            priority:    4, width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
+    {id: 'dreame2',           priority:    5, width: 1, fit: true, content: <Dreame2 />, calcPriority: calcDreame2},
+    {id: 'vito',              priority:    6, width: 1, fit: true, content: <Vito />},
+    {id: 'jalousieBuero',     priority:    7, width: 1, fit: true, content: <JalousieBuero />},
 
 //  {id: 'tempAussen',                        width: 1, fit: true, content: <Temperatur site='AußenFunk' />},
 //  {id: 'tempAussenTasmota',                 width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
@@ -201,7 +207,7 @@ const Control = function(props) {
       }}
     >
       <title>Control</title>
-      <Grid page={displayPage} items={pages[displayPage - 1]} maxPages={Number(_.keys(pages).length)} />
+      <Grid route='' page={displayPage} items={pages[displayPage - 1]} maxPages={Number(_.keys(pages).length)} />
     </div>
   );
 };

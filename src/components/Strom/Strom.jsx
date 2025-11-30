@@ -7,20 +7,14 @@ import React, {
 } from 'react';
 
 import AppContext  from '../../contexts/AppContext.js';
-import Close       from '../../svg/sargam/Close.jsx';
-import Collect     from '../../svg/sargam/Collect.jsx';
-import Max         from '../../svg/sargam/Max.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
 import Value       from '../Value/Value.jsx';
-
-//TODO button akku sparen (use grid)
-//TODO button jetzt akku fuellen (bis x%)
 
 export default function Strom() {
   // console.log('Strom');
 
   const {setAppDialog} = useContext(AppContext);
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages} = useContext(MqttContext);
   const einkaufRing = useRef(new RingBuffer(3));
   const [_lastUpdateTime, setLastUpdateTime] = useState();
 
@@ -68,57 +62,21 @@ export default function Strom() {
           </tr>
           <tr>
             <td className='strom__label'>
-              <div style={{display: 'flex', flexDirection: 'row'}}>
-                <div
-                  style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
-                >
-                  Akku:
-                </div>
-                <div style={{width: '40px'}}>
-                  {messageStatus?.chargeMax ?
-                    <Close
-                      dark={true}
-                      onClick={async event => {
-                        event.stopPropagation();
-
-                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: null}));
-                      }}
-                    /> :
-                    <Collect
-                      dark={true}
-                      onClick={async event => {
-                        event.stopPropagation();
-
-                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeMax: true}));
-                      }}
-                    />}
-                </div>
-                <div style={{width: '40px'}}>
-                  {messageStatus?.chargeTo ?
-                    <Close
-                      dark={true}
-                      onClick={async event => {
-                        event.stopPropagation();
-
-                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: null}));
-                      }}
-                    /> :
-                    <Max
-                      dark={true}
-                      onClick={async event => {
-                        event.stopPropagation();
-
-                        await mqttClient.publishAsync('Fronius/solar/cmnd', JSON.stringify({chargeTo: 100}));
-                      }}
-                    />}
-                </div>
-              </div>
+              Akku:
             </td>
             <Value
               className='digitalism'
               value={_.round(akkuLadelevel * 100, 1)}
               unit='%'
               unitOn='bottom'
+            />
+          </tr>
+          <tr>
+            <td className='strom__label'>Status:</td>
+            <Value
+              className='small'
+              value={messageStatus?.batteryStatus}
+              unit={null}
             />
           </tr>
         </tbody>
