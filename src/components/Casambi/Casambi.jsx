@@ -88,6 +88,10 @@ const Casambi = function(params) {
       return;
     }
 
+    value = getInRange(value, diff, range[prop].min, range[prop].max);
+
+    mqttClient.publishAsync(`casambi/holzhaus/${name}/cmnd`, JSON.stringify({[prop]: value}));
+
     setDownInterval(setInterval(() => {
       value = getInRange(value, diff, range[prop].min, range[prop].max);
 
