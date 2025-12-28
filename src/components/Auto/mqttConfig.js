@@ -11,5 +11,7 @@ export default [{
 }, {
   topic: `carconnectivity/garage/${vwId}/charging/settings/target_level`,
 }, {
+  topic: `carconnectivity/garage/${vwId}/state`,
+}, {
   topic: 'Fronius/solar/tele/SENSOR',
 }];

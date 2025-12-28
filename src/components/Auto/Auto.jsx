@@ -13,7 +13,7 @@ import {vwId}      from './mqttConfig.js';
 
 let refreshInterval;
 
-export const wallboxStateToAnzeige = function({atHome, wallboxState}) {
+export const wallboxStateToAnzeige = function({atHome, carStatus, wallboxState}) {
   switch(wallboxState) {
     case 'Lädt':
       return 'Lädt';
@@ -21,6 +21,10 @@ export const wallboxStateToAnzeige = function({atHome, wallboxState}) {
     case 'Nicht verbunden':
       if(atHome) {
         return 'Getrennt';
+      }
+
+      if(carStatus === 'parked') {
+        return <>Parkt&nbsp;&nbsp;</>;
       }
 
       return 'Unterwegs';
@@ -71,6 +75,7 @@ export default function Auto() {
   const ladeziel       = messages[`carconnectivity/garage/${vwId}/charging/settings/target_level`];
   const autoStatus     = messages['auto/tele/STATUS'];
   const pvSensor       = messages['Fronius/solar/tele/SENSOR'];
+  const carStatus      = messages[`carconnectivity/garage/${vwId}/state`];
 
   if(!autoStatus || !pvSensor) {
     return;
@@ -91,7 +96,7 @@ export default function Auto() {
     ladelevelColor = '#ff0000';
   }
 
-  const ladestatusAnzeige = wallboxStateToAnzeige({atHome, wallboxState});
+  const ladestatusAnzeige = wallboxStateToAnzeige({atHome, carStatus, wallboxState});
 
   const rows = [
     <tr key='akku'>
