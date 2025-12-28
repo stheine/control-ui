@@ -53,6 +53,20 @@ const Grid = function(props) {
   };
 
   const renderNavigation = function() {
+    let buttonTwo;
+    let buttonThree;
+
+    if(!route && page === 1) {
+      buttonTwo   = <Light dark={true} onClick={() => navigate('/light/1')} />;
+      buttonThree = <SettingsVerticalDots dark={true} onClick={() => navigate('/settings/1')} />;
+    } else if(!route && page > 1) {
+      buttonTwo   = <Home dark={true} onClick={() => navigate('/1')} />;
+    } else if(route === 'settings') {
+      buttonThree = <Home dark={true} onClick={() => navigate('/1')} />;
+    } else {
+      buttonTwo   = <Home dark={true} onClick={() => navigate('/1')} />;
+    }
+
     return (
       <div key='navigation' className='navigation'>
         <div className='navigation__button one'>
@@ -62,16 +76,10 @@ const Grid = function(props) {
           />
         </div>
         <div className='navigation__button two'>
-          {route ?
-            null :
-            <Light dark={true} onClick={() => navigate('/light/1')} />
-          }
+          {buttonTwo}
         </div>
         <div className='navigation__button three'>
-          {route ?
-            <Home dark={true} onClick={() => navigate('/1')} /> :
-            <SettingsVerticalDots dark={true} onClick={() => navigate('/settings/1')} />
-          }
+          {buttonThree}
         </div>
         <div className='navigation__button four'>
           <Down
