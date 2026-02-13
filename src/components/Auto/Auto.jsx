@@ -134,30 +134,6 @@ export default function Auto() {
         />
       </tr>
     );
-    rows.push(
-      <tr key='mode'>
-        <td className='auto__label'>
-          Mode:
-        </td>
-        <Value
-          className='small'
-          value={activeChargeMode}
-          unit={null}
-        />
-      </tr>
-    );
-//    if(ladeziel) {
-//      rows.push(
-//        <tr key='ziel'>
-//          <td className='auto__label'>Ziel:</td>
-//          <Value
-//            value={ladeziel}
-//            unit='%'
-//            unitOn='bottom'
-//          />
-//        </tr>
-//      );
-//    }
   } else {
     let ladestatusBackgroundColor;
 
@@ -168,7 +144,9 @@ export default function Auto() {
     rows.push(
       <tr key='status'>
         <td className='auto__label'>
-          Status:
+          <div className='auto__label__multi'>
+            Status:
+          </div>
         </td>
         <Value
           backgroundColor={ladestatusBackgroundColor}
@@ -178,20 +156,20 @@ export default function Auto() {
         />
       </tr>
     );
-    if(atHome) {
-      rows.push(
-        <tr key='mode'>
-          <td className='auto__label'>
-            Mode:
-          </td>
-          <Value
-            className='small'
-            value={activeChargeMode}
-            unit={null}
-          />
-        </tr>
-      );
-    }
+  }
+  if(atHome) {
+    rows.push(
+      <tr key='mode'>
+        <td className='auto__label'>
+          Mode:
+        </td>
+        <Value
+          className='small'
+          value={activeChargeMode}
+          unit={activeChargeMode === 'Nachts' ? `${ladeziel}%` : null}
+        />
+      </tr>
+    );
   }
 
   if(!controlClient) {

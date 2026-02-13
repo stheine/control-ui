@@ -7,14 +7,14 @@ import React, {
 // import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
+import Candle      from '../../svg/sargam/Candle.jsx';
 import Decrease    from '../../svg/sargam/Decrease.jsx';
-import Down        from '../../svg/sargam/Down.jsx';
 import Icon        from '../../svg/sargam/Icon.jsx';
 import Increase    from '../../svg/sargam/Increase.jsx';
 import Minus       from '../../svg/sargam/Minus.jsx';
 import Plus        from '../../svg/sargam/Plus.jsx';
 import Power       from '../../svg/sargam/Power.jsx';
-import Up          from '../../svg/sargam/Up.jsx';
+import Snow        from '../../svg/sargam/Snow.jsx';
 
 const buttonWidth = '65px';
 const repeat      = 200;
@@ -145,7 +145,7 @@ const Casambi = function(params) {
                 />
               </td>
               <td style={{width: buttonWidth}}>
-                <Up
+                <Plus
                   dark={true}
                   onMouseDown={() => downHandler('dimmer', 5)}
                   onMouseUp={() => upHandler()}
@@ -154,12 +154,12 @@ const Casambi = function(params) {
               <td style={{width: buttonWidth}}>
                 <Increase
                   dark={true}
-                  onMouseDown={() => downHandler('vertical', 5)}
+                  onMouseDown={() => downHandler('vertical', -5)}
                   onMouseUp={() => upHandler()}
                 />
               </td>
               <td style={{width: buttonWidth}}>
-                <Plus
+                <Snow
                   dark={true}
                   onMouseDown={() => downHandler('temperature', 55)}
                   onMouseUp={() => upHandler()}
@@ -168,7 +168,7 @@ const Casambi = function(params) {
             </tr>
             <tr>
               <td style={{width: buttonWidth}}>
-                <Down
+                <Minus
                   dark={true}
                   onMouseDown={() => downHandler('dimmer', -5)}
                   onMouseUp={() => upHandler()}
@@ -177,12 +177,12 @@ const Casambi = function(params) {
               <td style={{width: buttonWidth}}>
                 <Decrease
                   dark={true}
-                  onMouseDown={() => downHandler('vertical', -5)}
+                  onMouseDown={() => downHandler('vertical', 5)}
                   onMouseUp={() => upHandler()}
                 />
               </td>
               <td style={{width: buttonWidth}}>
-                <Minus
+                <Candle
                   dark={true}
                   onMouseDown={() => downHandler('temperature', -55)}
                   onMouseUp={() => upHandler()}

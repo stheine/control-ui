@@ -1,0 +1,59 @@
+@use '../../colors.scss' as colors;
+
+.speakerDiv {
+  width:  100%;
+  height: 100%;
+}
+
+.speaker {
+  // background-color: #949440;
+  display:        flex;
+  flex-direction: column;
+
+  svg {
+    width: 90px;
+  }
+
+  .speaker__row {
+    display:        flex;
+    flex-direction: row;
+  }
+
+  .speaker__control {
+    width: 205px;
+  }
+
+  .speaker__title {
+    .speaker__title__value {
+      color:        colors.$value-color;
+      height:       114px;
+      width:        205px;
+      overflow:     hidden;
+      padding-left: 10px;
+    }
+  }
+
+  .speaker__status {
+    width:       195px;
+    font-family: Digitalism;
+    font-size:   50px;
+    overflow:    visible;
+    padding:     20px 0 0 10px;
+  }
+
+  .speaker__volume {
+    .speaker__volume__value {
+      color:       colors.$value-color;
+      font-family: Digitalism;
+      font-size:   50px;
+      height:      42px;
+      overflow:    hidden;
+      margin:      30px 0 0 10px;
+    }
+  }
+
+//    tr:last-child {
+//      height:    72px;
+//      font-size: 200%;
+//    }
+}

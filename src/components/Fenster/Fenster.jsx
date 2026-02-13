@@ -17,7 +17,7 @@ export default function Fenster() {
     <table>
       <tbody>
         {_.map(mqttConfig, config => {
-          if(controlClient && config.topic === 'Zigbee/FensterSensor Sonoff 1') {
+          if(controlClient && config.topic === 'Zigbee/FensterSensor Test') {
             return;
           }
 

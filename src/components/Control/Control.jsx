@@ -25,11 +25,11 @@ import Infrarotheizung from '../Infrarotheizung/Infrarotheizung.jsx';
 import JalousieBuero   from '../JalousieBuero/JalousieBuero.jsx';
 import JalousieWohnen  from '../JalousieWohnen/JalousieWohnen.jsx';
 import Muell           from '../Muell/Muell.jsx';
+import Music           from '../Music/Music.jsx';
 import Solar           from '../Solar/Solar.jsx';
 import Strom           from '../Strom/Strom.jsx';
 import Temperatur      from '../Temperatur/Temperatur.jsx';
 import Vito            from '../Vito/Vito.jsx';
-import Volumio         from '../Volumio/Volumio.jsx';
 
 let    clickTimeout;
 
@@ -45,7 +45,7 @@ const Control = function(props) {
   const displayPage = Number(params.page) || 1;
 
   const displayPageRef = useRef(displayPage);
-  const volumioStatus  = useRef();
+  const musicState     = useRef();
 
   useEffect(() => {
     // Use the displayPageRef inside this effect to prevent
@@ -69,13 +69,13 @@ const Control = function(props) {
             navigate(message);
             break;
 
-          case 'volumio/stat/pushState': {
-            const {status} = message || {};
+          case 'music/STATE': {
+            const {state} = message || {};
 
-            if(status !== volumioStatus.current) {
-              volumioStatus.current = status;
+            if(state !== musicState.current) {
+              musicState.current = state;
 
-              if(status === 'play' && displayPageRef.current !== 1) {
+              if(['...', 'play'].includes(state) && displayPageRef.current !== 1) {
                 navigate('/1');
               }
             }
@@ -101,7 +101,9 @@ const Control = function(props) {
       return false;
     }
 
-    if(controlClient && topic === 'Zigbee/FensterSensor Sonoff 1') {
+    // console.log(`${topic}: ${message.contact}`);
+
+    if(controlClient && topic === 'Zigbee/FensterSensor Test') {
       return false;
     }
 
@@ -115,8 +117,8 @@ const Control = function(props) {
   const calcMuell = () => Boolean(_.filter(messages, (message, topic) =>
     topic === 'muell/leerung/morgen' && Boolean(message?.length)).length);
 
-  const calcVolumio = () => Boolean(_.filter(messages, (message, topic) =>
-    topic === 'volumio/stat/pushState' && ['...', 'play'].includes(message.status)).length);
+  const calcMusic = () => Boolean(_.filter(messages, (message, topic) =>
+    topic === 'music/STATE' && ['...', 'play'].includes(message.state)).length);
 
   const calcDreame = () => Boolean(_.filter(messages, (message, topic) =>
     (topic === 'valetudo/dreame-d9/StatusStateAttribute/status' && message !== 'docked') ||
@@ -128,7 +130,9 @@ const Control = function(props) {
 
   const items = [
     {id: 'tempVito',          priority: -204, width: 1,            content: <Temperatur site='Außen' />},
-    {id: 'tempWohnen',        priority: -203, width: 1,            content: <Temperatur site='Wohnen' />},
+    controlClient ?
+      {id: 'tempWohnen',      priority: -203, width: 1,            content: <Temperatur site='Wohnen' />} :
+      {id: 'tempBüro',        priority: -203, width: 1,            content: <Temperatur site='Büro' />},
     {id: 'auto',              priority: -103, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
     {id: 'strom',             priority: -102, width: 1,            content: <Strom />},
     {id: 'solar',             priority: -101, width: 1,            content: <Solar />},
@@ -136,7 +140,7 @@ const Control = function(props) {
 
     {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
     {id: 'fenster',           priority:    1, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
-    {id: 'volumio',           priority:    2, width: 1,            content: <Volumio />, calcPriority: calcVolumio},
+    {id: 'music',             priority:    2, width: 1,            content: <Music />, calcPriority: calcMusic},
     {id: 'jalousieWohnen',    priority:    3, width: 1, fit: true, content: <JalousieWohnen />},
     {id: 'dreame',            priority:    4, width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
     {id: 'dreame2',           priority:    5, width: 1, fit: true, content: <Dreame2 />, calcPriority: calcDreame2},

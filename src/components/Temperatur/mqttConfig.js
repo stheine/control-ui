@@ -1,30 +1,4 @@
 export default [{
-  label: 'AußenFunk',
-  topic: 'Zigbee/LuftSensor Außen',
-  values: [{
-    key:       'temperature',
-    precision: 1,
-    unit:      '°C',
-  }, {
-    className: 'small',
-    key:       'humidity',
-    precision: 0,
-    unit:      '%rH',
-  }],
-}, {
-  label: 'AußenTasmota',
-  topic: 'tasmota/thermometer/tele/SENSOR',
-  values: [{
-    key:       'AM2301.Temperature',
-    precision: 1,
-    unit:      '°C',
-  }, {
-    className: 'small',
-    key:       'AM2301.Humidity',
-    precision: 0,
-    unit:      '%rH',
-  }],
-}, {
   label: 'Außen',
   topic: 'vito/tele/SENSOR',
   values: [{
@@ -34,14 +8,14 @@ export default [{
   }],
 }, {
   label: 'Büro',
-  topic: 'Zigbee/LuftSensor Büro',
+  topic: 'tasmota/espco2/tele/SENSOR',
   values: [{
-    key:       'temperature',
+    key:       'AM2301.Temperature',
     precision: 1,
     unit:      '°C',
   }, {
     className: 'small',
-    key:       'humidity',
+    key:       'AM2301.Humidity',
     precision: 0,
     unit:      '%rH',
   }],
@@ -54,18 +28,6 @@ export default [{
     unit:      '°C',
   }, {
     className: 'small',
-    key:       'humidity',
-    precision: 0,
-    unit:      '%rH',
-  }],
-}, {
-  label: 'WohnenRaspi',
-  topic: 'Wohnzimmer/tele/SENSOR',
-  values: [{
-    key:       'temperature',
-    precision: 1,
-    unit:      '°C',
-  }, {
     key:       'humidity',
     precision: 0,
     unit:      '%rH',

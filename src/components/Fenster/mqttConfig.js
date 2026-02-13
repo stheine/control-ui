@@ -9,5 +9,5 @@ export default [{
 }, {
   topic: 'Zigbee/FensterSensor Garage',
 }, {
-  topic: 'Zigbee/FensterSensor Sonoff 1',
+  topic: 'Zigbee/FensterSensor Test',
 }];

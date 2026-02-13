@@ -14,6 +14,7 @@ import BlindDown              from '../../svg/sargam/BlindDown.jsx';
 import BlindShade             from '../../svg/sargam/BlindShade.jsx';
 import BlindUp                from '../../svg/sargam/BlindUp.jsx';
 import Button                 from '../../svg/Button.jsx';
+import Candle                 from '../../svg/sargam/Candle.jsx';
 import Checked                from '../../svg/sargam/Checked.jsx';
 import Close                  from '../../svg/sargam/Close.jsx';
 import Collect                from '../../svg/sargam/Collect.jsx';
@@ -47,6 +48,7 @@ import ScreenOff              from '../../svg/sargam/ScreenOff.jsx';
 import SettingsApplications   from '../../svg/sargam/SettingsApplications.jsx';
 import SettingsHorizontalDots from '../../svg/sargam/SettingsHorizontalDots.jsx';
 import SettingsVerticalDots   from '../../svg/sargam/SettingsVerticalDots.jsx';
+import Snow                   from '../../svg/sargam/Snow.jsx';
 import Stop                   from '../../svg/sargam/Stop.jsx';
 import StopCircle             from '../../svg/sargam/StopCircle.jsx';
 import Sun                    from '../../svg/sargam/Sun.jsx';
@@ -124,6 +126,8 @@ const row5 = [
   <BlindUp key='blindUp' />,
   <StopCircle key='stopCircle' />,
   <Light key='light' />,
+  <Candle key='candle' />,
+  <Snow key='snow' />,
 ];
 
 export default function Icons() {

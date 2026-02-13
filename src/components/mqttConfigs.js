@@ -10,6 +10,7 @@ import Infrarotheizung     from './Infrarotheizung/mqttConfig.js';
 import JalousieWohnen      from './JalousieWohnen/mqttConfig.js';
 import LedsConfig          from './Leds/mqttConfig.js';
 import MuellConfig         from './Muell/mqttConfig.js';
+import MusicConfig         from './Music/mqttConfig.js';
 import PushButtonsConfig   from './PushButtons/mqttConfig.js';
 import SolarConfig         from './Solar/mqttConfig.js';
 import SolarForecastConfig from './SolarForecast/mqttConfig.js';
@@ -35,6 +36,7 @@ export default [
   ...JalousieWohnen,
   ...LedsConfig,
   ...MuellConfig,
+  ...MusicConfig,
   ...PushButtonsConfig,
   ...SolarConfig,
   ...SolarForecastConfig,
