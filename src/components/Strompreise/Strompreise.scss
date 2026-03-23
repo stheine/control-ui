@@ -1,7 +1,7 @@
 .strompreise {
   .chart {
-    height: 430px;
-    width:  980px;
+    height: 380px;
+    width:  990px;
   }
 
   .buttons {
@@ -18,5 +18,12 @@
     .label {
       padding-top: 10px;
     }
+  }
+
+  .forecast {
+    display:         flex;
+    flex-direction:  row;
+    justify-content: center;
+    padding-top:     5px;
   }
 }

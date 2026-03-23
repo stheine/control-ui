@@ -37,8 +37,13 @@ export default function Strompreise() {
   const messageStatus = messages['Fronius/solar/tele/STATUS'];
 
   const now               = dayjs();
+  const forecastRaw       = messages['strom/tele/forecast'];
   const strompreise       = messages['strom/tele/preise'];
   const firstStartTime    = strompreise.at(0).startTime;
+  const lastStartTime     = strompreise.at(-1).startTime;
+  const forecast          = useMemo(() => _.reject(forecastRaw, data => data.startTime <= lastStartTime),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [lastStartTime]);
   const futureStrompreise = useMemo(() => _.reduce(strompreise, (result, strompreis) => {
     if(dayjs(strompreis.startTime) < now.subtract(1, 'hour')) {
       return result;
@@ -62,6 +67,10 @@ export default function Strompreise() {
     [futureStrompreise]);
   const minCent = useMemo(() => _.min(_.map(futureStrompreise, 'cent')),
     [futureStrompreise]);
+  const maxForecast = useMemo(() => _.max(_.map(forecast, 'cent')),
+    [forecast]);
+  const minForecast = useMemo(() => _.min(_.map(forecast, 'cent')),
+    [forecast]);
 
   const sunriseHour = sunrise > now ?
     dayjs(sunrise).hour() :
@@ -145,7 +154,7 @@ export default function Strompreise() {
 
   // console.log({sunriseHour, sunsetHour});
 
-  // console.log('Strompreise', {strompreise, sunTimes});
+  // console.log('Strompreise', {strompreise, sunTimes, forecast, minForecast, maxForecast});
 
   if(minCent < 0) {
     yDomain[0] = minCent - 0.5;
@@ -286,6 +295,9 @@ export default function Strompreise() {
             />
           </LineChart>
         </ResponsiveContainer>
+      </div>
+      <div className='forecast'>
+        Prognose: {_.round(minForecast)}-{_.round(maxForecast)}ct
       </div>
       <div className='buttons'>
         <div className='label'>Akku:</div>
