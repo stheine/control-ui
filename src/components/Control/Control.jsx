@@ -22,6 +22,7 @@ import Dreame          from '../Dreame/Dreame.jsx';
 import Dreame2         from '../Dreame2/Dreame2.jsx';
 import Fenster         from '../Fenster/Fenster.jsx';
 import Infrarotheizung from '../Infrarotheizung/Infrarotheizung.jsx';
+import Internet        from '../Internet/Internet.jsx';
 import JalousieBuero   from '../JalousieBuero/JalousieBuero.jsx';
 import JalousieWohnen  from '../JalousieWohnen/JalousieWohnen.jsx';
 import Muell           from '../Muell/Muell.jsx';
@@ -128,24 +129,28 @@ const Control = function(props) {
     (topic === 'valetudo/dreame-d9-2/StatusStateAttribute/status' && message !== 'docked') ||
     (topic === 'valetudo/dreame-d9-2/StatusStateAttribute/error' && message?.severity.kind !== 'none')).length);
 
-  const items = [
-    {id: 'tempVito',          priority: -204, width: 1,            content: <Temperatur site='Außen' />},
-    controlClient ?
-      {id: 'tempWohnen',      priority: -203, width: 1,            content: <Temperatur site='Wohnen' />} :
-      {id: 'tempBüro',        priority: -203, width: 1,            content: <Temperatur site='Büro' />},
-    {id: 'auto',              priority: -103, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
-    {id: 'strom',             priority: -102, width: 1,            content: <Strom />},
-    {id: 'solar',             priority: -101, width: 1,            content: <Solar />},
-    {id: 'clock',             priority:  -60, width: 1, fit: true, content: <Clock />},
+  const calcInternet = () => Boolean(_.filter(messages, (message, topic) =>
+    topic === 'dns/failed' && Boolean(message?.length)).length);
 
-    {id: 'muell',             priority:    0, width: 1,            content: <Muell />,   calcPriority: calcMuell},
-    {id: 'fenster',           priority:    1, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
-    {id: 'music',             priority:    2, width: 1,            content: <Music />, calcPriority: calcMusic},
-    {id: 'jalousieWohnen',    priority:    3, width: 1, fit: true, content: <JalousieWohnen />},
-    {id: 'dreame',            priority:    4, width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
-    {id: 'dreame2',           priority:    5, width: 1, fit: true, content: <Dreame2 />, calcPriority: calcDreame2},
-    {id: 'vito',              priority:    6, width: 1, fit: true, content: <Vito />},
-    {id: 'jalousieBuero',     priority:    7, width: 1, fit: true, content: <JalousieBuero />},
+  const items = [
+    {id: 'auto',              priority:  1, width: 1,            content: <Auto />}, // ,    calcPriority: calcAuto},
+    {id: 'strom',             priority:  2, width: 1,            content: <Strom />},
+    {id: 'solar',             priority:  3, width: 1,            content: <Solar />},
+    {id: 'tempVito',          priority:  4, width: 1,            content: <Temperatur site='Außen' />},
+    controlClient ?
+      {id: 'tempWohnen',      priority:  5, width: 1,            content: <Temperatur site='Wohnen' />} :
+      {id: 'tempBüro',        priority:  5, width: 1,            content: <Temperatur site='Büro' />},
+    {id: 'clock',             priority:  6, width: 1, fit: true, content: <Clock />},
+
+    {id: 'muell',             priority:  10, width: 1,            content: <Muell />,   calcPriority: calcMuell},
+    {id: 'fenster',           priority:  11, width: 1, fit: true, content: <Fenster />, calcPriority: calcFenster},
+    {id: 'music',             priority:  12, width: 1,            content: <Music />,   calcPriority: calcMusic},
+    {id: 'jalousieWohnen',    priority:  13, width: 1, fit: true, content: <JalousieWohnen />},
+    {id: 'dreame',            priority:  14, width: 1, fit: true, content: <Dreame />,  calcPriority: calcDreame},
+    {id: 'dreame2',           priority:  15, width: 1, fit: true, content: <Dreame2 />, calcPriority: calcDreame2},
+    {id: 'vito',              priority:  16, width: 1, fit: true, content: <Vito />},
+    {id: 'jalousieBuero',     priority:  17, width: 1, fit: true, content: <JalousieBuero />},
+    {id: 'internet',          priority:  18, width: 1,            content: <Internet />, calcPriority: calcInternet},
 
 //  {id: 'tempAussen',                        width: 1, fit: true, content: <Temperatur site='AußenFunk' />},
 //  {id: 'tempAussenTasmota',                 width: 1, fit: true, content: <Temperatur site='AußenTasmota' />},
@@ -156,17 +161,23 @@ const Control = function(props) {
   ];
 
   const itemsToPages = () => {
-    const pages = [];
+    const pages           = [];
+    let   numPriorityPlus = 0;
 
-    const itemsByPriority = _.sortBy(_.map(items, (item, index) => {
-      let priority = item.priority || index;
+    const itemsByPriority = items.reduce((result, item) => {
+      if(item.calcPriority && item.calcPriority() && result.length >= 6) {
+        numPriorityPlus++;
 
-      if(item.calcPriority && item.calcPriority()) {
-        priority -= 100;
+        const pos = 6 - numPriorityPlus;
+
+        result.push(items[pos]);
+        result[pos] = item;
+      } else {
+        result.push(item);
       }
 
-      return {...item, priority};
-    }), ['priority']);
+      return result;
+    }, []);
 
     for(const item of itemsByPriority) {
       let found = false;

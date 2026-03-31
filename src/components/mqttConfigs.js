@@ -7,6 +7,7 @@ import Dreame2Config       from './Dreame2/mqttConfig.js';
 import DreameConfig        from './Dreame/mqttConfig.js';
 import FensterConfig       from './Fenster/mqttConfig.js';
 import Infrarotheizung     from './Infrarotheizung/mqttConfig.js';
+import Internet            from './Internet/mqttConfig.js';
 import JalousieWohnen      from './JalousieWohnen/mqttConfig.js';
 import LedsConfig          from './Leds/mqttConfig.js';
 import MuellConfig         from './Muell/mqttConfig.js';
@@ -33,6 +34,7 @@ export default [
   ...Dreame2Config,
   ...FensterConfig,
   ...Infrarotheizung,
+  ...Internet,
   ...JalousieWohnen,
   ...LedsConfig,
   ...MuellConfig,

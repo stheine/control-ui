@@ -29,10 +29,10 @@
         color:       colors.$value-color;
         font-family: "AC Display";
         line-height: 80%;
-      &.small {
-        font-size: 50px;
-      }
 
+        &.small {
+          font-size: 50px;
+        }
       }
 
       .temperatur__value__right {

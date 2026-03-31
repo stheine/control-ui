@@ -1,0 +1,24 @@
+.internet {
+  .header {
+    font-size:  60px;
+    text-align: center;
+  }
+
+  .content {
+    padding: 40px 15px 0 15px;
+
+    .content__value {
+      &.failed {
+        background-color: #ff0000;
+      }
+      &.ok {
+        background-color: #00ff00;
+        color:            #000000;
+      }
+
+      font-size:  30px;
+      text-align: center;
+      padding:    5px;
+    }
+  }
+}
