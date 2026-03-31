@@ -10,9 +10,8 @@ import Casambi     from '../Casambi/Casambi.jsx';
 
 const pages = {
   1: [
-    {width: 3, content: <Casambi name='Mito raggio' />},
-    null,
     {width: 3, content: <Casambi name='Mito volo' />},
+    {width: 3, content: <Casambi name='Mito raggio' />},
   ],
 };
 

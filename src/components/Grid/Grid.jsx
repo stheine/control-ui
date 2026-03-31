@@ -19,6 +19,8 @@ const Grid = function(props) {
   // console.log('Grid', {maxPages, page, props});
 
   const renderActions = function() {
+    let offset = 0;
+
     return (
       <div key='grid' className='grid'>
         {_.map(items, (item, key) => {
@@ -26,14 +28,17 @@ const Grid = function(props) {
             return;
           }
 
-          // console.log('Grid', {key, item});
+          let className = `grid__action grid__item${offset}`;
 
-          let className = `grid__action grid__item${key}`;
+          offset++;
 
           if(item.width === 2) {
             className += ' double';
+            offset++;
           } else if(item.width === 3) {
             className += ' triple';
+            offset++;
+            offset++;
           }
 
           return (
