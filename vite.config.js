@@ -10,25 +10,15 @@ const {
 } = appConfig;
 const hostName = await fqdn();
 
-const port  = serverPort + 1;
-// const proxy = {};
+const port = serverPort + 1;
 
-// for(const backendRoute of ['/api', '/identity', '/settings', '/version']) {
-//   console.log({backendRoute, target: `${scheme}://${hostName}:${serverPort}`});
-//
-//   proxy[backendRoute] = {
-//     target: `${scheme}://${hostName}:${serverPort}`,
-//     // changeOrigin: true,
-//     secure: false,
-//   };
-// }
 export default defineConfig({
   plugins: [react()],
   server: {
     allowedHosts: true,
-    host: '0.0.0.0',
+    host:         '0.0.0.0',
     port,
-    // proxy,
+    strictPort:   true,
   },
   assetsInclude: ['**/*.md'],
   root: 'src',
