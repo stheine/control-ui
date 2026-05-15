@@ -30,7 +30,7 @@ export default function Solar() {
   const messageStatus = messages['Fronius/solar/tele/STATUS'];
 
   if(messageSensor || messageStatus) {
-    console.log('Solar', {messageSensor, messageStatus});
+    // console.log('Solar', {messageSensor, messageStatus});
   }
 
   const akkuLadung              = messageSensor?.battery.powerIncoming  || -messageSensor?.battery.powerOutgoing || 0;

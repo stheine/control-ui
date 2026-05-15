@@ -19,11 +19,13 @@ import React, {
 import Button      from '../Button/Button.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
 
-const buttons = {
-  null: 'Aus',
-  40:   '4kW',
-  80:   '8kW',
-};
+const buttons = [
+  {value: null,   label: 'Aus'},
+  {value: 40,     label: '4kW'},
+  {value: 80,     label: '8kW'},
+  {value: '-40',  label: '-4kW'},
+  {value: 'hold', label: 'Halten'},
+];
 
 const strokeOpacity = 0.5;
 const strokeWidth   = 5;
@@ -31,10 +33,12 @@ const strokeWidth   = 5;
 export default function Strompreise() {
   const {messages, mqttClient} = useContext(MqttContext);
 
+  const batteryHold = Boolean(messages['Fronius/solar/cmnd/batteryHold']);
   const gridChargePct = _.isNil(messages['Fronius/solar/cmnd/gridChargePct']) ?
     messages['Fronius/solar/cmnd/gridChargePct'] :
     String(messages['Fronius/solar/cmnd/gridChargePct']);
   const messageStatus = messages['Fronius/solar/tele/STATUS'];
+  const {chargeMax} = messageStatus || {};
 
   const now               = dayjs();
   const forecastRaw       = messages['strom/tele/forecast'];
@@ -56,7 +60,7 @@ export default function Strompreise() {
     });
 
     return result;
-  }, []).slice(0, 96),
+  }, []),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [firstStartTime]);
   const sunTimes = messages['sunTimes/INFO'];
@@ -304,13 +308,13 @@ export default function Strompreise() {
         <Button
           key='akkuCharge'
           className='button'
-          active={messageStatus?.chargeMax}
+          active={chargeMax}
           onClick={async event => {
             event.stopPropagation();
 
             const cmndData = {};
 
-            if(messageStatus?.chargeMax) {
+            if(chargeMax) {
               cmndData.chargeMax = null;
               cmndData.chargeTo  = null;
             } else {
@@ -327,16 +331,27 @@ export default function Strompreise() {
         <div style={{width: '50px'}} />
 
         <div className='label'>Netzladen:</div>
-        {Object.keys(buttons).map(button => (
+        {buttons.map(({value, label}) => (
           <Button
-            key={button}
+            key={value}
             className='button'
-            active={button === gridChargePct || button === 'null' && !gridChargePct}
-            onClick={async() => await mqttClient.publishAsync('Fronius/solar/cmnd/gridChargePct',
-              button === 'null' ? null : button,
-              {retain: true})}
+            active={value === gridChargePct ||
+              value === null && !gridChargePct && !batteryHold ||
+              value === 'hold' && batteryHold
+            }
+            onClick={async() => {
+              if(value === 'hold') {
+                await mqttClient.publishAsync('Fronius/solar/cmnd/batteryHold',
+                  'true',
+                  {retain: true});
+              } else {
+                await mqttClient.publishAsync('Fronius/solar/cmnd/gridChargePct',
+                  value,
+                  {retain: true});
+              }
+            }}
           >
-            {buttons[button]}
+            {label}
           </Button>
         ))}
       </div>
