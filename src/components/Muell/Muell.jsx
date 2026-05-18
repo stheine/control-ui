@@ -98,13 +98,27 @@ export default function Muell() {
   }
 
   const renderRelative = date => {
-    const now   = new Date();
-    const start = new Date(date);
+    const now    = dayjs();
+    const start  = dayjs(date);
+    const start7 = start.add(7, 'hours');
+
+    const diffDays  = start7.diff(now, 'days');
+    const diffHours = start7.diff(now, 'hours');
+
+    let diffString;
+
+    if(diffHours < 7) {
+      diffString = 'Heute';
+    } else if(diffDays < 2) {
+      diffString = 'Morgen';
+    } else {
+      diffString = start7.locale('de').fromNow();
+    }
 
     return (
       <td style={{paddingBottom: '12px'}}>
         <span style={{fontSize: '120%'}}>
-          {start < now ? 'Heute' : dayjs().locale('de').to(dayjs(date))}
+          {diffString}
         </span>
       </td>
     );
