@@ -1,8 +1,8 @@
 import _               from 'lodash';
 import {connect}       from 'react-redux';
 import ms              from 'ms';
-import React, {
-  useContext,
+import {
+  use,
   useEffect,
   useRef,
 } from 'react';
@@ -39,14 +39,14 @@ const Control = function(props) {
 
   const navigate = useNavigate();
 
-  const {controlClient}        = useContext(AppContext);
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {controlClient}        = use(AppContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const params = useParams();
   const displayPage = Number(params.page) || 1;
 
   const displayPageRef = useRef(displayPage);
-  const musicState     = useRef();
+  const musicStateRef  = useRef();
 
   useEffect(() => {
     // Use the displayPageRef inside this effect to prevent
@@ -73,8 +73,8 @@ const Control = function(props) {
           case 'music/STATE': {
             const {state} = message || {};
 
-            if(state !== musicState.current) {
-              musicState.current = state;
+            if(state !== musicStateRef.current) {
+              musicStateRef.current = state;
 
               if(['...', 'play'].includes(state) && displayPageRef.current !== 1) {
                 navigate('/1');
@@ -171,6 +171,7 @@ const Control = function(props) {
         const pos = 6 - numPriorityPlus;
 
         result.push(items[pos]);
+        // eslint-disable-next-line no-param-reassign
         result[pos] = item;
       } else {
         result.push(item);

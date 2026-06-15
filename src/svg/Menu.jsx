@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
 
-import React from 'react';
-
 export default function Menu() {
   return (
     <svg x='0px' y='0px' viewBox='0 0 495 495'>

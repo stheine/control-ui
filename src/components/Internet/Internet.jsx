@@ -1,25 +1,9 @@
-/* eslint-disable arrow-body-style */
-/* eslint-disable no-lonely-if */
+import {use}       from 'react';
 
-import ms from 'ms';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import MqttContext from '../../contexts/MqttContext.js';
 
-import MqttContext  from '../../contexts/MqttContext.js';
-
-import OffColored   from '../../svg/sargam/OffColored.jsx';
-import OnColored    from '../../svg/sargam/OnColored.jsx';
-import OnOffUnknown from '../../svg/sargam/OnOffUnknown.jsx';
-
-export default function Internet(props) {
-  const {messages, mqttClient} = useContext(MqttContext);
-
-  const [_pulseTime, setPulseTime] = useState();
-  const [_pulseTimeInterval, setPulseTimeInterval] = useState();
+export default function Internet() {
+  const {messages} = use(MqttContext);
 
   const message = messages['dns/failed'];
   const ok = !message;

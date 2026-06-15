@@ -1,5 +1,5 @@
 import _     from 'lodash';
-// import dayjs from 'dayjs';
+import {use} from 'react';
 import {
   Bar,
   BarChart,
@@ -7,9 +7,6 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import React, {
-  useContext,
-} from 'react';
 
 const fields1 = [
   'totalPvHours',
@@ -29,7 +26,7 @@ import MqttContext from '../../contexts/MqttContext.js';
 // import Value       from '../Value/Value.jsx';
 
 export default function SolarForecast() {
-  const {messages} = useContext(MqttContext);
+  const {messages} = use(MqttContext);
 
   const analysis = messages['solcast/analysis'];
   const {hourlyForecasts} = analysis;

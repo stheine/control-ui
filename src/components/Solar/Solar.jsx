@@ -1,7 +1,7 @@
 import _           from 'lodash';
 import RingBuffer  from '@stheine/ringbufferjs';
-import React, {
-  useContext,
+import {
+  use,
   useRef,
   useState,
 } from 'react';
@@ -21,9 +21,9 @@ const wattage = function(value) {
 export default function Solar() {
   // console.log('Solar');
 
-  const {setAppDialog} = useContext(AppContext);
-  const {messages} = useContext(MqttContext);
-  const einkaufRing = useRef(new RingBuffer(3));
+  const {setAppDialog} = use(AppContext);
+  const {messages} = use(MqttContext);
+  const einkaufRingRef = useRef(new RingBuffer(3));
   const [_lastUpdateTime, setLastUpdateTime] = useState();
 
   const messageSensor = messages['Fronius/solar/tele/SENSOR'];
@@ -33,7 +33,7 @@ export default function Solar() {
     // console.log('Solar', {messageSensor, messageStatus});
   }
 
-  const akkuLadung              = messageSensor?.battery.powerIncoming  || -messageSensor?.battery.powerOutgoing || 0;
+  const akkuLadung              = messageSensor?.battery.powerIncoming  || -(messageSensor?.battery.powerOutgoing || 0);
   const solarErzeugung          = _.isNumber(messageSensor?.solar.powerOutgoing) ?
     messageSensor.solar.powerOutgoing :
     99999;
@@ -47,8 +47,8 @@ export default function Solar() {
   if(updateTime !== _lastUpdateTime) {
     setLastUpdateTime(updateTime);
 
-    einkaufRing.current.enq(einkauf);
-    // console.log(einkaufRing.current.size(), einkaufRing.current.dump());
+    einkaufRingRef.current.enq(einkauf);
+    // console.log(einkaufRingRef.current.size(), einkaufRingRef.current.dump());
   }
 
   return (
@@ -87,7 +87,7 @@ export default function Solar() {
             <Value
               className='digitalism'
               unitOn='top'
-              {...wattage(einspeisung || (einkaufRing.current.size() ? -einkaufRing.current.avg() : 0))}
+              {...wattage(einspeisung || (einkaufRingRef.current.size() ? -einkaufRingRef.current.avg() : 0))}
             />
           </tr>
         </tbody>

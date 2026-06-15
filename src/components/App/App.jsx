@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-/* eslint-disable react/no-array-index-key */
+/* eslint-disable @eslint-react/no-array-index-key */
 
 import _                         from 'lodash';
 import {connect}                 from 'react-redux';
@@ -13,7 +13,7 @@ import {
   Routes,
   // useNavigate,
 } from 'react-router';
-import React, {
+import {
   useCallback,
   useEffect,
   useMemo,

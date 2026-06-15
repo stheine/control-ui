@@ -1,5 +1,3 @@
-import React         from 'react';
-
 import AutoLaden     from '../AutoLaden/AutoLaden.jsx';
 import Close         from '../../svg/sargam/Close.jsx';
 import SolarForecast from '../SolarForecast/SolarForecast.jsx';

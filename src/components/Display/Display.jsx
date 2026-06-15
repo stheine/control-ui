@@ -1,6 +1,4 @@
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 // import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
@@ -10,7 +8,7 @@ import ScreenOff   from '../../svg/sargam/ScreenOff.jsx';
 import Sun         from '../../svg/sargam/Sun.jsx';
 
 const Display = function() {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   // console.log('Display', _messages);
 

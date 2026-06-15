@@ -1,6 +1,5 @@
-import React, {
-  useContext,
-} from 'react';
+import dayjs        from 'dayjs';
+import {use}        from 'react';
 
 import mqttConfig   from './mqttConfig.js';
 import MqttContext  from '../../contexts/MqttContext.js';
@@ -9,8 +8,40 @@ import OffColored   from '../../svg/sargam/OffColored.jsx';
 import OnColored    from '../../svg/sargam/OnColored.jsx';
 import OnOffUnknown from '../../svg/sargam/OnOffUnknown.jsx';
 
+const PermitJoin = function(props) {
+  const {permitJoin} = props;
+  const {mqttClient} = use(MqttContext);
+
+  switch(permitJoin) {
+    case true:
+      return (
+        <OnColored
+          dark={true}
+          onClick={async() => {
+            await mqttClient.publishAsync('Zigbee/bridge/request/permit_join',
+              JSON.stringify({value: false}));
+          }}
+        />
+      );
+
+    case false:
+      return (
+        <OffColored
+          dark={true}
+          onClick={async() => {
+            await mqttClient.publishAsync('Zigbee/bridge/request/permit_join',
+              JSON.stringify({value: true, time: 120}));
+          }}
+        />
+      );
+
+    default:
+      return <OnOffUnknown dark={true} />;
+  }
+};
+
 export default function Zigbee() {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages} = use(MqttContext);
 
   const siteConfig = mqttConfig[0];
 
@@ -20,39 +51,10 @@ export default function Zigbee() {
     // console.log('Zigbee', {message});
   }
 
-  const permitJoin        = message?.permit_join;
-  const permitJoinTimeout = message?.permit_join_timeout;
-  const restartRequired   = message?.restart_required;
-  const version           = message?.version;
-
-  const PermitJoin = function() {
-    switch(permitJoin) {
-      case true:
-        return (
-          <OnColored
-            dark={true}
-            onClick={async() => {
-              await mqttClient.publishAsync('Zigbee/bridge/request/permit_join',
-                JSON.stringify({value: false}));
-            }}
-          />
-        );
-
-      case false:
-        return (
-          <OffColored
-            dark={true}
-            onClick={async() => {
-              await mqttClient.publishAsync('Zigbee/bridge/request/permit_join',
-                JSON.stringify({value: true, time: 120}));
-            }}
-          />
-        );
-
-      default:
-        return <OnOffUnknown dark={true} />;
-    }
-  };
+  const permitJoin      = message?.permit_join;
+  const permitJoinEnd   = message?.permit_join_end;
+  const restartRequired = message?.restart_required;
+  const version         = message?.version;
 
   return (
     <table>
@@ -74,20 +76,26 @@ export default function Zigbee() {
           <td colSpan={2}>
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <div
-                style={{display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 10px 10px 0'}}
+                style={{
+                  display:        'flex',
+                  flexDirection:  'column',
+                  justifyContent: 'center',
+                  padding:        '0 10px 10px 0',
+                  whiteSpace:     'nowrap',
+                }}
               >
                 Permit Join:
               </div>
               <div style={{width: '100px'}}>
-                <PermitJoin />
+                <PermitJoin permitJoin={permitJoin} />
               </div>
             </div>
           </td>
         </tr>
-        {permitJoinTimeout ?
+        {permitJoinEnd ?
           <tr>
-            <td>Timeout:</td>
-            <td style={{whiteSpace: 'nowrap'}}>{`${permitJoinTimeout}`}</td>
+            <td>Until:</td>
+            <td style={{whiteSpace: 'nowrap'}}>{`${dayjs(permitJoinEnd).format('HH:mm:ss')}`}</td>
           </tr> :
           null}
       </tbody>

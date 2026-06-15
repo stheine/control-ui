@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React      from 'react';
 
 export default function Button(props) {
   const {active, children, onClick} = props;

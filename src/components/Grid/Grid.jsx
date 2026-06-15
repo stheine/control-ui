@@ -1,6 +1,5 @@
 import _                    from 'lodash';
 import {connect}            from 'react-redux';
-import React                from 'react';
 import {useNavigate}        from 'react-router';
 
 import FitBox               from '../FitBox/FitBox.jsx';

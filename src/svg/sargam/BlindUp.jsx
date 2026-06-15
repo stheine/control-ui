@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Icon(props) {
   const {dark, onClick, onMouseDown, onMouseUp} = props;
   const color     = dark ? '#e0e0e0' : '#000000';

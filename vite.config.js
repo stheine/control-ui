@@ -1,14 +1,9 @@
 import {defineConfig} from 'vite';
-import fqdn           from 'fqdn-multi';
 import react          from '@vitejs/plugin-react';
 
 import appConfig      from './config.js';
 
-const {
-  scheme,
-  serverPort,
-} = appConfig;
-const hostName = await fqdn();
+const {serverPort} = appConfig;
 
 const port = serverPort + 1;
 

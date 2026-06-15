@@ -2,11 +2,12 @@
 /* eslint-disable no-lonely-if */
 
 import ms from 'ms';
-import React, {
-  useCallback,
-  useContext,
+import {
+  use,
+//   useCallback,
   useEffect,
-  useState,
+  useMemo,
+//   useState,
 } from 'react';
 
 import MqttContext  from '../../contexts/MqttContext.js';
@@ -15,12 +16,50 @@ import OffColored   from '../../svg/sargam/OffColored.jsx';
 import OnColored    from '../../svg/sargam/OnColored.jsx';
 import OnOffUnknown from '../../svg/sargam/OnOffUnknown.jsx';
 
+const refreshIntervals = {};
+
+const Switch = props => {
+  const {messagePower, topic} = props;
+  const {mqttClient} = use(MqttContext);
+
+  switch(messagePower) {
+    case 'ON':
+      return (
+        <OnColored
+          dark={true}
+          onClick={async() => {
+            await mqttClient.publishAsync(`tasmota/${topic}/cmnd/Power`, '0');
+            // console.log(`Infrarotheizung(${topic}):off`);
+            if(refreshIntervals[topic]) {
+              // console.log(`Infrarotheizung(${topic}):off - clearInterval`);
+              clearInterval(refreshIntervals[topic]);
+              Reflect.deleteProperty(refreshIntervals, topic);
+            }
+          }}
+        />
+      );
+
+    case 'OFF':
+      return (
+        <OffColored
+          dark={true}
+          onClick={async() => {
+            await mqttClient.publishAsync(`tasmota/${topic}/cmnd/Power`, '1');
+            // console.log(`Infrarotheizung(${topic}):on - setInterval`);
+            refreshIntervals[topic] = setInterval(() => mqttClient.publishAsync(`tasmota/${topic}/cmnd/PulseTime`, ''),
+              ms('1s'));
+          }}
+        />
+      );
+
+    default:
+      return <OnOffUnknown dark={true} />;
+  }
+};
+
 export default function Infrarotheizung(props) {
   const {site, style} = props;
-  const {messages, mqttClient} = useContext(MqttContext);
-
-  const [_pulseTime, setPulseTime] = useState();
-  const [_pulseTimeInterval, setPulseTimeInterval] = useState();
+  const {messages, mqttClient} = use(MqttContext);
 
   let topic;
 
@@ -41,90 +80,56 @@ export default function Infrarotheizung(props) {
   const messageResult = messages[`tasmota/${topic}/stat/RESULT`];
   const messageLWT    = messages[`tasmota/${topic}/tele/LWT`];
 
-  const pulseTimeIntervalFunction = useCallback(async() => {
-    // console.log('trigger PulseTime');
-    await mqttClient.publishAsync(`tasmota/${topic}/cmnd/PulseTime`, '');
-  }, [mqttClient, topic]);
+  // if(topic === 'infrarotheizung-buero') console.log({messagePower, messageResult});
 
   useEffect(() => {
-    // console.log('Infrarotheizung:mount');
+    // console.log(`Infrarotheizung(${topic}):mount`);
 
     return () => {
-      // console.log('Infrarotheizung:dismount');
+      // console.log(`Infrarotheizung(${topic}):dismount`, {refreshIntervals});
 
-      if(_pulseTimeInterval) {
-        // console.log('Infrarotheizung:dismount - clearInterval');
-        clearInterval(_pulseTimeInterval);
+      if(refreshIntervals[topic]) {
+        // console.log(`Infrarotheizung(${topic}):dismount - clearInterval`);
+        clearInterval(refreshIntervals[topic]);
+        Reflect.deleteProperty(refreshIntervals, topic);
       }
     };
-  }, [_pulseTimeInterval]);
+  }, [topic]);
 
-  useEffect(() => {
+  const pulseTime = useMemo(() => {
+    if(messagePower === 'OFF') {
+      return 0;
+    }
+
     if(messageResult?.PulseTime) {
       const remaining = messageResult.PulseTime.Remaining[0];
 
-      setPulseTime(remaining > 111 ? remaining - 100 : remaining);
+      return remaining > 111 ? remaining - 100 : remaining;
     }
-  }, [messageResult]);
-
-  useEffect(() => {
-    if(messagePower === 'OFF') {
-      setPulseTime(0);
-    }
-  }, [messagePower]);
+  }, [messagePower, messageResult]);
 
   useEffect(() => {
     if(messagePower === 'ON') {
-      if(!_pulseTimeInterval) {
-        setPulseTimeInterval(setInterval(pulseTimeIntervalFunction, ms('1s')));
+      if(!refreshIntervals[topic]) {
+        // console.log(`Infrarotheizung(${topic}):effect:on - setInterval`, {refreshIntervals});
+        refreshIntervals[topic] = setInterval(() => mqttClient.publishAsync(`tasmota/${topic}/cmnd/PulseTime`, ''),
+          ms('1s'));
       }
     } else {
-      if(_pulseTimeInterval) {
-        clearInterval(_pulseTimeInterval);
-        setPulseTimeInterval();
+      // console.log(`Infrarotheizung(${topic}):effect:off`, {refreshIntervals});
+      if(refreshIntervals[topic]) {
+        // console.log(`Infrarotheizung(${topic}):effect:off - clearInterval`);
+        clearInterval(refreshIntervals[topic]);
+        Reflect.deleteProperty(refreshIntervals, topic);
       }
     }
-  }, [messagePower, _pulseTimeInterval, pulseTimeIntervalFunction]);
+  }, [messagePower, mqttClient, topic]);
 
   if(messagePower) {
-    // console.log('Infrarotheizung', {messagePower});
+    // console.log(`Infrarotheizung(${topic})`, {messagePower});
   }
 
-  // console.log('Infrarotheizung', messages[`tasmota/${topic}/stat/RESULT`]);
-
-  const Switch = function() {
-    switch(messagePower) {
-      case 'ON':
-        return (
-          <OnColored
-            dark={true}
-            onClick={async() => {
-              await mqttClient.publishAsync(`tasmota/${topic}/cmnd/Power`, '0');
-              if(_pulseTimeInterval) {
-                clearInterval(_pulseTimeInterval);
-                setPulseTimeInterval();
-                setPulseTime();
-              }
-            }}
-          />
-        );
-
-      case 'OFF':
-        return (
-          <OffColored
-            dark={true}
-            onClick={async() => {
-              await mqttClient.publishAsync(`tasmota/${topic}/cmnd/Power`, '1');
-              await mqttClient.publishAsync(`tasmota/${topic}/cmnd/PulseTime`, '');
-              setPulseTimeInterval(setInterval(pulseTimeIntervalFunction, ms('1s')));
-            }}
-          />
-        );
-
-      default:
-        return <OnOffUnknown dark={true} />;
-    }
-  };
+  // console.log(`Infrarotheizung(${topic})`, messages[`tasmota/${topic}/stat/RESULT`]);
 
   return (
     <table style={style}>
@@ -152,16 +157,16 @@ export default function Infrarotheizung(props) {
           <td colSpan={2}>
             <div style={{display: 'flex', flexDirection: 'row'}}>
               <div style={{width: '100px'}}>
-                <Switch />
+                <Switch messagePower={messagePower} topic={topic} />
               </div>
             </div>
           </td>
         </tr>
         <tr>
-          {_pulseTime ?
+          {pulseTime ?
             [
               <td key='row1'>Timeout:</td>,
-              <td key='row2' style={{whiteSpace: 'nowrap'}}>{_pulseTime}</td>,
+              <td key='row2' style={{whiteSpace: 'nowrap'}}>{pulseTime}</td>,
             ] :
             <td>&nbsp;</td>}
         </tr>

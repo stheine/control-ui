@@ -5,6 +5,8 @@ export default [{
 }, {
   topic: 'carconnectivity/connectors/volkswagen/last_update',
 }, {
+  topic: 'carconnectivity/connectors/vw_eu_data_act/last_update',
+}, {
   topic: `carconnectivity/garage/${vwId}/drives/primary/range`,
 }, {
   topic: `carconnectivity/garage/${vwId}/drives/primary/level`,

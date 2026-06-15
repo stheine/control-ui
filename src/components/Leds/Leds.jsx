@@ -1,7 +1,5 @@
 import _           from 'lodash';
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
@@ -9,7 +7,7 @@ import MqttContext from '../../contexts/MqttContext.js';
 import Led         from '../../svg/Led.jsx';
 
 export default function Leds() {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   if(!_.isEmpty(messages)) {
     // console.log('Leds', {messages});

@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/prefer-at */
 
 import _           from 'lodash';
-import React       from 'react';
 import {useParams} from 'react-router';
 
 import Grid        from '../Grid/Grid.jsx';

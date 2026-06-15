@@ -1,8 +1,6 @@
 import _           from 'lodash';
 import {connect}   from 'react-redux';
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 import AppContext  from '../../contexts/AppContext.js';
 import mqttConfig  from './mqttConfig.js';
@@ -29,8 +27,8 @@ const Button = function(props) {
 const Speaker = function() {
   // console.log('Speaker');
 
-  const {setAppDialog} = useContext(AppContext);
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {setAppDialog} = use(AppContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const siteConfig = _.first(mqttConfig);
 

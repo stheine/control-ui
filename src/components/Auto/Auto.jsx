@@ -1,64 +1,40 @@
 import ms from 'ms';
-import React, {
-  useContext,
+import {
+  use,
   useEffect,
   useState,
 } from 'react';
 
-import AppContext  from '../../contexts/AppContext.js';
-import MqttContext from '../../contexts/MqttContext.js';
-import repeatEvery from '../Clock/repeatEvery.js';
-import Value       from '../Value/Value.jsx';
-import {vwId}      from './mqttConfig.js';
+import AppContext            from '../../contexts/AppContext.js';
+import MqttContext           from '../../contexts/MqttContext.js';
+import Value                 from '../Value/Value.jsx';
+import {vwId}                from './mqttConfig.js';
+import wallboxStateToAnzeige from './wallboxStateToAnzeige.jsx';
 
 let refreshInterval;
-
-export const wallboxStateToAnzeige = function({atHome, carStatus, wallboxState}) {
-  switch(wallboxState) {
-    case 'Lädt':
-      return 'Lädt';
-
-    case 'Nicht verbunden':
-      if(atHome) {
-        return 'Getrennt';
-      }
-
-      if(carStatus === 'parked') {
-        return <>Parkt&nbsp;&nbsp;</>;
-      }
-
-      return 'Unterwegs';
-
-    case 'Warte auf Ladefreigabe':
-      return 'Bereit';
-
-    default:
-      return wallboxState;
-  }
-};
 
 export default function Auto() {
   // console.log('Auto');
 
-  const {controlClient, setAppDialog} = useContext(AppContext);
-  const {messages} = useContext(MqttContext);
+  const {controlClient, setAppDialog} = use(AppContext);
+  const {messages} = use(MqttContext);
 
-  const [_now, setNow] = useState(new Date());
+  const [_now, setNow] = useState(() => new Date());
 
   useEffect(() => {
-    // console.log('Clock:useEffect, mount');
+    // console.log('Auto:useEffect, mount');
 
-    refreshInterval = repeatEvery(() => {
-      // console.log('Clock, refresh');
+    refreshInterval = setInterval(() => {
+      // console.log('Auto, refresh');
 
       setNow(new Date());
-    }, ms('1s'), 'Auto');
+    }, ms('1s'));
 
     return () => {
-      // console.log('Clock:useEffect, dismount', {refreshInterval});
+      // console.log('Auto:useEffect, dismount', {refreshInterval});
 
       if(refreshInterval) {
-        // console.log('Clock, remove, disable refresh');
+        // console.log('Auto, remove, disable refresh');
         clearInterval(refreshInterval);
 
         refreshInterval = null;
@@ -66,11 +42,14 @@ export default function Auto() {
     };
   }, []);
 
-  const updated        = messages['carconnectivity/connectors/volkswagen/last_update'];
-  const updatedSeconds = Math.round((_now - new Date(updated)) / 1000);
+  const updatedVolkswagen  = messages['carconnectivity/connectors/volkswagen/last_update'];
+  const updatedVWEUDataAct = messages['carconnectivity/connectors/vw_eu_data_act/last_update'];
+  const updated            = updatedVolkswagen > updatedVWEUDataAct ? updatedVolkswagen : updatedVWEUDataAct;
+  const updatedSeconds     = Math.round((_now - new Date(updated)) / 1000);
 
-  const reichweite     = messages[`carconnectivity/garage/${vwId}/drives/primary/range`];
+  // const reichweite     = messages[`carconnectivity/garage/${vwId}/drives/primary/range`];
   const ladelevel      = messages[`carconnectivity/garage/${vwId}/drives/primary/level`];
+  const reichweite     = Math.round(77 * ladelevel / 17);
 
   const ladeziel       = messages[`carconnectivity/garage/${vwId}/charging/settings/target_level`];
   const autoStatus     = messages['auto/tele/STATUS'];

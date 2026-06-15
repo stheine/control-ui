@@ -1,14 +1,15 @@
-import _ from 'lodash';
-import React, {
-  useContext,
+import _            from 'lodash';
+import {
+  use,
+  useMemo,
 } from 'react';
 
-import AppContext  from '../../contexts/AppContext.js';
-// import mqttConfig  from './mqttConfig.js';
-import MqttContext from '../../contexts/MqttContext.js';
+import AppContext   from '../../contexts/AppContext.js';
+// import mqttConfig   from './mqttConfig.js';
+import MqttContext  from '../../contexts/MqttContext.js';
 
-import Alert       from '../../svg/sargam/Alert.jsx';
-import Value       from '../Value/Value.jsx';
+import Alert        from '../../svg/sargam/Alert.jsx';
+import Value        from '../Value/Value.jsx';
 
 // https://tc39.es/ecma402/#table-datetimeformat-components
 const dateTimeFormat = {
@@ -32,15 +33,19 @@ const renderWarningTitle = function(warning) {
 };
 
 export default function Wetter() {
-  const {clientId} = useContext(AppContext);
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {clientId} = use(AppContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const messageDwd = messages['wetter/dwd/INFO'];
   const messageOw  = messages['wetter/openweather/INFO'];
 
-  if(messageDwd && messageOw) {
-    // console.log('Wetter', {messageDwd, messageOw});
-  }
+  const currentHour = useMemo(() => {
+    if(messageDwd && messageOw) {
+      // console.log('Wetter', {messageDwd, messageOw});
+    }
+
+    return new Date();
+  }, [messageDwd, messageOw]);
 
   const {eveningStartsHour} = messageOw || {};
   const wetter              = messageOw?.current.weather[0].description || '';
@@ -144,7 +149,7 @@ export default function Wetter() {
             <td>
               <table>
                 <tbody>
-                  {new Date().getHours() < eveningStartsHour ?
+                  {currentHour < eveningStartsHour ?
                     [...renderDay(), ...renderNight()] :
                     [...renderNight(), ...renderDay()]}
                 </tbody>

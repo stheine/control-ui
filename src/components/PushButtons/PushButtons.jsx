@@ -1,7 +1,5 @@
 import _           from 'lodash';
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
@@ -9,7 +7,7 @@ import MqttContext from '../../contexts/MqttContext.js';
 import Button      from '../../svg/Button.jsx';
 
 export default function PushButtons() {
-  const {messages} = useContext(MqttContext);
+  const {messages} = use(MqttContext);
 
   if(!_.isEmpty(messages)) {
     // console.log('PushButtons', {messages});

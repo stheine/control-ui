@@ -1,6 +1,6 @@
-import React, {
+import {
+  use,
   useCallback,
-  useContext,
   useState,
 } from 'react';
 
@@ -64,7 +64,7 @@ const getInRange = function(value, change, min, max) {
 };
 
 const Casambi = function(params) {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
   const {name} = params;
 
   const [_downInterval, setDownInterval] = useState();

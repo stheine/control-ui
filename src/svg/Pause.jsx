@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
 
-import React from 'react';
-
 export default function Pause() {
   return (
     <svg viewBox='0 0 512 512'>

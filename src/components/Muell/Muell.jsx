@@ -4,9 +4,7 @@ import _               from 'lodash';
 import dayjs           from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import relativeTime    from 'dayjs/plugin/relativeTime';
-import React, {
-  useContext,
-} from 'react';
+import {use}           from 'react';
 
 import Checked     from '../../svg/sargam/Checked.jsx';
 import MqttContext from '../../contexts/MqttContext.js';
@@ -46,7 +44,7 @@ const formatter = new Intl.DateTimeFormat('de-DE', {
 });
 
 export default function Muell() {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const morgen   = messages['muell/leerung/morgen'];
   const naechste = messages['muell/leerung/naechste'];

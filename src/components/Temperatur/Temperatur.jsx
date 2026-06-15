@@ -1,8 +1,9 @@
 import _           from 'lodash';
 import classNames  from 'classnames';
 import ms          from 'ms';
-import React, {
-  useContext,
+import {
+  use,
+  useMemo,
   useState,
 } from 'react';
 
@@ -52,18 +53,33 @@ export default function Temperatur(props) {
   const {site} = props;
   // console.log('Temperaturen');
 
-  const {setAppDialog} = useContext(AppContext);
-  const {messages} = useContext(MqttContext);
+  const {setAppDialog} = use(AppContext);
+  const {messages} = use(MqttContext);
 
   const [_lastTime, setLastTime] = useState();
 
   const siteConfig = _.find(mqttConfig, {label: site});
+  const message = messages[siteConfig.topic];
+
+  const outdated = useMemo(() => {
+    const now = Date.now();
+
+    if(message?.Time && now - Date.parse(message.Time) > ms('60m')) {
+      // eslint-disable-next-line no-console
+      console.log('Temperatur:outdated', {
+        message,
+        now,
+        parsedTime: Date.parse(message.Time),
+        stringTime: message.Time,
+      });
+
+      return `Outdated`;
+    }
+  }, [message]);
 
   if(!siteConfig) {
     return <div>Missing: {site}</div>;
   }
-
-  const message = messages[siteConfig.topic];
 
   if(message && site === 'AußenFunk' && message.Time !== _lastTime) {
     setLastTime(message.Time);
@@ -78,13 +94,8 @@ export default function Temperatur(props) {
     warnungen = messageDwd ? messageDwd?.forecast.warnings || [] : [{event: 'none'}];
   }
 
-  const now = Date.now();
-
-  if(message?.Time && now - Date.parse(message.Time) > ms('60m')) {
-    // eslint-disable-next-line no-console
-    console.log('Temperatur:outdated', {message, now, parsedTime: Date.parse(message.Time), stringTime: message.Time});
-
-    return `Outdated`;
+  if(outdated) {
+    return outdated;
   }
 
   return (

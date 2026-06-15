@@ -1,7 +1,5 @@
 // import _ from 'lodash';
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 import MqttContext from '../../contexts/MqttContext.js';
 
@@ -24,15 +22,7 @@ const dateTimeFormat = {
 export default function JalousieWohnen() {
   // console.log('JalousieWohnen');
 
-  const date = new Date();
-
-  date.setHours('08');
-  date.setMinutes('00');
-  date.setSeconds('00');
-
-  // console.log({date});
-
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const messageStatus = messages['JalousieBackend/tele/STATUS'];
   const messageTimes  = messages['JalousieBackend/tele/TIMES'];

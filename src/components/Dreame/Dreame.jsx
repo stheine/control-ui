@@ -1,7 +1,5 @@
 import _           from 'lodash';
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 // import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
@@ -11,7 +9,7 @@ import Play        from '../../svg/sargam/Play.jsx';
 import Value       from '../Value/Value.jsx';
 
 export default function Dreame() {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   if(!_.isEmpty(messages)) {
     // console.log('Dreame', {messages: _.pickBy(messages, (message, topic) => topic.startsWith('valetudo/dreame'))});

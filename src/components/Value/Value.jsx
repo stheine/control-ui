@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React      from 'react';
 
 const lightOrDark = function(color) {
   const matches = color.match(/^#(?<r>..)(?<g>..)(?<b>..)$/);

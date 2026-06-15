@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
 
-import React from 'react';
-
 const StopBlue = function() {
   return (
     <svg x='0px' y='0px' viewBox='0 0 512 512'>

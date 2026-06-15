@@ -1,6 +1,4 @@
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 import MqttContext from '../../contexts/MqttContext.js';
 
@@ -13,7 +11,7 @@ import Up          from '../../svg/sargam/Up.jsx';
 export default function JalousieBuero() {
   // console.log('JalousieBuero');
 
-  const {mqttClient} = useContext(MqttContext);
+  const {mqttClient} = use(MqttContext);
 
   // Power2 - Hoch
   // Power1 - Runter

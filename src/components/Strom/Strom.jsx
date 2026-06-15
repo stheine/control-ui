@@ -1,7 +1,7 @@
 import _           from 'lodash';
 import RingBuffer  from '@stheine/ringbufferjs';
-import React, {
-  useContext,
+import {
+  use,
   useRef,
   useState,
 } from 'react';
@@ -13,9 +13,9 @@ import Value       from '../Value/Value.jsx';
 export default function Strom() {
   // console.log('Strom');
 
-  const {setAppDialog} = useContext(AppContext);
-  const {messages} = useContext(MqttContext);
-  const einkaufRing = useRef(new RingBuffer(3));
+  const {setAppDialog} = use(AppContext);
+  const {messages} = use(MqttContext);
+  const einkaufRingRef = useRef(new RingBuffer(3));
   const [_lastUpdateTime, setLastUpdateTime] = useState();
 
   const messageSensor = messages['Fronius/solar/tele/SENSOR'];
@@ -40,8 +40,8 @@ export default function Strom() {
   if(updateTime !== _lastUpdateTime) {
     setLastUpdateTime(updateTime);
 
-    einkaufRing.current.enq(einkauf);
-    // console.log(einkaufRing.current.size(), einkaufRing.current.dump());
+    einkaufRingRef.current.enq(einkauf);
+    // console.log(einkaufRingRef.current.size(), einkaufRingRef.current.dump());
   }
 
   return (

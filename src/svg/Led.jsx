@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
 
-import React from 'react';
-
 export default function Icon(props) {
   const {color, dark, lit, onClick} = props;
   let   color1;                                // led color light

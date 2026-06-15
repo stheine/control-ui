@@ -1,3 +1,5 @@
+/* eslint-disable @eslint-react/no-clone-element */
+
 import _                      from 'lodash';
 import React                  from 'react';
 

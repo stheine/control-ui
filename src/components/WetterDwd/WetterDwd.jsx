@@ -1,7 +1,5 @@
-import _ from 'lodash';
-import React, {
-  useContext,
-} from 'react';
+import _             from 'lodash';
+import {use}         from 'react';
 
 import AppContext    from '../../contexts/AppContext.js';
 import mqttConfig    from './mqttConfig.js';
@@ -70,8 +68,8 @@ const renderWarningTime = function(warning) {
 };
 
 export default function WetterDwd() {
-  const {clientId} = useContext(AppContext);
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {clientId} = use(AppContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const siteConfig = _.first(mqttConfig);
 

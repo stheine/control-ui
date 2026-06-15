@@ -1,5 +1,5 @@
 import ms from 'ms';
-import React, {
+import {
   useEffect,
   useState,
 } from 'react';
@@ -9,7 +9,7 @@ import repeatEvery from './repeatEvery.js';
 let refreshInterval;
 
 export default function Clock() {
-  const [_now, setNow] = useState(new Date());
+  const [_now, setNow] = useState(() => new Date());
 
   useEffect(() => {
     // console.log('Clock:useEffect, mount');

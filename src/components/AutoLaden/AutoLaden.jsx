@@ -1,13 +1,11 @@
-import _ from 'lodash';
-import React, {
-  useContext,
-} from 'react';
+import _     from 'lodash';
+import {use} from 'react';
 
-import Button                  from '../Button/Button.jsx';
-import MqttContext             from '../../contexts/MqttContext.js';
-import Value                   from '../Value/Value.jsx';
-import {vwId}                  from '../Auto/mqttConfig.js';
-import {wallboxStateToAnzeige} from '../Auto/Auto.jsx';
+import Button                from '../Button/Button.jsx';
+import MqttContext           from '../../contexts/MqttContext.js';
+import Value                 from '../Value/Value.jsx';
+import {vwId}                from '../Auto/mqttConfig.js';
+import wallboxStateToAnzeige from '../Auto/wallboxStateToAnzeige.jsx';
 
 const buttonsLademodus = [
   'Überschuss',
@@ -33,7 +31,7 @@ const buttonsSocTarget = [
 ];
 
 export default function AutoLaden() {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const ladestrom       = messages['Wallbox/evse/external_current'].current;
   const reichweite      = messages[`carconnectivity/garage/${vwId}/drives/primary/range`];

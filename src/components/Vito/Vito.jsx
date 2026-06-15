@@ -1,7 +1,6 @@
-import React, {
-  useContext,
-  useEffect,
-  useState,
+import {
+  use,
+  useMemo,
 } from 'react';
 
 import MqttContext  from '../../contexts/MqttContext.js';
@@ -10,54 +9,55 @@ import OffColored   from '../../svg/sargam/OffColored.jsx';
 import OnColored    from '../../svg/sargam/OnColored.jsx';
 import OnOffUnknown from '../../svg/sargam/OnOffUnknown.jsx';
 
-export default function Vito() {
-  const [_sparbetrieb, setSparbetrieb] = useState();
+const Sparbetrieb = function(props) {
+  const {mqttClient} = use(MqttContext);
 
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {sparbetrieb} = props;
+
+  switch(sparbetrieb) {
+    case true:
+      return (
+        <OnColored
+          dark={true}
+          onClick={async() => {
+            // TODO pending setSparbetrieb();
+            await mqttClient.publishAsync('vito/cmnd/setHK1BetriebsartSpar', '0');
+          }}
+        />
+      );
+
+    case false:
+      return (
+        <OffColored
+          dark={true}
+          onClick={async() => {
+            // TODO pending setSparbetrieb();
+            await mqttClient.publishAsync('vito/cmnd/setHK1BetriebsartSpar', '1');
+          }}
+        />
+      );
+
+    default:
+      return <OnOffUnknown dark={true} />;
+  }
+};
+
+export default function Vito() {
+  const {messages} = use(MqttContext);
 
   const hk1BetriebsartSpar = messages['vito/tele/SENSOR']?.hk1BetriebsartSpar;
-  const messageTimestamp    = messages['vito/tele/SENSOR']?.timestamp;
+  // const messageTimestamp   = messages['vito/tele/SENSOR']?.timestamp;
+  const heizkreisPumpe     = Boolean(Number(messages['vito/tele/SENSOR']?.heizkreisPumpe))     || false;
+  const kesselLeistung     = Number(messages['vito/tele/SENSOR']?.kesselLeistung)              || 0;
+  const zirkulationsPumpe  = Boolean(Number(messages['vito/tele/SENSOR']?.zirkulationsPumpe))  || false;
+  const vorrat             = messages['vito/tele/STATS']?.vorrat;
 
-  useEffect(() => setSparbetrieb(Boolean(Number(hk1BetriebsartSpar))),
-    [messageTimestamp, hk1BetriebsartSpar]);
-
-  const heizkreisPumpe    = Boolean(Number(messages['vito/tele/SENSOR']?.heizkreisPumpe))     || false;
-  const kesselLeistung    = Number(messages['vito/tele/SENSOR']?.kesselLeistung)              || 0;
-  const zirkulationsPumpe = Boolean(Number(messages['vito/tele/SENSOR']?.zirkulationsPumpe))  || false;
-  const vorrat            = messages['vito/tele/STATS']?.vorrat;
+  const sparbetrieb = useMemo(() => Boolean(Number(hk1BetriebsartSpar)),
+    [hk1BetriebsartSpar]);
 
   if(messages['vito/tele/SENSOR']) {
-    // console.log('Vito', {SENSOR: messages['vito/tele/SENSOR'], _sparbetrieb, STATS: messages['vito/tele/STATS']});
+    // console.log('Vito', {SENSOR: messages['vito/tele/SENSOR'], sparbetrieb, STATS: messages['vito/tele/STATS']});
   }
-
-  const Sparbetrieb = function() {
-    switch(_sparbetrieb) {
-      case true:
-        return (
-          <OnColored
-            dark={true}
-            onClick={async() => {
-              setSparbetrieb();
-              await mqttClient.publishAsync('vito/cmnd/setHK1BetriebsartSpar', '0');
-            }}
-          />
-        );
-
-      case false:
-        return (
-          <OffColored
-            dark={true}
-            onClick={async() => {
-              setSparbetrieb();
-              await mqttClient.publishAsync('vito/cmnd/setHK1BetriebsartSpar', '1');
-            }}
-          />
-        );
-
-      default:
-        return <OnOffUnknown dark={true} />;
-    }
-  };
 
   return (
     <table>
@@ -87,7 +87,7 @@ export default function Vito() {
                 sparbetrieb:
               </div>
               <div style={{width: '100px'}}>
-                <Sparbetrieb />
+                <Sparbetrieb sparbetrieb={sparbetrieb} />
               </div>
             </div>
           </td>

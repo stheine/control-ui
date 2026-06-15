@@ -1,7 +1,5 @@
 /* eslint-disable max-len */
 
-import React from 'react';
-
 export default function Icon(props) {
   const {dark, onClick, onMouseDown, onMouseUp} = props;
 

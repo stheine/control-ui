@@ -11,8 +11,8 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import React, {
-  useContext,
+import {
+  use,
   useMemo,
 } from 'react';
 
@@ -30,8 +30,63 @@ const buttons = [
 const strokeOpacity = 0.5;
 const strokeWidth   = 5;
 
+const CustomizedDot = props => {
+  const {cx, cy, payload} = props;
+
+  let fill;
+
+  switch(payload.level) {
+    case 'VERY_EXPENSIVE': fill = '#ff0000'; break;
+    case 'EXPENSIVE':      fill = '#880000'; break;
+    case 'NORMAL':         fill = '#000088'; break;
+    case 'CHEAP':          fill = '#008800'; break;
+    case 'VERY_CHEAP':     fill = '#00ff00'; break;
+
+    default:
+      fill = '#dddddd';
+      break;
+  }
+
+  return (
+    <svg x={cx - 10} y={cy - 10} width={20} height={20} viewBox='0 0 20 20'>
+      <circle cx={10} cy={10} r={5} fill={fill} />
+    </svg>
+  );
+};
+
+let labelNum = 0;
+
+const CustomizedLabel = props => {
+  const {futureStrompreise, printKeysAbove, printKeysBelow, x, y, stroke, value} = props;
+
+  let printValue = null;
+  let dy;
+
+  if(labelNum >= futureStrompreise.length) {
+    labelNum = 0;
+  }
+
+  if(printKeysAbove.includes(labelNum)) {
+    printValue = value;
+    dy = -8;
+  } else if(printKeysBelow.includes(labelNum)) {
+    printValue = value;
+    dy = 16;
+  }
+
+  labelNum++;
+
+  if(printValue !== null) {
+    return (
+      <text x={x} y={y} dy={dy} fill={stroke} fontSize={10} textAnchor='middle'>
+        {printValue}
+      </text>
+    );
+  }
+};
+
 export default function Strompreise() {
-  const {messages, mqttClient} = useContext(MqttContext);
+  const {messages, mqttClient} = use(MqttContext);
 
   const batteryHold = Boolean(messages['Fronius/solar/cmnd/batteryHold']);
   const gridChargePct = _.isNil(messages['Fronius/solar/cmnd/gridChargePct']) ?
@@ -46,7 +101,7 @@ export default function Strompreise() {
   const firstStartTime    = strompreise.at(0).startTime;
   const lastStartTime     = strompreise.at(-1).startTime;
   const forecast          = useMemo(() => _.reject(forecastRaw, data => data.startTime <= lastStartTime),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     [lastStartTime]);
   const futureStrompreise = useMemo(() => _.reduce(strompreise, (result, strompreis) => {
     if(dayjs(strompreis.startTime) < now.subtract(1, 'hour')) {
@@ -61,7 +116,7 @@ export default function Strompreise() {
 
     return result;
   }, []),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line @eslint-react/exhaustive-deps
     [firstStartTime]);
   const sunTimes = messages['sunTimes/INFO'];
   const {sunrise, sunset, sunriseTomorrow, sunsetTomorrow} = sunTimes;
@@ -152,8 +207,6 @@ export default function Strompreise() {
         ifOverflow='hidden'
       />
     );
-    startLabel = null;
-    aktuellerHintergrund = 'Tag';
   }
 
   // console.log({sunriseHour, sunsetHour});
@@ -163,30 +216,6 @@ export default function Strompreise() {
   if(minCent < 0) {
     yDomain[0] = minCent - 0.5;
   }
-
-  const CustomizedDot = props => {
-    const {cx, cy, payload} = props;
-
-    let fill;
-
-    switch(payload.level) {
-      case 'VERY_EXPENSIVE': fill = '#ff0000'; break;
-      case 'EXPENSIVE':      fill = '#880000'; break;
-      case 'NORMAL':         fill = '#000088'; break;
-      case 'CHEAP':          fill = '#008800'; break;
-      case 'VERY_CHEAP':     fill = '#00ff00'; break;
-
-      default:
-        fill = '#dddddd';
-        break;
-    }
-
-    return (
-      <svg x={cx - 10} y={cy - 10} width={20} height={20} viewBox='0 0 20 20'>
-        <circle cx={10} cy={10} r={5} fill={fill} />
-      </svg>
-    );
-  };
 
   // console.log(futureStrompreise);
 
@@ -228,35 +257,6 @@ export default function Strompreise() {
     return {printKeysAbove: newPrintKeysAbove, printKeysBelow: newPrintKeysBelow};
   }, [futureStrompreise]);
 
-  let key = 0;
-
-  const CustomizedLabel = ({x, y, stroke, value}) => {
-    let printValue = null;
-    let dy;
-
-    if(key >= futureStrompreise.length) {
-      key = 0;
-    }
-
-    if(printKeysAbove.includes(key)) {
-      printValue = value;
-      dy = -8;
-    } else if(printKeysBelow.includes(key)) {
-      printValue = value;
-      dy = 16;
-    }
-
-    key++;
-
-    if(printValue !== null) {
-      return (
-        <text x={x} y={y} dy={dy} fill={stroke} fontSize={10} textAnchor='middle'>
-          {printValue}
-        </text>
-      );
-    }
-  };
-
   return (
     <div className='strompreise'>
       <div className='chart'>
@@ -267,7 +267,13 @@ export default function Strompreise() {
               dataKey='cent'
               fill='#000088'
               isAnimationActive={false}
-              label={<CustomizedLabel />}
+              label={
+                <CustomizedLabel
+                  futureStrompreise={futureStrompreise}
+                  printKeysAbove={printKeysAbove}
+                  printKeysBelow={printKeysBelow}
+                />
+              }
               dot={<CustomizedDot />}
             />
             <ReferenceLine

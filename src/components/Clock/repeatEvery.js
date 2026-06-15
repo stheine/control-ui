@@ -20,11 +20,13 @@ export default function repeatEvery(func, interval, name) {
     // console.log('Clock, start, disable refresh');
     clearInterval(refreshIntervals[name]);
 
-    refreshIntervals[name] = null;
+    Reflect.deleteProperty(refreshIntervals, name);
   }
 
   // Delay execution until it's an even interval
   setTimeout(start, delay);
+
+  //TODO das ist doch stuss, denn der return value ist immer leer, weil der ja erst nach dem timeout gesetzt ist.
 
   return refreshIntervals[name];
 }

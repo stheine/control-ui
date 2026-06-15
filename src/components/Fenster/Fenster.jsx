@@ -1,15 +1,13 @@
 import _           from 'lodash';
-import React, {
-  useContext,
-} from 'react';
+import {use}       from 'react';
 
 import AppContext  from '../../contexts/AppContext.js';
 import mqttConfig  from './mqttConfig.js';
 import MqttContext from '../../contexts/MqttContext.js';
 
 export default function Fenster() {
-  const {controlClient} = useContext(AppContext);
-  const {messages}      = useContext(MqttContext);
+  const {controlClient} = use(AppContext);
+  const {messages}      = use(MqttContext);
 
   // console.log('Fenster', {_messages});
 

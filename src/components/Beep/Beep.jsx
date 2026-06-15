@@ -1,13 +1,11 @@
-import React, {
-  useContext,
-} from 'react';
+import {use}        from 'react';
 
 import MqttContext  from '../../contexts/MqttContext.js';
 
 import Notification from '../../svg/sargam/Notification.jsx';
 
 export default function LedToggle() {
-  const {mqttClient} = useContext(MqttContext);
+  const {mqttClient} = use(MqttContext);
 
   // console.log('Beep');
 
