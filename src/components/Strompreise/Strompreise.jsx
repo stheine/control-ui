@@ -21,8 +21,8 @@ import MqttContext from '../../contexts/MqttContext.js';
 
 const buttons = [
   {value: null,   label: 'Aus'},
-  {value: 40,     label: '4kW'},
-  {value: 80,     label: '8kW'},
+  {value: '40',   label: '4kW'},
+  {value: '80',   label: '8kW'},
   {value: '-40',  label: '-4kW'},
   {value: 'hold', label: 'Halten'},
 ];
