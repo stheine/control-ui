@@ -1,4 +1,4 @@
-export default function wallboxStateToAnzeige({atHome, carStatus, wallboxState}) {
+export default function wallboxStateToAnzeige({atHome, wallboxState}) {
   switch(wallboxState) {
     case 'Lädt':
       return 'Lädt';
@@ -6,10 +6,6 @@ export default function wallboxStateToAnzeige({atHome, carStatus, wallboxState})
     case 'Nicht verbunden':
       if(atHome) {
         return 'Getrennt';
-      }
-
-      if(carStatus === 'parked') {
-        return <>Parkt&nbsp;&nbsp;</>;
       }
 
       return 'Unterwegs';
