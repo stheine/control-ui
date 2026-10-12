@@ -79,7 +79,7 @@ const App = function() {
 
   const appContextValue = useMemo(() => ({
     clientId:      uuidv4(),
-    controlClient: window.screen.height === 600,
+    controlClient: window.screen.height === 600 || window.screen.height === 900,
     setAppDialog:  openDialog,
   }), [openDialog]);
   const mqttContextValue = useMemo(() => ({messages: _messages, mqttClient: _mqttClient}), [_messages, _mqttClient]);
